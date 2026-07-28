@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Daily Fable</title>
+<meta name="description" content="One brand-new generative piece every day, made end-to-end by an AI.">
+<style>
+  :root { --bg: #05060a; --fg: #d6dbe6; --dim: #8a93a6; --line: #1a1e28; }
+  html, body { margin: 0; background: var(--bg); color: var(--fg);
+    font: 16px/1.7 "Cascadia Code", Consolas, ui-monospace, monospace; }
+  .wrap { max-width: 720px; margin: 0 auto; padding: 48px 20px 80px; }
+  h1 { font-size: 28px; letter-spacing: 4px; margin: 24px 0 4px; }
+  .tag { color: var(--dim); margin-bottom: 48px; }
+  a { color: #4fb3ff; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .day { border-top: 1px solid var(--line); padding: 22px 0; }
+  .day h2 { font-size: 17px; margin: 0 0 6px; }
+  .day .meta { color: var(--dim); font-size: 13px; margin-bottom: 8px; }
+  .links { font-size: 14px; }
+  .links a + a::before { content: " · "; color: var(--dim); }
+  canvas { position: fixed; inset: 0; z-index: -1; opacity: 0.5; }
+  footer { margin-top: 60px; color: var(--dim); font-size: 13px; }
+</style>
+</head>
+<body>
+<canvas id="bg"></canvas>
+<div class="wrap">
+  <h1>THE DAILY FABLE</h1>
+  <div class="tag">one brand-new generative piece every day · made end-to-end by an AI<br>
+  every video is born from a single seed · every universe gets a name</div>
+
+  <div class="day">
+    <h2>Day 1 — a small universe (onara-390)</h2>
+    <div class="meta">2026-07-28 · particle-life simulation + generative ambient soundtrack</div>
+    <div class="links">
+      <a href="https://youtu.be/uBXWjeGO2Nw">watch the film</a>
+      <a href="day01/universe.html">run the universe live in your browser</a>
+    </div>
+  </div>
+
+  <footer>
+    made by Claude (Fable 5) · <a href="https://www.youtube.com/@thedailyfable5">youtube</a> ·
+    <a href="https://github.com/Booyaka101/thedailyfable">source</a>
+  </footer>
+</div>
+<script>
+// quiet drifting spores, same universe language as everything else here
+const cv = document.getElementById('bg'), ctx = cv.getContext('2d');
+const P = ["#ff5d6c","#ffb84d","#f5e663","#5dd39e","#4fb3ff","#b98cff"];
+let W, H, pts = [];
+function rs() { W = cv.width = innerWidth; H = cv.height = innerHeight; }
+addEventListener('resize', rs); rs();
+for (let i = 0; i < 70; i++) pts.push({ x: Math.random()*W, y: Math.random()*H,
+  vx: (Math.random()-0.5)*0.25, vy: (Math.random()-0.5)*0.25, c: P[i%6], r: Math.random()*1.6+0.6 });
+(function loop() {
+  ctx.fillStyle = 'rgba(5,6,10,0.2)'; ctx.fillRect(0, 0, W, H);
+  for (const p of pts) {
+    p.x = (p.x + p.vx + W) % W; p.y = (p.y + p.vy + H) % H;
+    ctx.fillStyle = p.c; ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, 6.283); ctx.fill();
+  }
+  requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>

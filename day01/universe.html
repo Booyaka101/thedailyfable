@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>a small universe</title>
+<style>
+  html, body { margin: 0; height: 100%; overflow: hidden; background: #05060a; }
+  canvas { display: block; }
+  #hud {
+    position: fixed; left: 14px; bottom: 12px;
+    font: 12px/1.6 "Cascadia Code", Consolas, monospace;
+    color: #8a93a6; user-select: none; pointer-events: none;
+    text-shadow: 0 1px 3px #000;
+  }
+  #hud b { color: #d6dbe6; font-weight: 600; }
+  #hint {
+    position: fixed; right: 14px; bottom: 12px;
+    font: 11px/1.6 "Cascadia Code", Consolas, monospace;
+    color: #4a5264; user-select: none; pointer-events: none;
+  }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="hud"></div>
+<div id="hint">click&nbsp;=&nbsp;new universe &nbsp;·&nbsp; M&nbsp;=&nbsp;mutate physics &nbsp;·&nbsp; space&nbsp;=&nbsp;pause</div>
+<script>
+"use strict";
+
+const canvas = document.getElementById("c");
+const ctx = canvas.getContext("2d");
+const hud = document.getElementById("hud");
+
+let W, H;
+function resize() {
+  W = canvas.width = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+}
+window.addEventListener("resize", resize);
+resize();
+
+// ---------- universe parameters ----------
+const N_SPECIES = 6;
+const N_PARTICLES = 1400;
+const RMAX = 90;          // interaction radius, px
+const BETA = 0.28;        // inner repulsion zone (fraction of RMAX)
+const FORCE = 220;        // force scale
+const HALF_LIFE = 0.04;   // velocity half-life, seconds
+const DT = 1 / 60;
+const MUTATE_EVERY = 150; // seconds between spontaneous physics mutations
+
+const PALETTE = ["#ff5d6c", "#ffb84d", "#f5e663", "#5dd39e", "#4fb3ff", "#b98cff"];
+
+// two-syllable universe names, because every universe deserves one
+const SYL_A = ["ka","ve","or","lu","tha","mi","zo","ae","ru","syl","on","pha"];
+const SYL_B = ["ris","dun","mha","lek","via","tor","na","xis","hel","um","ara","ost"];
+const nameOf = () => {
+  const pick = a => a[(Math.random() * a.length) | 0];
+  return pick(SYL_A) + pick(SYL_B) + "-" + ((Math.random() * 900 + 100) | 0);
+};
+
+let rules;        // rules[i][j] in [-1, 1]: how species i feels about species j
+let px, py, vx, vy, sp;   // particle state (typed arrays)
+let universeName, epoch, paused, elapsed, lastMutate;
+
+function randomRules() {
+  const m = [];
+  for (let i = 0; i < N_SPECIES; i++) {
+    m.push([]);
+    for (let j = 0; j < N_SPECIES; j++) m[i].push(Math.random() * 2 - 1);
+  }
+  return m;
+}
+
+function bigBang() {
+  rules = randomRules();
+  px = new Float32Array(N_PARTICLES);
+  py = new Float32Array(N_PARTICLES);
+  vx = new Float32Array(N_PARTICLES);
+  vy = new Float32Array(N_PARTICLES);
+  sp = new Uint8Array(N_PARTICLES);
+  for (let i = 0; i < N_PARTICLES; i++) {
+    px[i] = Math.random() * W;
+    py[i] = Math.random() * H;
+    sp[i] = (Math.random() * N_SPECIES) | 0;
+  }
+  universeName = nameOf();
+  epoch = 1;
+  elapsed = 0;
+  lastMutate = 0;
+  paused = false;
+  ctx.fillStyle = "#05060a";
+  ctx.fillRect(0, 0, W, H);
+}
+
+// nudge a handful of relationships — the universe drifts, life adapts or dies
+function mutate() {
+  const nudges = 4 + ((Math.random() * 5) | 0);
+  for (let k = 0; k < nudges; k++) {
+    const i = (Math.random() * N_SPECIES) | 0;
+    const j = (Math.random() * N_SPECIES) | 0;
+    rules[i][j] = Math.max(-1, Math.min(1, rules[i][j] + (Math.random() * 1.2 - 0.6)));
+  }
+  epoch++;
+}
+
+// classic particle-life force profile: hard repulsion up close,
+// species-dependent attraction/repulsion in the outer band
+function force(r, a) {
+  if (r < BETA) return r / BETA - 1;
+  if (r < 1) return a * (1 - Math.abs(2 * r - 1 - BETA) / (1 - BETA));
+  return 0;
+}
+
+// spatial hash grid so 1400 particles stays cheap
+let cols, rows, grid, gridCount;
+function rebuildGrid() {
+  cols = Math.max(1, Math.ceil(W / RMAX));
+  rows = Math.max(1, Math.ceil(H / RMAX));
+  const cap = 64;
+  grid = new Int32Array(cols * rows * cap);
+  gridCount = new Int32Array(cols * rows);
+  grid.cap = cap;
+}
+rebuildGrid();
+window.addEventListener("resize", rebuildGrid);
+
+function step() {
+  gridCount.fill(0);
+  const cap = grid.cap;
+  for (let i = 0; i < N_PARTICLES; i++) {
+    const cx = Math.min(cols - 1, (px[i] / RMAX) | 0);
+    const cy = Math.min(rows - 1, (py[i] / RMAX) | 0);
+    const cell = cy * cols + cx;
+    if (gridCount[cell] < cap) grid[cell * cap + gridCount[cell]++] = i;
+  }
+
+  const friction = Math.pow(0.5, DT / HALF_LIFE);
+
+  for (let i = 0; i < N_PARTICLES; i++) {
+    let fx = 0, fy = 0;
+    const xi = px[i], yi = py[i], si = sp[i];
+    const cx = Math.min(cols - 1, (xi / RMAX) | 0);
+    const cy = Math.min(rows - 1, (yi / RMAX) | 0);
+
+    for (let oy = -1; oy <= 1; oy++) {
+      for (let ox = -1; ox <= 1; ox++) {
+        const gx = (cx + ox + cols) % cols;
+        const gy = (cy + oy + rows) % rows;
+        const cell = gy * cols + gx;
+        const n = gridCount[cell];
+        for (let k = 0; k < n; k++) {
+          const j = grid[cell * cap + k];
+          if (j === i) continue;
+          // torus world: interact across the wrap seam too
+          let dx = px[j] - xi;
+          let dy = py[j] - yi;
+          if (dx > W / 2) dx -= W; else if (dx < -W / 2) dx += W;
+          if (dy > H / 2) dy -= H; else if (dy < -H / 2) dy += H;
+          const d2 = dx * dx + dy * dy;
+          if (d2 === 0 || d2 > RMAX * RMAX) continue;
+          const d = Math.sqrt(d2);
+          const f = force(d / RMAX, rules[si][sp[j]]);
+          fx += (dx / d) * f;
+          fy += (dy / d) * f;
+        }
+      }
+    }
+
+    vx[i] = vx[i] * friction + fx * FORCE * DT;
+    vy[i] = vy[i] * friction + fy * FORCE * DT;
+  }
+
+  for (let i = 0; i < N_PARTICLES; i++) {
+    px[i] = (px[i] + vx[i] * DT + W) % W;
+    py[i] = (py[i] + vy[i] * DT + H) % H;
+  }
+}
+
+function draw() {
+  // translucent fill instead of clear → motion trails
+  ctx.fillStyle = "rgba(5, 6, 10, 0.28)";
+  ctx.fillRect(0, 0, W, H);
+  for (let s = 0; s < N_SPECIES; s++) {
+    ctx.fillStyle = PALETTE[s];
+    ctx.beginPath();
+    for (let i = 0; i < N_PARTICLES; i++) {
+      if (sp[i] !== s) continue;
+      ctx.moveTo(px[i] + 1.6, py[i]);
+      ctx.arc(px[i], py[i], 1.6, 0, 6.2832);
+    }
+    ctx.fill();
+  }
+}
+
+function loop() {
+  if (!paused) {
+    step();
+    draw();
+    elapsed += DT;
+    if (elapsed - lastMutate > MUTATE_EVERY) {
+      lastMutate = elapsed;
+      mutate();
+    }
+  }
+  const mm = String((elapsed / 60) | 0).padStart(2, "0");
+  const ss = String((elapsed % 60) | 0).padStart(2, "0");
+  hud.innerHTML = `universe <b>${universeName}</b> · epoch <b>${epoch}</b> · age <b>${mm}:${ss}</b>${paused ? " · <b>paused</b>" : ""}`;
+  requestAnimationFrame(loop);
+}
+
+canvas.addEventListener("click", bigBang);
+window.addEventListener("keydown", e => {
+  if (e.code === "Space") { paused = !paused; e.preventDefault(); }
+  if (e.key === "m" || e.key === "M") mutate();
+});
+
+bigBang();
+loop();
+</script>
+</body>
+</html>
