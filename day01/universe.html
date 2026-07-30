@@ -41,13 +41,36 @@ resize();
 
 // ---------- universe parameters ----------
 const N_SPECIES = 6;
-const N_PARTICLES = 1400;
-const RMAX = 90;          // interaction radius, px
+// The film put 1400 particles in 1280x720. Holding that COUNT on a desktop screen gave a
+// third of the film's density — which is why the page read as "just dots moving around"
+// while the film grew colonies. Scale the count to the viewport instead.
+const DENSITY = 1400 / (1280 * 720);
+let N_PARTICLES = 1400;                       // recomputed per big bang
+
+// The exact rule matrix behind the film (numpy default_rng(42)). Used for the FIRST
+// universe so a visitor sees the one from the video; click rerolls a random one.
+const FILM_RULES = [
+  [0.5479, -0.1222, 0.7172, 0.3947, -0.8116, 0.9512],
+  [0.5223, 0.5721, -0.7438, -0.0992, -0.2584, 0.8535],
+  [0.2877, 0.6455, -0.1132, -0.5455, 0.1092, -0.8724],
+  [0.6553, 0.2633, 0.5162, -0.2909, 0.9414, 0.7862],
+  [0.5568, -0.6107, -0.0666, -0.9124, -0.6914, 0.3661],
+  [0.4895, 0.9350, -0.3483, -0.2591, -0.0609, -0.6211],
+];
+let firstUniverse = true;
+// These MUST match day01/universe.py, which rendered the film. They did not, and the
+// page looked like drifting dots while the film grew worms and ciliated cells: force was
+// 220 vs 700 and there was one sim step per frame instead of two, so the effective force
+// per frame was 6.4x too weak for any structure to form.
+const RMAX = 70;          // interaction radius, px
 const BETA = 0.28;        // inner repulsion zone (fraction of RMAX)
-const FORCE = 220;        // force scale
+const FORCE = 700;        // force scale
 const HALF_LIFE = 0.04;   // velocity half-life, seconds
 const DT = 1 / 60;
-const MUTATE_EVERY = 150; // seconds between spontaneous physics mutations
+const SUBSTEPS = 2;       // the film advances the sim twice per frame
+const FADE = 0.94;        // per-frame trail decay (film value)
+const MUTATE_EVERY = 15;  // seconds between physics mutations — the film's epochs
+const MAX_EPOCHS = 12;    // then the physics hold: see the note in loop()
 
 const PALETTE = ["#ff5d6c", "#ffb84d", "#f5e663", "#5dd39e", "#4fb3ff", "#b98cff"];
 
@@ -73,7 +96,10 @@ function randomRules() {
 }
 
 function bigBang() {
-  rules = randomRules();
+  // first load = the film's universe; every click after that is a fresh roll of the dice
+  rules = firstUniverse ? FILM_RULES.map(r => r.slice()) : randomRules();
+  // hold the film's density whatever the screen size (capped so a 4K display stays smooth)
+  N_PARTICLES = Math.max(600, Math.min(4200, Math.round(W * H * DENSITY)));
   px = new Float32Array(N_PARTICLES);
   py = new Float32Array(N_PARTICLES);
   vx = new Float32Array(N_PARTICLES);
@@ -84,7 +110,8 @@ function bigBang() {
     py[i] = Math.random() * H;
     sp[i] = (Math.random() * N_SPECIES) | 0;
   }
-  universeName = nameOf();
+  universeName = firstUniverse ? "onara-390" : nameOf();   // the film's universe by name
+  firstUniverse = false;
   epoch = 1;
   elapsed = 0;
   lastMutate = 0;
@@ -117,7 +144,9 @@ let cols, rows, grid, gridCount;
 function rebuildGrid() {
   cols = Math.max(1, Math.ceil(W / RMAX));
   rows = Math.max(1, Math.ceil(H / RMAX));
-  const cap = 64;
+  // stronger forces mean denser clusters; 64 silently DROPPED interactions in a crowded
+  // cell, which suppressed exactly the structures we want
+  const cap = 256;
   grid = new Int32Array(cols * rows * cap);
   gridCount = new Int32Array(cols * rows);
   grid.cap = cap;
@@ -177,35 +206,60 @@ function step() {
   }
 }
 
+// The film stamps a gaussian per particle into a float buffer, decays it by FADE and
+// tonemaps. Flat 1.6px dots could never look like that, so: one pre-rendered radial
+// sprite per species, drawn additively ("lighter"), over a slow fade. Dense clusters
+// saturate toward white, which is what the film's tonemap does at the core.
+// Sprite kept tight and dim: the film's gaussian has sigma 1.7, so most energy sits within
+// ~3px, and a single particle must stay its own COLOUR. A bright broad sprite saturated
+// additively to white and smeared the whole field grey.
+const SPRITE_R = 5;
+const sprites = PALETTE.map(hex => {
+  const c = document.createElement("canvas");
+  c.width = c.height = SPRITE_R * 2;
+  const g = c.getContext("2d");
+  const grad = g.createRadialGradient(SPRITE_R, SPRITE_R, 0, SPRITE_R, SPRITE_R, SPRITE_R);
+  const r = parseInt(hex.slice(1, 3), 16), gg = parseInt(hex.slice(3, 5), 16), b = parseInt(hex.slice(5, 7), 16);
+  grad.addColorStop(0.00, `rgba(${r},${gg},${b},0.55)`);
+  grad.addColorStop(0.40, `rgba(${r},${gg},${b},0.18)`);
+  grad.addColorStop(1.00, `rgba(${r},${gg},${b},0)`);
+  g.fillStyle = grad;
+  g.fillRect(0, 0, SPRITE_R * 2, SPRITE_R * 2);
+  return c;
+});
+
 function draw() {
-  // translucent fill instead of clear → motion trails
-  ctx.fillStyle = "rgba(5, 6, 10, 0.28)";
+  // decay toward BLACK, not toward the background colour: fading to #05060a left a blue
+  // haze building up across the whole field, because additive draws never subtract it
+  ctx.globalCompositeOperation = "source-over";
+  ctx.fillStyle = `rgba(0, 0, 0, ${1 - FADE})`;
   ctx.fillRect(0, 0, W, H);
-  for (let s = 0; s < N_SPECIES; s++) {
-    ctx.fillStyle = PALETTE[s];
-    ctx.beginPath();
-    for (let i = 0; i < N_PARTICLES; i++) {
-      if (sp[i] !== s) continue;
-      ctx.moveTo(px[i] + 1.6, py[i]);
-      ctx.arc(px[i], py[i], 1.6, 0, 6.2832);
-    }
-    ctx.fill();
+  ctx.globalCompositeOperation = "lighter";
+  for (let i = 0; i < N_PARTICLES; i++) {
+    ctx.drawImage(sprites[sp[i]], px[i] - SPRITE_R, py[i] - SPRITE_R);
   }
+  ctx.globalCompositeOperation = "source-over";
 }
 
 function loop() {
   if (!paused) {
-    step();
+    for (let s = 0; s < SUBSTEPS; s++) step();   // the film's 2 steps per frame
     draw();
     elapsed += DT;
-    if (elapsed - lastMutate > MUTATE_EVERY) {
+    // The film only lived 75 seconds (5 epochs). A page left open does not: after ~350
+    // minutes of 15s epochs the rule matrix has random-walked ~0.78 away from where it
+    // started with a quarter of its rules pinned at the +-1 extremes — degenerate physics
+    // where nothing can organise, which is exactly the "just dots moving around" report.
+    // So the universe stops mutating once it has had its epochs, and then simply lives.
+    if (epoch < MAX_EPOCHS && elapsed - lastMutate > MUTATE_EVERY) {
       lastMutate = elapsed;
       mutate();
     }
   }
   const mm = String((elapsed / 60) | 0).padStart(2, "0");
   const ss = String((elapsed % 60) | 0).padStart(2, "0");
-  hud.innerHTML = `universe <b>${universeName}</b> · epoch <b>${epoch}</b> · age <b>${mm}:${ss}</b>${paused ? " · <b>paused</b>" : ""}`;
+  const settled = epoch >= MAX_EPOCHS ? " · <b>settled</b>" : "";
+  hud.innerHTML = `universe <b>${universeName}</b> · epoch <b>${epoch}</b> · age <b>${mm}:${ss}</b>${settled}${paused ? " · <b>paused</b>" : ""}`;
   requestAnimationFrame(loop);
 }
 
