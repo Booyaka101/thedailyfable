@@ -242,6 +242,9 @@ const stepsPerSec = () => bpm / 60 * 2;
 const cv = document.getElementById('box'), cx = cv.getContext('2d');
 const stage = document.getElementById('stage');
 const REC = new URLSearchParams(location.search).has('rec');
+/* ?rec=1&portrait=1 records a native 1080x1920 master for a vertical Short, using the
+   narrow (thumb-sized) layout rather than a squashed desktop one. Invisible to visitors. */
+const RECP = REC && new URLSearchParams(location.search).has('portrait');
 
 /* layout is recomputed on every resize: cell sizes are in CSS pixels, so a
    phone shows FEWER bars at a touchable size instead of shrinking the whole box */
@@ -251,7 +254,10 @@ const crank = { x: 0, y: 0, r: 46, dragging: false, lastA: 0 };
 const rowY = r => stripTop + (ROWS - 1 - r) * cellH + cellH / 2;
 
 function layout(){
-  if (REC){                       // fixed 16:9 master for recording: 1280x720 @2 = 2560x1440
+  if (RECP){                      // fixed 9:16 master: 540x960 @2 = 1080x1920
+    W = 540; H = 960; S = 2;
+    cellW = 30; cellH = 30; narrow = true;   // fewer bars, fat holes — the phone design
+  } else if (REC){                // fixed 16:9 master for recording: 1280x720 @2 = 2560x1440
     W = 1280; H = 720; S = 2;
     cellW = 26; cellH = 22; narrow = false;
   } else {
