@@ -24,36 +24,46 @@
   h1 em{font-style:italic; color:var(--brass)}
   .sub{font-size:13px; color:#a99877; margin-top:4px; letter-spacing:.04em}
   #stage{width:100%; max-width:1180px; position:relative}
-  canvas{width:100%; height:auto; display:block; border-radius:10px;
+  canvas{width:100%; display:block; border-radius:10px;
          box-shadow:0 18px 60px rgba(0,0,0,.55), 0 2px 8px rgba(0,0,0,.4); cursor:crosshair;
-         touch-action:none}
+         touch-action:pan-y}
   #bar{
     width:100%; max-width:1180px; display:flex; flex-wrap:wrap; gap:10px; align-items:center;
     justify-content:center; margin-top:14px; padding:10px 14px;
     background:linear-gradient(#241a11,#1c130c); border:1px solid #3a2b1c; border-radius:10px;
   }
   button{
-    font-family:inherit; font-size:14px; color:var(--cream);
+    font-family:inherit; font-size:15px; color:var(--cream);
     background:linear-gradient(#3a2c1c,#2b1f13); border:1px solid #57422a;
-    padding:7px 14px; border-radius:7px; cursor:pointer; letter-spacing:.03em;
+    padding:10px 16px; border-radius:7px; cursor:pointer; letter-spacing:.03em;
+    min-height:44px;               /* touch target */
   }
   button:hover{border-color:var(--brass); color:#fff}
-  button.primary{background:linear-gradient(#6b5027,#4a3618); border-color:var(--brass); font-size:15px; min-width:86px}
-  .grp{display:flex; align-items:center; gap:7px; font-size:13px; color:#a99877}
-  input[type=range]{accent-color:var(--brass); width:130px}
-  .hint{margin-top:12px; font-size:13px; color:#8d7d5f; text-align:center; line-height:1.7; letter-spacing:.02em}
+  button.primary{background:linear-gradient(#6b5027,#4a3618); border-color:var(--brass); font-size:16px; min-width:104px}
+  .grp{display:flex; align-items:center; gap:8px; font-size:14px; color:#a99877}
+  input[type=range]{accent-color:var(--brass); width:130px; height:36px}
+  .hint{margin-top:12px; font-size:14px; color:#8d7d5f; text-align:center; line-height:1.75; letter-spacing:.02em}
   .hint b{color:#bfae8c; font-weight:normal}
   #toast{
     position:fixed; left:50%; bottom:26px; transform:translateX(-50%) translateY(30px);
     background:#2e2214; color:var(--cream); border:1px solid var(--brass);
     padding:9px 18px; border-radius:8px; font-size:14px; opacity:0; pointer-events:none;
-    transition:all .25s ease;
+    transition:all .25s ease; z-index:5;
   }
   #toast.show{opacity:1; transform:translateX(-50%) translateY(0)}
-  footer{margin-top:26px; font-size:12px; color:#6d5f46}
+  footer{margin-top:26px; font-size:12px; color:#6d5f46; text-align:center}
   footer a{color:#a08a5f; text-decoration:none}
   footer a:hover{color:var(--brass)}
   #recbtn{display:none; border-color:#8a3a2a; color:#e2b3a5}
+  @media (max-width: 620px){
+    body{padding:14px 8px 30px}
+    h1{font-size:21px}
+    .sub{font-size:12px}
+    #bar{gap:8px; padding:9px 8px}
+    button{padding:10px 13px; font-size:14px}
+    .grp{font-size:13px}
+    input[type=range]{width:104px}
+  }
 </style>
 </head>
 <body>
@@ -74,11 +84,7 @@
   <button id="recbtn">&#9679; record</button>
 </div>
 
-<div class="hint">
-  <b>click</b> the paper to punch a hole (click again to mend it) · <b>drag the crank</b> to play it by hand ·
-  <b>space</b> to play/pause · <b>scroll</b> to wind the strip<br>
-  every hole you punch is saved into the page&rsquo;s address — <b>copy the link</b> and your tune goes with it
-</div>
+<div class="hint" id="hint"></div>
 
 <div id="toast"></div>
 
@@ -234,35 +240,71 @@ const stepsPerSec = () => bpm / 60 * 2;
 
 /* ============================== canvas ============================= */
 const cv = document.getElementById('box'), cx = cv.getContext('2d');
-const W = 1180, H = 560, DPR = Math.min(2, window.devicePixelRatio || 1);
-cv.width = W * DPR; cv.height = H * DPR; cx.scale(DPR, DPR);
+const stage = document.getElementById('stage');
+const REC = new URLSearchParams(location.search).has('rec');
 
-const cellW = 26, cellH = 22;
-const stripTop = (H - ROWS * cellH) / 2, stripBot = stripTop + ROWS * cellH;
-const combX = 172;
-const crank = { x: W - 74, y: H / 2, r: 46, dragging: false, lastA: 0 };
+/* layout is recomputed on every resize: cell sizes are in CSS pixels, so a
+   phone shows FEWER bars at a touchable size instead of shrinking the whole box */
+let W, H, S, cellW, cellH, stripTop, stripBot, combX, plateL, plateR, tineLen,
+    narrow, showLabels, woodTex, paperPat;
+const crank = { x: 0, y: 0, r: 46, dragging: false, lastA: 0 };
 const rowY = r => stripTop + (ROWS - 1 - r) * cellH + cellH / 2;
 
-/* pre-rendered paper + wood textures */
+function layout(){
+  if (REC){                       // fixed 16:9 master for recording: 1280x720 @2 = 2560x1440
+    W = 1280; H = 720; S = 2;
+    cellW = 26; cellH = 22; narrow = false;
+  } else {
+    const availCss = Math.max(280, Math.min(1180, stage.clientWidth));
+    narrow = availCss < 620;
+    cellW = narrow ? 26 : 26;     // keep holes a real touch target in CSS px
+    cellH = narrow ? 21 : 22;
+    W = Math.round(availCss);
+    const woodMargin = narrow ? 34 : 89;
+    H = Math.round(ROWS * cellH + 52 + woodMargin * 2);
+    S = Math.min(2, window.devicePixelRatio || 1);
+  }
+  showLabels = !narrow;
+  stripTop = (H - ROWS * cellH) / 2;
+  stripBot = stripTop + ROWS * cellH;
+  plateL   = narrow ? 6 : 26;
+  tineLen  = narrow ? 34 : 64;
+  combX    = narrow ? 78 : 172;
+  plateR   = combX - tineLen;
+  crank.r  = narrow ? 34 : 46;
+  crank.x  = W - (crank.r + 26);                 // keep the whole hub inside the frame
+  crank.y  = H / 2;
+
+  cv.width = Math.round(W * S); cv.height = Math.round(H * S);
+  cv.style.height = H + 'px';
+  cx.setTransform(S, 0, 0, S, 0, 0);
+  paperPat = makePaper(); woodTex = makeWood();
+}
+
+/* textures are generated at device resolution so they stay crisp on retina */
 function makePaper(){
-  const c = document.createElement('canvas'); c.width = c.height = 256;
-  const g = c.getContext('2d');
-  g.fillStyle = '#f2e8d5'; g.fillRect(0, 0, 256, 256);
+  const tile = 256, c = document.createElement('canvas');
+  c.width = c.height = Math.round(tile * S);
+  const g = c.getContext('2d'); g.scale(S, S);
+  g.fillStyle = '#f2e8d5'; g.fillRect(0, 0, tile, tile);
   for (let i = 0; i < 1400; i++){
     g.fillStyle = `rgba(${120 + Math.random() * 60 | 0},${100 + Math.random() * 50 | 0},60,${0.02 + Math.random() * 0.04})`;
-    g.fillRect(Math.random() * 256, Math.random() * 256, 1 + Math.random() * 1.6, 1);
+    g.fillRect(Math.random() * tile, Math.random() * tile, 1 + Math.random() * 1.6, 1);
   }
   for (let i = 0; i < 40; i++){
     g.strokeStyle = 'rgba(140,115,80,0.05)'; g.lineWidth = 0.6;
-    const y = Math.random() * 256; g.beginPath(); g.moveTo(0, y);
-    g.bezierCurveTo(80, y + Math.random() * 8 - 4, 170, y + Math.random() * 8 - 4, 256, y);
+    const y = Math.random() * tile; g.beginPath(); g.moveTo(0, y);
+    g.bezierCurveTo(80, y + Math.random() * 8 - 4, 170, y + Math.random() * 8 - 4, tile, y);
     g.stroke();
   }
-  return cx.createPattern(c, 'repeat');
+  const p = cx.createPattern(c, 'repeat');
+  if (p.setTransform && window.DOMMatrix) p.setTransform(new DOMMatrix([1/S, 0, 0, 1/S, 0, 0]));
+  return p;
 }
 function makeWood(){
-  const c = document.createElement('canvas'); c.width = W; c.height = H;
-  const g = c.getContext('2d');
+  const c = document.createElement('canvas');
+  c.width = Math.round(W * S); c.height = Math.round(H * S);
+  const g = c.getContext('2d'); g.scale(S, S);
   const gr = g.createLinearGradient(0, 0, 0, H);
   gr.addColorStop(0, '#4a3520'); gr.addColorStop(0.5, '#3a2917'); gr.addColorStop(1, '#241708');
   g.fillStyle = gr; g.fillRect(0, 0, W, H);
@@ -279,11 +321,10 @@ function makeWood(){
   g.fillStyle = v; g.fillRect(0, 0, W, H);
   return c;
 }
-const paperPat = makePaper(), woodTex = makeWood();
 
 function draw(now){
   cx.clearRect(0, 0, W, H);
-  cx.drawImage(woodTex, 0, 0);
+  cx.drawImage(woodTex, 0, 0, W, H);
 
   /* --- the paper strip --- */
   const padY = 26, top = stripTop - padY, bot = stripBot + padY;
@@ -298,8 +339,7 @@ function draw(now){
   cx.fillStyle = lamp; cx.fillRect(0, top, W, bot - top);
 
   const T = totalSteps();
-  const colX = c => combX + (c - pos) * cellW;      // c may be fractional/wrapped
-  // visible column range (draw wrapped copies)
+  const colX = c => combX + (c - pos) * cellW;
   const cMin = Math.floor(pos - combX / cellW) - 1, cMax = Math.ceil(pos + (W - combX) / cellW) + 1;
 
   /* row guide lines */
@@ -330,24 +370,25 @@ function draw(now){
     }
   }
   /* punched holes */
+  const hr = Math.min(6.5, cellH * 0.3);
   for (let c = cMin; c <= cMax; c++){
     const x = colX(c); if (x < -cellW || x > W + cellW) continue;
     const cw = ((c % T) + T) % T;
     for (let r = 0; r < ROWS; r++) if (cell(cw, r)){
       const y = rowY(r);
       cx.fillStyle = '#241708';
-      cx.beginPath(); cx.arc(x, y, 6.5, 0, 7); cx.fill();
+      cx.beginPath(); cx.arc(x, y, hr, 0, 7); cx.fill();
       cx.strokeStyle = 'rgba(255,245,220,0.55)'; cx.lineWidth = 1.2;   // paper rim catch-light
-      cx.beginPath(); cx.arc(x + 0.8, y + 0.8, 6.5, -0.6, 1.4); cx.stroke();
+      cx.beginPath(); cx.arc(x + 0.8, y + 0.8, hr, -0.6, 1.4); cx.stroke();
       cx.strokeStyle = 'rgba(30,18,8,0.5)';
-      cx.beginPath(); cx.arc(x - 0.5, y - 0.5, 6.2, 2.4, 4.6); cx.stroke();
+      cx.beginPath(); cx.arc(x - 0.5, y - 0.5, hr - 0.3, 2.4, 4.6); cx.stroke();
     }
   }
-  /* hover ghost */
+  /* hover ghost (fine pointers only) */
   if (hover && !crank.dragging){
     const x = colX(hover.cDraw), y = rowY(hover.r);
     cx.strokeStyle = 'rgba(150,110,50,0.65)'; cx.lineWidth = 1.5; cx.setLineDash([3,3]);
-    cx.beginPath(); cx.arc(x, y, 7.5, 0, 7); cx.stroke(); cx.setLineDash([]);
+    cx.beginPath(); cx.arc(x, y, hr + 1, 0, 7); cx.stroke(); cx.setLineDash([]);
   }
   /* note glows */
   for (let i = glows.length - 1; i >= 0; i--){
@@ -357,13 +398,12 @@ function draw(now){
     const y = rowY(g.r);
     cx.strokeStyle = `rgba(255,196,88,${0.75 * (1 - age)})`;
     cx.lineWidth = 2.2 * (1 - age) + 0.4;
-    cx.beginPath(); cx.arc(dx, y, 7 + age * 15, 0, 7); cx.stroke();
+    cx.beginPath(); cx.arc(dx, y, hr + 0.5 + age * 15, 0, 7); cx.stroke();
   }
 
   /* --- the comb --- */
   cx.save();
   cx.shadowColor = 'rgba(0,0,0,0.4)'; cx.shadowBlur = 8; cx.shadowOffsetX = 3;
-  const plateL = 26, plateR = combX - 64;
   const bg = cx.createLinearGradient(plateL, 0, plateR + 40, 0);
   bg.addColorStop(0, '#8a6c33'); bg.addColorStop(0.45, '#d9b76a'); bg.addColorStop(1, '#a8813d');
   cx.fillStyle = bg;
@@ -372,7 +412,7 @@ function draw(now){
   cx.fill();
   cx.restore();
   for (let r = 0; r < ROWS; r++){
-    const y = rowY(r), len = 64 + (ROWS - 1 - r) * 2.0;
+    const y = rowY(r), len = tineLen + (ROWS - 1 - r) * 2.0;
     const since = (now - tineHit[r]) / 1000;
     const vib = since < 1.2 ? Math.sin(since * 90) * 2.6 * Math.exp(-since * 5.5) : 0;
     const tg = cx.createLinearGradient(combX - len, y, combX, y);
@@ -384,11 +424,13 @@ function draw(now){
     cx.arc(combX - 4, y + vib, 2.6, -1.2, 1.2);
     cx.lineTo(combX - len, y + 3.4);
     cx.closePath(); cx.fill();
-    cx.fillStyle = 'rgba(58,44,28,0.9)'; cx.font = '9.5px Georgia';
-    cx.fillText(NOTE_NAMES[r], plateL + 8, y + 3);
+    if (showLabels){
+      cx.fillStyle = 'rgba(58,44,28,0.9)'; cx.font = '9.5px Georgia';
+      cx.fillText(NOTE_NAMES[r], plateL + 8, y + 3);
+    }
   }
   /* screws on the plate */
-  for (const sy of [stripTop - 6, stripBot + 6]){
+  if (!narrow) for (const sy of [stripTop - 6, stripBot + 6]){
     cx.fillStyle = '#6e5426'; cx.beginPath(); cx.arc(plateL + 14, sy, 3.4, 0, 7); cx.fill();
     cx.strokeStyle = '#3c2d12'; cx.beginPath(); cx.moveTo(plateL + 11.6, sy); cx.lineTo(plateL + 16.4, sy); cx.stroke();
   }
@@ -407,7 +449,6 @@ function draw(now){
   cg.addColorStop(0, '#e2c078'); cg.addColorStop(0.6, '#a8813d'); cg.addColorStop(1, '#6e5426');
   cx.fillStyle = cg; cx.beginPath(); cx.arc(0, 0, crank.r + 8, 0, 7); cx.fill();
   cx.strokeStyle = '#4a3618'; cx.lineWidth = 2; cx.beginPath(); cx.arc(0, 0, crank.r + 8, 0, 7); cx.stroke();
-  // arm + handle
   const hx = Math.cos(th) * crank.r, hy = Math.sin(th) * crank.r;
   cx.strokeStyle = '#8a6c33'; cx.lineWidth = 9; cx.lineCap = 'round';
   cx.beginPath(); cx.moveTo(0, 0); cx.lineTo(hx, hy); cx.stroke();
@@ -420,12 +461,15 @@ function draw(now){
   cx.fillStyle = hg; cx.beginPath(); cx.arc(hx, hy, 10, 0, 7); cx.fill();
   cx.fillStyle = '#c9a45c'; cx.beginPath(); cx.arc(0, 0, 6, 0, 7); cx.fill();
   cx.restore();
-  cx.fillStyle = 'rgba(200,175,120,0.55)'; cx.font = 'italic 11px Georgia';
-  cx.textAlign = 'center'; cx.fillText('crank', crank.x, crank.y + crank.r + 34); cx.textAlign = 'left';
+  if (!narrow){                                   // on a phone the crank speaks for itself
+    cx.fillStyle = 'rgba(200,175,120,0.55)'; cx.font = 'italic 11px Georgia';
+    cx.textAlign = 'center'; cx.fillText('crank', crank.x, crank.y + crank.r + 30); cx.textAlign = 'left';
+  }
 }
 
 /* ============================ interaction =========================== */
 let hover = null, painting = null;
+const coarse = matchMedia('(pointer: coarse)').matches;
 
 function stripHit(mx, my){
   if (my < stripTop - 4 || my > stripBot + 4) return null;
@@ -446,6 +490,8 @@ cv.addEventListener('pointerdown', e => {
   const dx = p.x - crank.x, dy = p.y - crank.y;
   if (Math.hypot(dx, dy) < crank.r + 20){
     crank.dragging = true; crank.lastA = Math.atan2(dy, dx); audio();
+    cv.style.touchAction = 'none';        // a crank turn must not scroll the page
+    e.preventDefault();
     return;
   }
   const h = stripHit(p.x, p.y);
@@ -464,20 +510,24 @@ cv.addEventListener('pointermove', e => {
     if (da > Math.PI) da -= Math.PI * 2; else if (da < -Math.PI) da += Math.PI * 2;
     crank.lastA = a;
     advance(pos + da / (Math.PI * 2) * SPB, 0.9);
+    e.preventDefault();
     return;
   }
-  hover = stripHit(p.x, p.y);
-  if (painting && hover){
-    const key = hover.c + ':' + hover.r;
-    if (!painting.seen.has(key)){
-      painting.seen.add(key);
-      setCell(hover.c, hover.r, painting.v);
-      if (painting.v) pluck(hover.r, 0.6);
-      saveHash();
+  if (!coarse) hover = stripHit(p.x, p.y);
+  if (painting){
+    const h = stripHit(p.x, p.y);
+    if (h){
+      const key = h.c + ':' + h.r;
+      if (!painting.seen.has(key)){
+        painting.seen.add(key);
+        setCell(h.c, h.r, painting.v);
+        if (painting.v) pluck(h.r, 0.6);
+        saveHash();
+      }
     }
   }
 });
-const endPtr = () => { crank.dragging = false; painting = null; };
+const endPtr = () => { crank.dragging = false; painting = null; cv.style.touchAction = 'pan-y'; };
 cv.addEventListener('pointerup', endPtr);
 cv.addEventListener('pointercancel', endPtr);
 cv.addEventListener('pointerleave', () => { hover = null; });
@@ -528,9 +578,17 @@ function toast(msg){
   const t = $('toast'); t.textContent = msg; t.classList.add('show');
   clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove('show'), 2600);
 }
+/* instructions in the language of the device you're actually holding */
+$('hint').innerHTML = coarse
+  ? `<b>tap</b> the paper to punch a hole (tap again to mend it) · <b>drag across it</b> to punch a run of notes<br>
+     <b>drag the crank</b> in circles to play it by hand<br>
+     every hole is saved into the page&rsquo;s address — <b>copy link</b> and your tune goes with it`
+  : `<b>click</b> the paper to punch a hole (click again to mend it) · <b>drag the crank</b> to play it by hand ·
+     <b>space</b> to play/pause · <b>scroll</b> to wind the strip<br>
+     every hole you punch is saved into the page&rsquo;s address — <b>copy the link</b> and your tune goes with it`;
 
 /* ======================== recorder (?rec=1) ======================== */
-if (new URLSearchParams(location.search).has('rec')){
+if (REC){
   const rb = $('recbtn'); rb.style.display = 'inline-block';
   rb.onclick = () => {
     audio();
@@ -538,7 +596,7 @@ if (new URLSearchParams(location.search).has('rec')){
     const stream = cv.captureStream(60);
     mediaDest.stream.getAudioTracks().forEach(tr => stream.addTrack(tr));
     const rec = new MediaRecorder(stream, { mimeType: 'video/webm;codecs=vp9,opus',
-      videoBitsPerSecond: 14_000_000, audioBitsPerSecond: 192_000 });
+      videoBitsPerSecond: 40_000_000, audioBitsPerSecond: 192_000 });
     const chunks = [];
     rec.ondataavailable = e => chunks.push(e.data);
     rec.onstop = () => {
@@ -557,6 +615,9 @@ if (new URLSearchParams(location.search).has('rec')){
 }
 
 /* =============================== boot ============================== */
+layout();
+addEventListener('resize', () => { layout(); });
+addEventListener('orientationchange', () => setTimeout(layout, 250));
 if (!location.hash || !decodeState(location.hash.slice(1))) loadWaltz();
 syncUI();
 
