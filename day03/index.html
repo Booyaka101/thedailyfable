@@ -1,0 +1,575 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>punch card waltz — a paper music box</title>
+<meta name="description" content="A paper music box in your browser. Punch holes, turn the crank, share the URL — the whole tune lives in the link.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#127932;</text></svg>">
+<style>
+  :root{
+    --paper:#f2e8d5; --ink:#3a2c1c; --brass:#c9a45c; --cream:#e8dcc0;
+  }
+  *{box-sizing:border-box; margin:0; padding:0}
+  html,body{height:100%}
+  body{
+    background:radial-gradient(1200px 800px at 50% 10%, #2b2018 0%, #1a130d 55%, #100b07 100%);
+    color:var(--cream);
+    font-family:Georgia, 'Iowan Old Style', 'Times New Roman', serif;
+    display:flex; flex-direction:column; align-items:center;
+    min-height:100%; padding:22px 14px 40px;
+  }
+  header{text-align:center; margin-bottom:14px}
+  h1{font-size:26px; font-weight:normal; letter-spacing:.06em; color:var(--cream)}
+  h1 em{font-style:italic; color:var(--brass)}
+  .sub{font-size:13px; color:#a99877; margin-top:4px; letter-spacing:.04em}
+  #stage{width:100%; max-width:1180px; position:relative}
+  canvas{width:100%; height:auto; display:block; border-radius:10px;
+         box-shadow:0 18px 60px rgba(0,0,0,.55), 0 2px 8px rgba(0,0,0,.4); cursor:crosshair;
+         touch-action:none}
+  #bar{
+    width:100%; max-width:1180px; display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+    justify-content:center; margin-top:14px; padding:10px 14px;
+    background:linear-gradient(#241a11,#1c130c); border:1px solid #3a2b1c; border-radius:10px;
+  }
+  button{
+    font-family:inherit; font-size:14px; color:var(--cream);
+    background:linear-gradient(#3a2c1c,#2b1f13); border:1px solid #57422a;
+    padding:7px 14px; border-radius:7px; cursor:pointer; letter-spacing:.03em;
+  }
+  button:hover{border-color:var(--brass); color:#fff}
+  button.primary{background:linear-gradient(#6b5027,#4a3618); border-color:var(--brass); font-size:15px; min-width:86px}
+  .grp{display:flex; align-items:center; gap:7px; font-size:13px; color:#a99877}
+  input[type=range]{accent-color:var(--brass); width:130px}
+  .hint{margin-top:12px; font-size:13px; color:#8d7d5f; text-align:center; line-height:1.7; letter-spacing:.02em}
+  .hint b{color:#bfae8c; font-weight:normal}
+  #toast{
+    position:fixed; left:50%; bottom:26px; transform:translateX(-50%) translateY(30px);
+    background:#2e2214; color:var(--cream); border:1px solid var(--brass);
+    padding:9px 18px; border-radius:8px; font-size:14px; opacity:0; pointer-events:none;
+    transition:all .25s ease;
+  }
+  #toast.show{opacity:1; transform:translateX(-50%) translateY(0)}
+  footer{margin-top:26px; font-size:12px; color:#6d5f46}
+  footer a{color:#a08a5f; text-decoration:none}
+  footer a:hover{color:var(--brass)}
+  #recbtn{display:none; border-color:#8a3a2a; color:#e2b3a5}
+</style>
+</head>
+<body>
+<header>
+  <h1>punch card waltz <em>— a paper music box</em></h1>
+  <div class="sub">punch holes in the paper · turn the crank · the whole tune lives in the URL</div>
+</header>
+
+<div id="stage"><canvas id="box"></canvas></div>
+
+<div id="bar">
+  <button id="play" class="primary">&#9654; play</button>
+  <div class="grp">tempo <input id="tempo" type="range" min="60" max="168" step="1"><span id="bpmlbl"></span></div>
+  <div class="grp">bars <button id="barsminus">&#8722;</button><span id="barslbl"></span><button id="barsplus">+</button></div>
+  <button id="clear">clear</button>
+  <button id="waltz">the waltz</button>
+  <button id="share">copy link</button>
+  <button id="recbtn">&#9679; record</button>
+</div>
+
+<div class="hint">
+  <b>click</b> the paper to punch a hole (click again to mend it) · <b>drag the crank</b> to play it by hand ·
+  <b>space</b> to play/pause · <b>scroll</b> to wind the strip<br>
+  every hole you punch is saved into the page&rsquo;s address — <b>copy the link</b> and your tune goes with it
+</div>
+
+<div id="toast"></div>
+
+<footer>day 03 of <a href="https://booyaka101.github.io/thedailyfable/">the daily fable</a> — a daily creation practice</footer>
+
+<script>
+'use strict';
+/* ============================== model ============================== */
+const ROWS = 15, SPB = 6;                       // 15 tines, 6 eighth-steps per 3/4 bar
+const NOTE_NAMES = ['C5','D5','E5','F5','G5','A5','B5','C6','D6','E6','F6','G6','A6','B6','C7'];
+const SEMIS = [3,5,7,8,10,12,14,15,17,19,20,22,24,26,27];   // from A4
+const FREQ = SEMIS.map(s => 440 * Math.pow(2, s/12));
+
+let bars = 16, bpm = 108;
+let grid = new Uint8Array(bars * SPB * ROWS);   // [step*ROWS + row]
+let pos = 0, playing = false, lastT = 0;
+
+const totalSteps = () => bars * SPB;
+const cell = (s, r) => grid[s * ROWS + r];
+const setCell = (s, r, v) => { grid[s * ROWS + r] = v ? 1 : 0; };
+
+/* ------------------------- the default tune ------------------------ */
+/* an original 16-bar waltz in C — [bar(1-16), step(0-5), row] */
+const WALTZ = [
+  // A ------------------------------------------------------------- melody
+  [1,0,7],[1,2,9],[1,4,11],      [2,0,10],[2,2,8],[2,4,6],
+  [3,0,9],[3,2,7],[3,4,4],       [4,0,9],[4,4,7],[4,5,8],
+  [5,0,5],[5,2,7],[5,4,10],      [6,0,9],[6,2,7],[6,4,9],
+  [7,0,8],[7,2,6],[7,3,7],[7,4,8],  [8,0,7],
+  // B
+  [9,0,12],[9,2,11],[9,4,10],    [10,0,11],[10,2,9],[10,4,7],
+  [11,0,10],[11,2,8],[11,4,6],   [12,0,14],[12,2,11],[12,4,9],
+  [13,0,12],[13,2,10],[13,3,11],[13,4,12], [14,0,11],[14,2,9],[14,4,7],
+  [15,0,8],[15,2,6],[15,4,8],    [16,0,7],
+  // accompaniment: bass on 1, dyad on 2 & 3
+  //   C bars: 1,3,4,6,8,10,12,14   G7 bars: 2,7,11,15   F bars: 5,9,13
+  ...[1,3,4,6,10,12,14].flatMap(b => [[b,0,0],[b,2,2],[b,2,4],[b,4,2],[b,4,4]]),
+  [8,0,0],[8,2,2],[8,2,4],
+  ...[2,7,11,15].flatMap(b => [[b,0,1],[b,2,4],[b,2,6],[b,4,4],[b,4,6]]),
+  ...[5,9,13].flatMap(b => [[b,0,0],[b,2,3],[b,2,5],[b,4,3],[b,4,5]]),
+  // final rolled chord
+  [16,0,0],[16,0,2],[16,0,4],
+];
+function loadWaltz(){
+  bars = 16; bpm = 108;
+  grid = new Uint8Array(totalSteps() * ROWS);
+  for (const [b,s,r] of WALTZ) setCell((b-1)*SPB + s, r, 1);
+}
+
+/* ------------------------- URL <-> state --------------------------- */
+function encodeState(){
+  const bits = new Uint8Array(Math.ceil(grid.length / 8));
+  for (let i = 0; i < grid.length; i++) if (grid[i]) bits[i >> 3] |= 1 << (i & 7);
+  let bin = ''; bits.forEach(b => bin += String.fromCharCode(b));
+  const b64 = btoa(bin).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+  return `1.${bars}.${bpm}.${b64}`;
+}
+function decodeState(h){
+  const m = /^1\.(\d+)\.(\d+)\.([A-Za-z0-9\-_]*)$/.exec(h);
+  if (!m) return false;
+  const nb = Math.min(48, Math.max(1, +m[1])), nbpm = Math.min(200, Math.max(40, +m[2]));
+  const bin = atob(m[3].replace(/-/g,'+').replace(/_/g,'/'));
+  bars = nb; bpm = nbpm;
+  grid = new Uint8Array(totalSteps() * ROWS);
+  for (let i = 0; i < grid.length; i++)
+    if ((bin.charCodeAt(i >> 3) || 0) & (1 << (i & 7))) grid[i] = 1;
+  return true;
+}
+let hashTimer = 0;
+function saveHash(){
+  clearTimeout(hashTimer);
+  hashTimer = setTimeout(() => history.replaceState(null, '', '#' + encodeState()), 150);
+}
+
+/* ============================== audio ============================== */
+let AC = null, master, wetGain, compNode, mediaDest = null;
+function audio(){
+  if (AC) return AC;
+  AC = new (window.AudioContext || window.webkitAudioContext)();
+  master = AC.createGain(); master.gain.value = 0.66;
+  const comp = compNode = AC.createDynamicsCompressor();
+  comp.threshold.value = -18; comp.knee.value = 22; comp.ratio.value = 4;
+  comp.attack.value = 0.004; comp.release.value = 0.24;
+  // little wooden room: two cross-fed delays, low-passed
+  const dl = AC.createDelay(0.5), dr = AC.createDelay(0.5);
+  dl.delayTime.value = 0.077; dr.delayTime.value = 0.103;
+  const fb = AC.createGain(); fb.gain.value = 0.26;
+  const lp = AC.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 3400;
+  wetGain = AC.createGain(); wetGain.gain.value = 0.16;
+  master.connect(comp);
+  master.connect(dl); dl.connect(dr); dr.connect(fb); fb.connect(lp); lp.connect(dl);
+  lp.connect(wetGain); wetGain.connect(comp);
+  comp.connect(AC.destination);
+  return AC;
+}
+/* a struck steel tine: fundamental + faint clamped-bar overtone + tick */
+function pluck(row, vel = 1, when = 0){
+  const ac = audio(); if (ac.state === 'suspended') ac.resume();
+  const t = Math.max(ac.currentTime, when || ac.currentTime) + 0.002;
+  const f = FREQ[row];
+  const pan = ac.createStereoPanner ? ac.createStereoPanner() : null;
+  const out = pan || ac.createGain();
+  if (pan) pan.pan.value = (row / (ROWS - 1) - 0.5) * 0.65;
+  out.connect(master);
+  const det = (Math.random() - 0.5) * 6;                        // cents
+  const dur = Math.max(0.9, 2.6 - row * 0.09);                  // low tines ring longer
+  const parts = [ [1, 0.58 * vel, dur], [2.004, 0.10 * vel, dur * 0.5], [6.27, 0.075 * vel, 0.22] ];
+  for (const [ratio, amp, d] of parts){
+    const o = ac.createOscillator(), g = ac.createGain();
+    o.type = 'sine'; o.frequency.value = f * ratio; o.detune.value = det;
+    g.gain.setValueAtTime(0, t);
+    g.gain.linearRampToValueAtTime(amp, t + 0.004);
+    g.gain.exponentialRampToValueAtTime(0.0008, t + d);
+    o.connect(g); g.connect(out);
+    o.start(t); o.stop(t + d + 0.05);
+  }
+  // mechanical tick of the pin catching the tine
+  const nb = ac.createBuffer(1, ac.sampleRate * 0.02, ac.sampleRate);
+  const ch = nb.getChannelData(0);
+  for (let i = 0; i < ch.length; i++) ch[i] = (Math.random() * 2 - 1) * (1 - i / ch.length);
+  const ns = ac.createBufferSource(); ns.buffer = nb;
+  const nf = ac.createBiquadFilter(); nf.type = 'bandpass'; nf.frequency.value = f * 3.2; nf.Q.value = 2.5;
+  const ng = ac.createGain(); ng.gain.value = 0.05 * vel;
+  ns.connect(nf); nf.connect(ng); ng.connect(out); ns.start(t);
+  flash(row);
+}
+
+/* ======================== playback / stepping ======================= */
+const glows = [];                                // {s,r,t0}
+const tineHit = new Float32Array(ROWS);          // last pluck time per row (perf ms)
+function flash(row){ tineHit[row] = performance.now(); }
+
+function triggerColumn(step, vel){
+  const s = ((step % totalSteps()) + totalSteps()) % totalSteps();
+  for (let r = 0; r < ROWS; r++) if (cell(s, r)){
+    pluck(r, vel);
+    glows.push({ s, r, t0: performance.now() });
+  }
+}
+let wraps = 0;
+function advance(np, vel = 1){
+  const T = totalSteps(), old = pos;
+  const d = np - old;
+  if (Math.abs(d) < 1e-9) return;
+  if (Math.abs(d) > 24){ pos = ((np % T) + T) % T; return; }    // teleport, no notes
+  if (np >= T && old < T) wraps++;
+  if (d > 0) for (let k = Math.floor(old) + 1; k <= Math.floor(np); k++) triggerColumn(k, vel);
+  else       for (let k = Math.ceil(old) - 1;  k >= Math.ceil(np);  k--) triggerColumn(k, vel * 0.6);
+  pos = ((np % T) + T) % T;
+  if (pos >= T) pos = 0;                                        // float-edge safety
+}
+const stepsPerSec = () => bpm / 60 * 2;
+
+/* ============================== canvas ============================= */
+const cv = document.getElementById('box'), cx = cv.getContext('2d');
+const W = 1180, H = 560, DPR = Math.min(2, window.devicePixelRatio || 1);
+cv.width = W * DPR; cv.height = H * DPR; cx.scale(DPR, DPR);
+
+const cellW = 26, cellH = 22;
+const stripTop = (H - ROWS * cellH) / 2, stripBot = stripTop + ROWS * cellH;
+const combX = 172;
+const crank = { x: W - 74, y: H / 2, r: 46, dragging: false, lastA: 0 };
+const rowY = r => stripTop + (ROWS - 1 - r) * cellH + cellH / 2;
+
+/* pre-rendered paper + wood textures */
+function makePaper(){
+  const c = document.createElement('canvas'); c.width = c.height = 256;
+  const g = c.getContext('2d');
+  g.fillStyle = '#f2e8d5'; g.fillRect(0, 0, 256, 256);
+  for (let i = 0; i < 1400; i++){
+    g.fillStyle = `rgba(${120 + Math.random() * 60 | 0},${100 + Math.random() * 50 | 0},60,${0.02 + Math.random() * 0.04})`;
+    g.fillRect(Math.random() * 256, Math.random() * 256, 1 + Math.random() * 1.6, 1);
+  }
+  for (let i = 0; i < 40; i++){
+    g.strokeStyle = 'rgba(140,115,80,0.05)'; g.lineWidth = 0.6;
+    const y = Math.random() * 256; g.beginPath(); g.moveTo(0, y);
+    g.bezierCurveTo(80, y + Math.random() * 8 - 4, 170, y + Math.random() * 8 - 4, 256, y);
+    g.stroke();
+  }
+  return cx.createPattern(c, 'repeat');
+}
+function makeWood(){
+  const c = document.createElement('canvas'); c.width = W; c.height = H;
+  const g = c.getContext('2d');
+  const gr = g.createLinearGradient(0, 0, 0, H);
+  gr.addColorStop(0, '#4a3520'); gr.addColorStop(0.5, '#3a2917'); gr.addColorStop(1, '#241708');
+  g.fillStyle = gr; g.fillRect(0, 0, W, H);
+  for (let i = 0; i < 90; i++){
+    const y = Math.random() * H;
+    g.strokeStyle = `rgba(${10 + Math.random() * 30 | 0},${8 + Math.random() * 18 | 0},4,${0.06 + Math.random() * 0.1})`;
+    g.lineWidth = 0.8 + Math.random() * 1.8;
+    g.beginPath(); g.moveTo(0, y);
+    g.bezierCurveTo(W * 0.3, y + Math.random() * 26 - 13, W * 0.7, y + Math.random() * 26 - 13, W, y + Math.random() * 12 - 6);
+    g.stroke();
+  }
+  const v = g.createRadialGradient(W/2, H/2, H * 0.45, W/2, H/2, W * 0.72);
+  v.addColorStop(0, 'rgba(0,0,0,0)'); v.addColorStop(1, 'rgba(0,0,0,0.5)');
+  g.fillStyle = v; g.fillRect(0, 0, W, H);
+  return c;
+}
+const paperPat = makePaper(), woodTex = makeWood();
+
+function draw(now){
+  cx.clearRect(0, 0, W, H);
+  cx.drawImage(woodTex, 0, 0);
+
+  /* --- the paper strip --- */
+  const padY = 26, top = stripTop - padY, bot = stripBot + padY;
+  cx.save();
+  cx.shadowColor = 'rgba(0,0,0,0.5)'; cx.shadowBlur = 18; cx.shadowOffsetY = 6;
+  cx.fillStyle = paperPat; cx.fillRect(0, top, W, bot - top);
+  cx.restore();
+  // lamplight across the paper
+  const lamp = cx.createRadialGradient(combX, H/2, 60, combX, H/2, W * 0.85);
+  lamp.addColorStop(0, 'rgba(255,236,180,0.20)'); lamp.addColorStop(0.5, 'rgba(255,220,150,0.05)');
+  lamp.addColorStop(1, 'rgba(60,40,10,0.16)');
+  cx.fillStyle = lamp; cx.fillRect(0, top, W, bot - top);
+
+  const T = totalSteps();
+  const colX = c => combX + (c - pos) * cellW;      // c may be fractional/wrapped
+  // visible column range (draw wrapped copies)
+  const cMin = Math.floor(pos - combX / cellW) - 1, cMax = Math.ceil(pos + (W - combX) / cellW) + 1;
+
+  /* row guide lines */
+  for (let r = 0; r < ROWS; r++){
+    const y = rowY(r);
+    cx.strokeStyle = 'rgba(120,95,60,0.16)'; cx.lineWidth = 1;
+    cx.beginPath(); cx.moveTo(0, y); cx.lineTo(W, y); cx.stroke();
+  }
+  /* beat + bar lines, sprockets */
+  for (let c = cMin; c <= cMax; c++){
+    const x = colX(c), cw = ((c % T) + T) % T;
+    if (x < -cellW || x > W + cellW) continue;
+    if (cw % SPB === 0){
+      cx.strokeStyle = 'rgba(110,80,45,0.34)'; cx.lineWidth = 1.4;
+    } else if (cw % 2 === 0){
+      cx.strokeStyle = 'rgba(110,80,45,0.15)'; cx.lineWidth = 1;
+    } else { cx.strokeStyle = 'rgba(110,80,45,0.07)'; cx.lineWidth = 1; }
+    cx.beginPath(); cx.moveTo(x, stripTop - 8); cx.lineTo(x, stripBot + 8); cx.stroke();
+    if (cw % 2 === 0){                             // sprocket holes on the beats
+      for (const sy of [top + 12, bot - 12]){
+        cx.fillStyle = 'rgba(46,32,18,0.85)';
+        cx.beginPath(); cx.arc(x, sy, 3, 0, 7); cx.fill();
+      }
+    }
+    if (cw % SPB === 0){                           // bar number
+      cx.fillStyle = 'rgba(110,80,45,0.5)'; cx.font = '10px Georgia';
+      cx.fillText(1 + cw / SPB, x + 3, top + 16);
+    }
+  }
+  /* punched holes */
+  for (let c = cMin; c <= cMax; c++){
+    const x = colX(c); if (x < -cellW || x > W + cellW) continue;
+    const cw = ((c % T) + T) % T;
+    for (let r = 0; r < ROWS; r++) if (cell(cw, r)){
+      const y = rowY(r);
+      cx.fillStyle = '#241708';
+      cx.beginPath(); cx.arc(x, y, 6.5, 0, 7); cx.fill();
+      cx.strokeStyle = 'rgba(255,245,220,0.55)'; cx.lineWidth = 1.2;   // paper rim catch-light
+      cx.beginPath(); cx.arc(x + 0.8, y + 0.8, 6.5, -0.6, 1.4); cx.stroke();
+      cx.strokeStyle = 'rgba(30,18,8,0.5)';
+      cx.beginPath(); cx.arc(x - 0.5, y - 0.5, 6.2, 2.4, 4.6); cx.stroke();
+    }
+  }
+  /* hover ghost */
+  if (hover && !crank.dragging){
+    const x = colX(hover.cDraw), y = rowY(hover.r);
+    cx.strokeStyle = 'rgba(150,110,50,0.65)'; cx.lineWidth = 1.5; cx.setLineDash([3,3]);
+    cx.beginPath(); cx.arc(x, y, 7.5, 0, 7); cx.stroke(); cx.setLineDash([]);
+  }
+  /* note glows */
+  for (let i = glows.length - 1; i >= 0; i--){
+    const g = glows[i], age = (now - g.t0) / 700;
+    if (age > 1){ glows.splice(i, 1); continue; }
+    let dx = colX(g.s); if (dx < combX - cellW * 1.5) dx = colX(g.s + T);
+    const y = rowY(g.r);
+    cx.strokeStyle = `rgba(255,196,88,${0.75 * (1 - age)})`;
+    cx.lineWidth = 2.2 * (1 - age) + 0.4;
+    cx.beginPath(); cx.arc(dx, y, 7 + age * 15, 0, 7); cx.stroke();
+  }
+
+  /* --- the comb --- */
+  cx.save();
+  cx.shadowColor = 'rgba(0,0,0,0.4)'; cx.shadowBlur = 8; cx.shadowOffsetX = 3;
+  const plateL = 26, plateR = combX - 64;
+  const bg = cx.createLinearGradient(plateL, 0, plateR + 40, 0);
+  bg.addColorStop(0, '#8a6c33'); bg.addColorStop(0.45, '#d9b76a'); bg.addColorStop(1, '#a8813d');
+  cx.fillStyle = bg;
+  cx.beginPath();
+  cx.roundRect(plateL, stripTop - 16, plateR - plateL, ROWS * cellH + 32, 6);
+  cx.fill();
+  cx.restore();
+  for (let r = 0; r < ROWS; r++){
+    const y = rowY(r), len = 64 + (ROWS - 1 - r) * 2.0;
+    const since = (now - tineHit[r]) / 1000;
+    const vib = since < 1.2 ? Math.sin(since * 90) * 2.6 * Math.exp(-since * 5.5) : 0;
+    const tg = cx.createLinearGradient(combX - len, y, combX, y);
+    tg.addColorStop(0, '#b5904a'); tg.addColorStop(0.7, '#e7cc8a'); tg.addColorStop(1, '#f6e7b6');
+    cx.fillStyle = tg;
+    cx.beginPath();
+    cx.moveTo(combX - len, y - 3.4);
+    cx.lineTo(combX - 6, y - 2.2 + vib);
+    cx.arc(combX - 4, y + vib, 2.6, -1.2, 1.2);
+    cx.lineTo(combX - len, y + 3.4);
+    cx.closePath(); cx.fill();
+    cx.fillStyle = 'rgba(58,44,28,0.9)'; cx.font = '9.5px Georgia';
+    cx.fillText(NOTE_NAMES[r], plateL + 8, y + 3);
+  }
+  /* screws on the plate */
+  for (const sy of [stripTop - 6, stripBot + 6]){
+    cx.fillStyle = '#6e5426'; cx.beginPath(); cx.arc(plateL + 14, sy, 3.4, 0, 7); cx.fill();
+    cx.strokeStyle = '#3c2d12'; cx.beginPath(); cx.moveTo(plateL + 11.6, sy); cx.lineTo(plateL + 16.4, sy); cx.stroke();
+  }
+
+  /* --- the crank --- */
+  const th = pos / SPB * Math.PI * 2;             // one revolution per bar
+  cx.save();
+  cx.translate(crank.x, crank.y);
+  cx.shadowColor = 'rgba(0,0,0,0.45)'; cx.shadowBlur = 10; cx.shadowOffsetY = 4;
+  cx.fillStyle = '#2c1e0f';
+  cx.beginPath(); cx.arc(0, 0, crank.r + 16, 0, 7); cx.fill();
+  cx.restore();
+  cx.save();
+  cx.translate(crank.x, crank.y);
+  const cg = cx.createRadialGradient(-8, -8, 4, 0, 0, crank.r + 12);
+  cg.addColorStop(0, '#e2c078'); cg.addColorStop(0.6, '#a8813d'); cg.addColorStop(1, '#6e5426');
+  cx.fillStyle = cg; cx.beginPath(); cx.arc(0, 0, crank.r + 8, 0, 7); cx.fill();
+  cx.strokeStyle = '#4a3618'; cx.lineWidth = 2; cx.beginPath(); cx.arc(0, 0, crank.r + 8, 0, 7); cx.stroke();
+  // arm + handle
+  const hx = Math.cos(th) * crank.r, hy = Math.sin(th) * crank.r;
+  cx.strokeStyle = '#8a6c33'; cx.lineWidth = 9; cx.lineCap = 'round';
+  cx.beginPath(); cx.moveTo(0, 0); cx.lineTo(hx, hy); cx.stroke();
+  cx.strokeStyle = '#d9b76a'; cx.lineWidth = 5;
+  cx.beginPath(); cx.moveTo(0, 0); cx.lineTo(hx, hy); cx.stroke();
+  cx.fillStyle = '#3a2c1c';
+  cx.beginPath(); cx.arc(hx, hy, 11, 0, 7); cx.fill();
+  const hg = cx.createRadialGradient(hx - 3, hy - 3, 1, hx, hy, 11);
+  hg.addColorStop(0, '#7a5c30'); hg.addColorStop(1, '#241708');
+  cx.fillStyle = hg; cx.beginPath(); cx.arc(hx, hy, 10, 0, 7); cx.fill();
+  cx.fillStyle = '#c9a45c'; cx.beginPath(); cx.arc(0, 0, 6, 0, 7); cx.fill();
+  cx.restore();
+  cx.fillStyle = 'rgba(200,175,120,0.55)'; cx.font = 'italic 11px Georgia';
+  cx.textAlign = 'center'; cx.fillText('crank', crank.x, crank.y + crank.r + 34); cx.textAlign = 'left';
+}
+
+/* ============================ interaction =========================== */
+let hover = null, painting = null;
+
+function stripHit(mx, my){
+  if (my < stripTop - 4 || my > stripBot + 4) return null;
+  if (mx < combX - 10) return null;                            // don't punch under the comb plate
+  const c = Math.round((mx - combX) / cellW + pos);
+  const r = ROWS - 1 - Math.floor((my - stripTop) / cellH);
+  if (r < 0 || r >= ROWS) return null;
+  const T = totalSteps();
+  return { c: ((c % T) + T) % T, cDraw: c, r };
+}
+function ptr(e){
+  const rc = cv.getBoundingClientRect();
+  return { x: (e.clientX - rc.left) * W / rc.width, y: (e.clientY - rc.top) * H / rc.height };
+}
+cv.addEventListener('pointerdown', e => {
+  cv.setPointerCapture(e.pointerId);
+  const p = ptr(e);
+  const dx = p.x - crank.x, dy = p.y - crank.y;
+  if (Math.hypot(dx, dy) < crank.r + 20){
+    crank.dragging = true; crank.lastA = Math.atan2(dy, dx); audio();
+    return;
+  }
+  const h = stripHit(p.x, p.y);
+  if (h){
+    const v = cell(h.c, h.r) ? 0 : 1;
+    setCell(h.c, h.r, v); painting = { v, seen: new Set([h.c + ':' + h.r]) };
+    if (v) pluck(h.r, 0.8);                                    // hear what you punched
+    saveHash();
+  }
+});
+cv.addEventListener('pointermove', e => {
+  const p = ptr(e);
+  if (crank.dragging){
+    const a = Math.atan2(p.y - crank.y, p.x - crank.x);
+    let da = a - crank.lastA;
+    if (da > Math.PI) da -= Math.PI * 2; else if (da < -Math.PI) da += Math.PI * 2;
+    crank.lastA = a;
+    advance(pos + da / (Math.PI * 2) * SPB, 0.9);
+    return;
+  }
+  hover = stripHit(p.x, p.y);
+  if (painting && hover){
+    const key = hover.c + ':' + hover.r;
+    if (!painting.seen.has(key)){
+      painting.seen.add(key);
+      setCell(hover.c, hover.r, painting.v);
+      if (painting.v) pluck(hover.r, 0.6);
+      saveHash();
+    }
+  }
+});
+const endPtr = () => { crank.dragging = false; painting = null; };
+cv.addEventListener('pointerup', endPtr);
+cv.addEventListener('pointercancel', endPtr);
+cv.addEventListener('pointerleave', () => { hover = null; });
+cv.addEventListener('wheel', e => {
+  e.preventDefault(); audio();
+  advance(pos + e.deltaY * 0.004, 0.7);
+}, { passive: false });
+
+/* ============================= controls ============================ */
+const $ = id => document.getElementById(id);
+const playBtn = $('play'), tempoSl = $('tempo'), bpmLbl = $('bpmlbl'), barsLbl = $('barslbl');
+
+function syncUI(){
+  tempoSl.value = bpm; bpmLbl.textContent = bpm + ' bpm';
+  barsLbl.textContent = bars;
+  playBtn.innerHTML = playing ? '&#10073;&#10073; pause' : '&#9654; play';
+}
+function setPlaying(v){
+  playing = v;
+  if (v){ audio(); if (AC.state === 'suspended') AC.resume(); lastT = performance.now(); }
+  syncUI();
+}
+playBtn.onclick = () => setPlaying(!playing);
+document.addEventListener('keydown', e => {
+  if (e.code === 'Space' && e.target.tagName !== 'BUTTON' && e.target.tagName !== 'INPUT'){
+    e.preventDefault(); setPlaying(!playing);
+  }
+});
+tempoSl.oninput = () => { bpm = +tempoSl.value; syncUI(); saveHash(); };
+$('barsplus').onclick = () => resizeBars(bars + 4);
+$('barsminus').onclick = () => resizeBars(bars - 4);
+function resizeBars(nb){
+  nb = Math.min(48, Math.max(4, nb));
+  if (nb === bars) return;
+  const ng = new Uint8Array(nb * SPB * ROWS);
+  ng.set(grid.subarray(0, Math.min(grid.length, ng.length)));
+  bars = nb; grid = ng; pos = pos % totalSteps();
+  syncUI(); saveHash();
+}
+$('clear').onclick = () => { grid.fill(0); pos = 0; saveHash(); toast('a fresh strip of paper'); };
+$('waltz').onclick = () => { loadWaltz(); pos = 0; syncUI(); saveHash(); toast('the waltz, re-punched'); };
+$('share').onclick = async () => {
+  history.replaceState(null, '', '#' + encodeState());
+  try { await navigator.clipboard.writeText(location.href); toast('link copied — your tune travels with it'); }
+  catch { toast('copy failed — grab it from the address bar'); }
+};
+function toast(msg){
+  const t = $('toast'); t.textContent = msg; t.classList.add('show');
+  clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove('show'), 2600);
+}
+
+/* ======================== recorder (?rec=1) ======================== */
+if (new URLSearchParams(location.search).has('rec')){
+  const rb = $('recbtn'); rb.style.display = 'inline-block';
+  rb.onclick = () => {
+    audio();
+    if (!mediaDest){ mediaDest = AC.createMediaStreamDestination(); compNode.connect(mediaDest); }
+    const stream = cv.captureStream(60);
+    mediaDest.stream.getAudioTracks().forEach(tr => stream.addTrack(tr));
+    const rec = new MediaRecorder(stream, { mimeType: 'video/webm;codecs=vp9,opus',
+      videoBitsPerSecond: 14_000_000, audioBitsPerSecond: 192_000 });
+    const chunks = [];
+    rec.ondataavailable = e => chunks.push(e.data);
+    rec.onstop = () => {
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(new Blob(chunks, { type: 'video/webm' }));
+      a.download = 'musicbox.webm'; a.click();
+      rb.textContent = '● record';
+    };
+    pos = 0; wraps = 0; setPlaying(true);
+    rec.start();
+    rb.textContent = '■ recording…';
+    const iv = setInterval(() => {                 // stop exactly at the end of loop 2, then ring out
+      if (wraps >= 2){ clearInterval(iv); setPlaying(false); setTimeout(() => rec.stop(), 3200); }
+    }, 80);
+  };
+}
+
+/* =============================== boot ============================== */
+if (!location.hash || !decodeState(location.hash.slice(1))) loadWaltz();
+syncUI();
+
+function frame(now){
+  if (playing){
+    const dt = Math.max(0, Math.min(0.1, (now - lastT) / 1000));  // rAF's now can lag performance.now()
+    advance(pos + dt * stepsPerSec(), 1);
+  }
+  lastT = now;
+  draw(now);
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>
