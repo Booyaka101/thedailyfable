@@ -1,0 +1,966 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#05070f">
+<meta name="description" content="A game about being the current. Guide paper lanterns down a night river to the sea — you never touch a lantern, you stir the water. Nine nights, one gesture.">
+<meta property="og:title" content="NAGASHI — you are the water">
+<meta property="og:description" content="Guide paper lanterns down a night river by stirring the water itself. A fluid-simulation game in one HTML file. Nine nights, one gesture.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23070b18'/%3E%3Crect x='20' y='18' width='24' height='28' rx='6' fill='%232c1a09' stroke='%238a5526' stroke-width='3'/%3E%3Ccircle cx='32' cy='31' r='6' fill='%23ffe0a8'/%3E%3Cpath d='M10 54 Q22 50 32 54 T54 54' stroke='%234fd8c7' stroke-width='3' fill='none' opacity='.8'/%3E%3C/svg%3E">
+<title>NAGASHI — you are the water</title>
+<style>
+  html,body{margin:0;padding:0;height:100%;background:#05070f;overflow:hidden;
+    font-family:system-ui,"Segoe UI",Roboto,sans-serif;color:#cdd8ee;
+    -webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
+  #c{position:fixed;inset:0;touch-action:none;cursor:crosshair}
+  /* ---------- HUD ---------- */
+  #hud{position:fixed;left:0;right:0;top:0;display:flex;justify-content:space-between;
+    align-items:flex-start;padding:calc(10px + env(safe-area-inset-top)) 12px 0 14px;
+    pointer-events:none;opacity:0;transition:opacity .5s}
+  #hud.on{opacity:1}
+  #hudL{font-size:13px;letter-spacing:.14em;color:#8fa3c8;text-transform:uppercase;
+    text-shadow:0 1px 8px #000;padding-top:12px}
+  #hudL b{color:#e8d9b0;font-weight:600}
+  #dots{display:flex;gap:7px;margin-top:8px}
+  .dot{width:11px;height:11px;border-radius:50%;background:#232c42;box-shadow:0 0 0 1px #31406288}
+  .dot.alive{background:#ffb35c;box-shadow:0 0 8px #ff9d3a99}
+  .dot.saved{background:#7de8d8;box-shadow:0 0 8px #4fd8c799}
+  .dot.dead{background:#3a2530;box-shadow:0 0 0 1px #57324288}
+  #hudR{display:flex;gap:10px;pointer-events:auto}
+  .hbtn{width:46px;height:46px;border-radius:50%;border:1px solid #2c3a5a;
+    background:#0c1428cc;color:#9db1d6;font-size:19px;line-height:1;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+  .hbtn:active{background:#1a2646}
+  /* ---------- overlay cards ---------- */
+  #ov{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;
+    background:rgba(3,5,12,.42);opacity:0;pointer-events:none;transition:opacity .45s;z-index:5}
+  #ov.on{opacity:1;pointer-events:auto}
+  #card{max-width:min(86vw,430px);text-align:center;padding:34px 30px 30px;
+    background:rgba(7,11,24,.88);border:1px solid rgba(130,170,240,.14);border-radius:18px;
+    box-shadow:0 20px 80px #000c;backdrop-filter:blur(8px)}
+  #kick{font-size:12px;letter-spacing:.34em;color:#7d8fb5;text-transform:uppercase;margin-bottom:14px}
+  #ttl{font-family:Georgia,"Times New Roman",serif;font-weight:400;color:#f0e6cf;
+    font-size:34px;margin:0 0 14px;line-height:1.12}
+  #ttl.big{font-size:54px;letter-spacing:.06em}
+  #sub{font-size:13px;letter-spacing:.28em;color:#8fa3c8;text-transform:uppercase;margin:-6px 0 16px}
+  #poem{font-family:Georgia,serif;font-style:italic;font-size:16.5px;line-height:1.65;
+    color:#aebadb;margin:0 0 24px;white-space:pre-line}
+  #btn{min-height:50px;padding:12px 30px;border-radius:12px;border:none;cursor:pointer;
+    font-size:16px;font-weight:600;letter-spacing:.03em;color:#241304;
+    background:linear-gradient(180deg,#ffc873,#f0993c);box-shadow:0 4px 24px #f0993c44}
+  #btn:active{transform:translateY(1px)}
+  #lvls{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;margin-top:22px}
+  .lb{width:44px;height:44px;border-radius:10px;border:1px solid #2c3a5a;background:#0d1530;
+    color:#aebadb;font-size:15px;cursor:pointer}
+  .lb.lock{opacity:.28;pointer-events:none}
+  .lb.done{border-color:#3f6f68;color:#7de8d8}
+  #hint{position:fixed;left:50%;top:58%;transform:translateX(-50%);font-size:15px;
+    letter-spacing:.06em;color:#c8d6f2;text-shadow:0 1px 10px #000;opacity:0;
+    transition:opacity .8s;pointer-events:none;z-index:4;text-align:center}
+  #hint.on{opacity:.85}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+
+<div id="hud">
+  <div id="hudL"><span id="lname"></span><div id="dots"></div></div>
+  <div id="hudR">
+    <button class="hbtn" id="bMute" aria-label="mute">♪</button>
+    <button class="hbtn" id="bRe" aria-label="restart level">↻</button>
+  </div>
+</div>
+<div id="hint"></div>
+
+<div id="ov"><div id="card">
+  <div id="kick"></div>
+  <h1 id="ttl"></h1>
+  <div id="sub" style="display:none">you are the water</div>
+  <p id="poem"></p>
+  <button id="btn">Begin</button>
+  <div id="lvls" style="display:none"></div>
+</div></div>
+
+<script>
+'use strict';
+/* =====================================================================
+   NAGASHI — you are the water.
+   A game about tōrō nagashi: paper lanterns floated downriver to carry
+   spirits back to the sea. You never touch a lantern. You stir the water.
+   Day 4 of the daily creation practice.
+   ===================================================================== */
+
+const Q = new URLSearchParams(location.search);
+const REC = Q.has('rec');
+const COARSE = matchMedia('(pointer: coarse)').matches;
+
+/* ---------------- canvas / world layout ---------------- */
+const cv = document.getElementById('c');
+const ctx = cv.getContext('2d');
+let VW=0, VH=0, DPR=1;
+let stripX=0, stripW=0;          // the river: a vertical strip, full height
+let cell=8, GW=72, GH=100, N=0;  // sim grid (GW fixed, cell = stripW/GW)
+
+/* fluid fields */
+let u,v,u2,v2,p,p2,div_,dye,dye2,solid,baseU,baseV;
+
+function layout(){
+  VW = innerWidth; VH = innerHeight;
+  DPR = Math.min(2.5, devicePixelRatio||1);
+  cv.width = Math.round(VW*DPR); cv.height = Math.round(VH*DPR);
+  cv.style.width = VW+'px'; cv.style.height = VH+'px';
+  ctx.setTransform(DPR,0,0,DPR,0,0);
+  stripW = Math.min(VW, Math.round(VH*0.62));
+  stripX = (VW-stripW)/2;
+  cell = stripW/GW;
+  GH = Math.min(230, Math.ceil(VH/cell));
+  N = GW*GH;
+  u=new Float32Array(N); v=new Float32Array(N); u2=new Float32Array(N); v2=new Float32Array(N);
+  p=new Float32Array(N); p2=new Float32Array(N); div_=new Float32Array(N);
+  dye=new Float32Array(N); dye2=new Float32Array(N);
+  solid=new Uint8Array(N); baseU=new Float32Array(N); baseV=new Float32Array(N);
+  dyeCan.width=GW; dyeCan.height=GH;
+  solCan.width=GW; solCan.height=GH;
+  if(L) buildLevelFields();
+  initStars();
+}
+
+/* offscreen canvases for the dye glow + solid mask (rendered at grid res, upscaled) */
+const dyeCan = document.createElement('canvas'); const dyeCtx = dyeCan.getContext('2d');
+const solCan = document.createElement('canvas'); const solCtx = solCan.getContext('2d');
+let dyeImg=null;
+
+/* ---------------- levels ---------------- */
+/* x, r normalized to stripW; y normalized to VH */
+const LEVELS = [
+ {name:'Open Water', poem:'The lanterns are lit and set down on the dark.\nThey cannot swim. They can only trust.\nBe the water. Carry them home.',
+  flow:26, count:3, need:2, rocks:[], drains:[], bulges:[]},
+ {name:'The Stones', poem:'Stones do not move for anyone.\nMove around them — and mind the sand\nbehind them, where the water thins.',
+  flow:46, count:4, need:3, rocks:[{x:.18,y:.46,r:.105},{x:.52,y:.46,r:.105},{x:.86,y:.46,r:.105}], drains:[], bulges:[],
+  shallows:[{x:.35,y:.62,r:.14},{x:.69,y:.62,r:.14}]},
+ {name:'The Old River', poem:'The old river runs fast tonight.\nIt has somewhere to be, and it is not\nwhere you are going.',
+  flow:105, count:4, need:3, rocks:[{x:.25,y:.30,r:.09},{x:.72,y:.45,r:.10},{x:.30,y:.62,r:.09},{x:.62,y:.78,r:.08}], drains:[], bulges:[],
+  shallows:[{x:.52,y:.40,r:.11},{x:.45,y:.72,r:.12},{x:.88,y:.58,r:.11},{x:.12,y:.50,r:.10}]},
+ {name:'The Hungry Eye', poem:'Something under the surface is hungry.\nIt is patient, and it turns, and it waits.\nDo not feed it.',
+  flow:42, count:4, need:3, rocks:[{x:.17,y:.74,r:.07},{x:.83,y:.74,r:.07}],
+  drains:[{x:.5,y:.46,r:.34,s:300}], bulges:[], margin:.30, base:(nx,ny)=>[(0.5-nx)*70, 42]},
+ {name:'The Narrows', poem:'Where the river narrows, go gently.\nHaste is how paper meets stone,\nand still water is how it meets the sand.',
+  flow:55, count:4, need:3, rocks:[{x:.74,y:.16,r:.06}],
+  drains:[], bulges:[{s:'L',y:.38,r:.30},{s:'R',y:.58,r:.30}],
+  shallows:[{x:.76,y:.48,r:.17},{x:.26,y:.71,r:.15}]},
+ {name:'The Drowned Orchard', poem:'There was an orchard here once.\nThe river had other plans.\nThe trees still stand, underneath.',
+  flow:52, count:5, need:4, drains:[], bulges:[],
+  rocks:[{x:.2,y:.30,r:.055},{x:.5,y:.30,r:.055},{x:.8,y:.30,r:.055},
+         {x:.35,y:.45,r:.055},{x:.65,y:.45,r:.055},
+         {x:.2,y:.60,r:.055},{x:.5,y:.60,r:.055},{x:.8,y:.60,r:.055},
+         {x:.35,y:.75,r:.055},{x:.65,y:.75,r:.055}],
+  shallows:[{x:.35,y:.375,r:.09},{x:.65,y:.525,r:.09},{x:.5,y:.68,r:.10},{x:.82,y:.60,r:.09},{x:.16,y:.44,r:.09}]},
+ {name:'Three Mouths', poem:'Three mouths in the riverbed,\nall of them whispering: this way, this way.\nAll of them lying.',
+  flow:48, count:5, need:3, rocks:[], bulges:[],
+  drains:[{x:.25,y:.33,r:.18,s:235},{x:.75,y:.50,r:.18,s:235},{x:.5,y:.72,r:.18,s:235}]},
+ {name:'Turned Water', poem:'Tonight the river forgets\nwhich way the sea is.\nRemind it.',
+  flow:70, count:5, need:3, bulges:[],
+  rocks:[{x:.68,y:.35,r:.07},{x:.85,y:.55,r:.07},{x:.62,y:.72,r:.07}],
+  drains:[], base:(nx,ny)=>[0, 70*(nx<0.5? -0.8 : 1.15)],
+  shallows:[{x:.18,y:.28,r:.14},{x:.78,y:.44,r:.09}]},
+ {name:'The Last Night', poem:'The last night of the festival.\nThe sea is waiting, patient as ever.\nSend them all home.',
+  flow:85, count:6, need:4, bulges:[],
+  rocks:[{x:.5,y:.26,r:.08},{x:.16,y:.58,r:.07},{x:.84,y:.80,r:.07},{x:.45,y:.86,r:.06}],
+  drains:[{x:.3,y:.42,r:.17,s:230},{x:.72,y:.62,r:.17,s:230}],
+  shallows:[{x:.52,y:.56,r:.11}]},
+];
+const ROMAN=['I','II','III','IV','V','VI','VII','VIII','IX'];
+
+/* ---------------- game state ---------------- */
+let L=null, li=0;                 // current level def + index
+let state='title';                // title | intro | play | done | end
+let lanterns=[], arrived=[], saved=0, dead=0, released=0, releaseT=0;
+let sessionSaved=0, sessionTotal=0;
+let unlocked = 1, bestClear = 0;
+try{ unlocked = Math.max(1, +localStorage.getItem('nagashi_unlocked')||1);
+     bestClear = +localStorage.getItem('nagashi_clear')||0; }catch(e){}
+let time=0, hintShown=false, lastInputT=0, doneAt=0, lastResolveT=0;
+
+/* rocks/drains/shallows in world px, rebuilt on layout */
+let rocksPx=[], drainsPx=[], shallowsPx=[], speckles=[], bulgesPx=[], seaTop=0;
+let shal=null; /* per-cell shallowness 0..1 */
+
+function buildLevelFields(){
+  seaTop = VH - Math.max(84, VH*0.105);
+  rocksPx = L.rocks.map(r=>({x:stripX+r.x*stripW, y:r.y*VH, r:r.r*stripW}));
+  bulgesPx = (L.bulges||[]).map(b=>({x: b.s==='L'? stripX : stripX+stripW, y:b.y*VH, r:b.r*stripW}));
+  const bulges = bulgesPx;
+  drainsPx = (L.drains||[]).map(d=>({x:stripX+d.x*stripW, y:d.y*VH, r:d.r*stripW, s:d.s, a:Math.random()*6}));
+  solid.fill(0);
+  for(let y=0;y<GH;y++)for(let x=0;x<GW;x++){
+    const i=x+y*GW, px=stripX+(x+.5)*cell, py=(y+.5)*cell;
+    const wob = 1.5 + 1.2*Math.sin(py*0.013 + 2.1) + 0.9*Math.sin(py*0.031);
+    if(x<1 || x>=GW-1 || px < stripX+wob*cell*0.6 || px > stripX+stripW-wob*cell*0.6){ solid[i]=1; continue; }
+    for(const r of rocksPx) if((px-r.x)**2+(py-r.y)**2 < r.r*r.r){ solid[i]=1; break; }
+    if(!solid[i]) for(const b of bulges) if((px-b.x)**2+(py-b.y)**2 < b.r*b.r){ solid[i]=1; break; }
+  }
+  /* shallows field */
+  shallowsPx=(L.shallows||[]).map(s=>({x:stripX+s.x*stripW, y:s.y*VH, r:s.r*stripW}));
+  shal=new Float32Array(N);
+  for(let y=0;y<GH;y++)for(let x=0;x<GW;x++){
+    const i=x+y*GW; if(solid[i])continue;
+    const px=stripX+(x+.5)*cell, py=(y+.5)*cell;
+    for(const s of shallowsPx){
+      const d=Math.hypot(px-s.x,py-s.y);
+      if(d<s.r) shal[i]=Math.max(shal[i], Math.min(1,(1-d/s.r)*1.6));
+    }
+  }
+  /* sand speckles (static per level) */
+  speckles=[];
+  for(const s of shallowsPx){
+    const n=Math.round(s.r*s.r/150);
+    for(let k=0;k<n;k++){
+      const a=Math.random()*6.283, rr=Math.sqrt(Math.random())*s.r*0.92;
+      speckles.push({x:s.x+Math.cos(a)*rr, y:s.y+Math.sin(a)*rr,
+        s:0.8+Math.random()*1.6, al:0.10+Math.random()*0.16});
+    }
+  }
+  /* base flow field (thin water over sand barely moves) */
+  for(let y=0;y<GH;y++)for(let x=0;x<GW;x++){
+    const i=x+y*GW;
+    if(solid[i]){ baseU[i]=baseV[i]=0; continue; }
+    const nx=(x+.5)/GW, ny=(y+.5)*cell/VH;
+    if(L.base){ const b=L.base(nx,ny); baseU[i]=b[0]; baseV[i]=b[1]; }
+    else { baseU[i]=0; baseV[i]=L.flow; }
+    const sfk=1-0.78*shal[i];
+    baseU[i]*=sfk; baseV[i]*=sfk;
+  }
+  u.fill(0); v.fill(0); dye.fill(0);
+  for(let i=0;i<N;i++){ u[i]=baseU[i]; v[i]=baseV[i]; }
+  /* pre-render solid mask */
+  const im = solCtx.createImageData(GW,GH); const d=im.data;
+  for(let i=0;i<N;i++){ const o=i*4;
+    if(solid[i]){ d[o]=15; d[o+1]=20; d[o+2]=36; d[o+3]=255; } else d[o+3]=0; }
+  solCtx.putImageData(im,0,0);
+  dyeImg = dyeCtx.createImageData(GW,GH);
+  initParticles();
+}
+
+/* ---------------- fluid sim ---------------- */
+function bilerp(f,gx,gy){
+  gx = gx<0?0:(gx>GW-1.001?GW-1.001:gx);
+  gy = gy<0?0:(gy>GH-1.001?GH-1.001:gy);
+  const x0=gx|0, y0=gy|0, fx=gx-x0, fy=gy-y0, i=x0+y0*GW;
+  return (f[i]*(1-fx)+f[i+1]*fx)*(1-fy) + (f[i+GW]*(1-fx)+f[i+GW+1]*fx)*fy;
+}
+function sampleVel(px,py){
+  const gx=(px-stripX)/cell-.5, gy=py/cell-.5;
+  return [bilerp(u,gx,gy), bilerp(v,gx,gy)];
+}
+const JACOBI=22;
+function fluidStep(dt){
+  /* relax toward the base current (the river reasserts itself) */
+  const k = Math.min(1, 0.55*dt);
+  for(let i=0;i<N;i++){ if(solid[i])continue;
+    u[i]+= (baseU[i]-u[i])*k; v[i]+= (baseV[i]-v[i])*k; }
+  /* drains stir the fluid */
+  for(const d of drainsPx){
+    const x0=Math.max(1,((d.x-d.r-stripX)/cell)|0), x1=Math.min(GW-2,((d.x+d.r-stripX)/cell)|0);
+    const y0=Math.max(1,((d.y-d.r)/cell)|0), y1=Math.min(GH-2,((d.y+d.r)/cell)|0);
+    for(let y=y0;y<=y1;y++)for(let x=x0;x<=x1;x++){
+      const i=x+y*GW; if(solid[i])continue;
+      const px=stripX+(x+.5)*cell, py=(y+.5)*cell;
+      let dx=d.x-px, dy=d.y-py; const dist=Math.hypot(dx,dy);
+      if(dist>d.r||dist<1)continue;
+      const w=(1-dist/d.r)*d.s*dt; dx/=dist; dy/=dist;
+      u[i]+= (dx*0.85 - dy*0.62)*w;   /* inward + swirl */
+      v[i]+= (dy*0.85 + dx*0.62)*w;
+    }
+  }
+  /* advect velocity (semi-Lagrangian) */
+  const s=dt/cell;
+  for(let y=0;y<GH;y++)for(let x=0;x<GW;x++){
+    const i=x+y*GW;
+    if(solid[i]){u2[i]=0;v2[i]=0;continue;}
+    const gx=x-u[i]*s, gy=y-v[i]*s;
+    u2[i]=bilerp(u,gx,gy); v2[i]=bilerp(v,gx,gy);
+  }
+  [u,u2]=[u2,u]; [v,v2]=[v2,v];
+  /* project to divergence-free */
+  for(let y=0;y<GH;y++)for(let x=0;x<GW;x++){
+    const i=x+y*GW; p[i]=0;
+    if(solid[i]){div_[i]=0;continue;}
+    const uL=(x>0&&!solid[i-1])?u[i-1]:0, uR=(x<GW-1&&!solid[i+1])?u[i+1]:0;
+    const vU=(y>0&&!solid[i-GW])?v[i-GW]:0, vD=(y<GH-1&&!solid[i+GW])?v[i+GW]:0;
+    div_[i]=(uR-uL+vD-vU)*0.5;
+  }
+  for(let k2=0;k2<JACOBI;k2++){
+    for(let y=0;y<GH;y++)for(let x=0;x<GW;x++){
+      const i=x+y*GW; if(solid[i]){p2[i]=p[i];continue;}
+      const pL=(x>0&&!solid[i-1])?p[i-1]:p[i], pR=(x<GW-1&&!solid[i+1])?p[i+1]:p[i];
+      const pU=(y>0&&!solid[i-GW])?p[i-GW]:p[i], pD=(y<GH-1&&!solid[i+GW])?p[i+GW]:p[i];
+      p2[i]=(pL+pR+pU+pD-div_[i])*0.25;
+    }
+    [p,p2]=[p2,p];
+  }
+  for(let y=0;y<GH;y++)for(let x=0;x<GW;x++){
+    const i=x+y*GW; if(solid[i]){u[i]=0;v[i]=0;continue;}
+    const pL=(x>0&&!solid[i-1])?p[i-1]:p[i], pR=(x<GW-1&&!solid[i+1])?p[i+1]:p[i];
+    const pU=(y>0&&!solid[i-GW])?p[i-GW]:p[i], pD=(y<GH-1&&!solid[i+GW])?p[i+GW]:p[i];
+    u[i]-=(pR-pL)*0.5; v[i]-=(pD-pU)*0.5;
+  }
+  /* open outflow at the sea; inflow at top */
+  for(let x=0;x<GW;x++){ const t=x, b=x+(GH-1)*GW;
+    if(!solid[t]) v[t]=Math.max(v[t],baseV[t]);
+    if(!solid[b]) v[b]=Math.max(v[b],0); }
+  /* thin water drags over the sand */
+  for(let i=0;i<N;i++){ if(!shal[i])continue;
+    const dmp=1-Math.min(0.9, shal[i]*2.4*dt);
+    u[i]*=dmp; v[i]*=dmp; }
+  /* advect + decay dye */
+  for(let y=0;y<GH;y++)for(let x=0;x<GW;x++){
+    const i=x+y*GW;
+    if(solid[i]){dye2[i]=0;continue;}
+    dye2[i]=bilerp(dye,x-u[i]*s,y-v[i]*s)*(1-0.55*dt);
+  }
+  [dye,dye2]=[dye2,dye];
+}
+
+/* ---------------- input → splats ---------------- */
+const pointers=new Map();  // pointerId -> {x,y,t}
+let stirEnergy=0, rippleAcc=0, ripples=[];
+cv.addEventListener('pointerdown',e=>{
+  e.preventDefault(); try{cv.setPointerCapture(e.pointerId);}catch(err){}
+  pointers.set(e.pointerId,{x:e.clientX,y:e.clientY,t:performance.now()});
+  audioBoot();
+});
+cv.addEventListener('pointermove',e=>{
+  const pr=pointers.get(e.pointerId); if(!pr)return;
+  const now=performance.now(), dtm=Math.max(4,now-pr.t)/1000;
+  const dx=e.clientX-pr.x, dy=e.clientY-pr.y;
+  let pu=dx/dtm, pv=dy/dtm;
+  const sp=Math.hypot(pu,pv);
+  if(sp>1100){pu*=1100/sp;pv*=1100/sp;}
+  splatSeg(pr.x,pr.y,e.clientX,e.clientY,pu,pv);
+  stirEnergy=Math.min(1400, stirEnergy+Math.hypot(dx,dy)*3.2);
+  lastInputT=time;
+  rippleAcc+=Math.hypot(dx,dy);
+  if(rippleAcc>46){rippleAcc=0; ripples.push({x:e.clientX,y:e.clientY,r:5,a:.32});}
+  pr.x=e.clientX; pr.y=e.clientY; pr.t=now;
+});
+const endP=e=>{pointers.delete(e.pointerId);};
+cv.addEventListener('pointerup',endP); cv.addEventListener('pointercancel',endP);
+
+function splatSeg(x0,y0,x1,y1,pu,pv){
+  const len=Math.hypot(x1-x0,y1-y0), steps=Math.max(1,Math.ceil(len/(cell*1.5)));
+  const R=Math.max(26, stripW*0.055), r2=R*R;
+  for(let st=0;st<=steps;st++){
+    const px=x0+(x1-x0)*st/steps, py=y0+(y1-y0)*st/steps;
+    const gx0=Math.max(1,((px-R-stripX)/cell)|0), gx1=Math.min(GW-2,((px+R-stripX)/cell)|0);
+    const gy0=Math.max(1,((py-R)/cell)|0), gy1=Math.min(GH-2,((py+R)/cell)|0);
+    for(let y=gy0;y<=gy1;y++)for(let x=gx0;x<=gx1;x++){
+      const i=x+y*GW; if(solid[i])continue;
+      const cx=stripX+(x+.5)*cell, cy=(y+.5)*cell;
+      const d2=(cx-px)**2+(cy-py)**2; if(d2>r2)continue;
+      const w=Math.exp(-d2/(r2*0.45))*0.5/steps* (st===steps?steps:1);
+      u[i]+= (pu*0.95-u[i])*Math.min(1,w);
+      v[i]+= (pv*0.95-v[i])*Math.min(1,w);
+      dye[i]=Math.min(1.7, dye[i]+w*1.15);
+    }
+  }
+}
+
+/* ---------------- lanterns ---------------- */
+function spawnLevel(){
+  lanterns=[]; arrived=[]; saved=0; dead=0; released=0; releaseT=0.4; lastResolveT=time;
+  const m=L.margin||0.20, span=1-2*m;
+  for(let k=0;k<L.count;k++){
+    const nx = L.count===1? .5 : m+span*k/(L.count-1);
+    lanterns.push({x:stripX+nx*stripW, y:VH*0.055, vx:0, vy:0, ang:Math.random()*6.28,
+      phase:Math.random()*6.28, state:'wait', flick:0, deadT:0, glow:1,
+      grounded:false, groundT:0});
+  }
+  renderDots();
+}
+function lanternStep(dt){
+  if(released<lanterns.length){
+    releaseT-=dt;
+    if(releaseT<=0){ lanterns[released].state='alive'; released++; releaseT=0.85; lastResolveT=time; sfxRelease(); }
+  }
+  const LR=11;
+  for(const t of lanterns){
+    if(t.state==='dead'){ t.deadT+=dt; continue; }
+    if(t.state!=='alive') continue;
+    const [fu,fv]=sampleVel(t.x,t.y);
+    /* shallows: slow lanterns run aground; strong water refloats them */
+    const sfk=bilerp(shal,(t.x-stripX)/cell-.5,t.y/cell-.5);
+    const fsp=Math.hypot(fu,fv);
+    if(t.grounded){
+      if(fsp>90){ t.grounded=false; t.groundT=0; sfxRefloat(); }
+      else{
+        t.groundT+=dt; t.vx=0; t.vy=0;
+        if(t.groundT>5){ killLantern(t,'sand'); }
+        continue;
+      }
+    } else if(sfk>0.3 && Math.hypot(t.vx,t.vy)<42 && fsp<58){
+      t.grounded=true; t.groundT=0; sfxGround();
+    }
+    let dd=0;
+    for(const d of drainsPx){ const dist=Math.hypot(t.x-d.x,t.y-d.y);
+      if(dist<d.r) dd=Math.max(dd,1-dist/d.r); }
+    const g=Math.min(1, 3.0*dt*(1-0.55*dd));
+    t.vx+=(fu-t.vx)*g; t.vy+=(fv-t.vy)*g;
+    t.x+=t.vx*dt; t.y+=t.vy*dt;
+    t.ang+= (t.vx*0.004)+Math.sin(time*0.9+t.phase)*0.15*dt;
+    /* soft wall margins */
+    const wallL=stripX+cell*2.2, wallR=stripX+stripW-cell*2.2;
+    if(t.x<wallL){t.x=wallL; t.vx=Math.abs(t.vx)*0.3;}
+    if(t.x>wallR){t.x=wallR; t.vx=-Math.abs(t.vx)*0.3;}
+    if(t.y<LR){t.y=LR; t.vy=Math.abs(t.vy)*0.3;}
+    /* rocks */
+    for(const r of rocksPx){
+      const dx=t.x-r.x, dy=t.y-r.y, d=Math.hypot(dx,dy), min=r.r+LR;
+      if(d<min&&d>0.001){
+        const imp=Math.hypot(t.vx,t.vy);
+        const nx=dx/d, ny=dy/d;
+        t.x=r.x+nx*min; t.y=r.y+ny*min;
+        const vn=t.vx*nx+t.vy*ny;
+        if(vn<0){ t.vx-=vn*nx*1.4; t.vy-=vn*ny*1.4; t.vx*=0.55; t.vy*=0.55; }
+        if(imp>170){ killLantern(t,'rock'); break; }
+        else if(imp>70){ t.flick=1; }
+      }
+    }
+    if(t.state==='dead')continue;
+    /* drains — the funnel pulls floating things directly */
+    for(const d of drainsPx){
+      const dx=d.x-t.x, dy=d.y-t.y, dist=Math.hypot(dx,dy);
+      if(dist<d.r*0.26){ killLantern(t,'drain'); break; }
+      if(dist<d.r){
+        const sink=1-dist/d.r, sv=d.s*Math.pow(sink,1.6), k=Math.min(1,3.0*dt*sink);
+        t.vx+=((dx/dist)*sv - t.vx)*k; t.vy+=((dy/dist)*sv - t.vy)*k;
+      }
+    }
+    if(t.state==='dead')continue;
+    /* lantern separation */
+    for(const o of lanterns){ if(o===t||o.state!=='alive')continue;
+      const dx=t.x-o.x, dy=t.y-o.y, d=Math.hypot(dx,dy);
+      if(d<LR*2&&d>0.001){ const push=(LR*2-d)*0.5/d; t.x+=dx*push; t.y+=dy*push; } }
+    /* the sea */
+    if(t.y>seaTop+14){
+      t.state='saved'; saved++; sessionSaved++; lastResolveT=time;
+      arrived.push({x:t.x, y:seaTop+30+arrived.length%2*22, phase:Math.random()*6.28});
+      sfxArrive(); renderDots();
+    }
+    t.flick=Math.max(0,t.flick-dt*1.6);
+  }
+  /* resolution */
+  if(state==='play'){
+    const resolved = saved+dead;
+    const aliveLeft = lanterns.length - resolved;
+    if(saved>=L.need && (resolved===lanterns.length || time-lastResolveT>10)) finishLevel(true);
+    else if(resolved===lanterns.length) finishLevel(saved>=L.need);
+    else if(saved + aliveLeft < L.need) finishLevel(false);
+  }
+}
+function killLantern(t,how){
+  t.state='dead'; dead++; lastResolveT=time; sfxDie(); renderDots();
+  ripples.push({x:t.x,y:t.y,r:4,a:.5,gray:true});
+}
+
+/* ---------------- particles (motes riding the current) ---------------- */
+let parts=null, NPART=0;
+function initParticles(){
+  NPART = COARSE? 700 : 1200;
+  parts=new Float32Array(NPART*2);
+  for(let i=0;i<NPART;i++){ parts[i*2]=stripX+Math.random()*stripW; parts[i*2+1]=Math.random()*VH; }
+}
+function partStep(dt){
+  for(let i=0;i<NPART;i++){
+    let px=parts[i*2], py=parts[i*2+1];
+    const [fu,fv]=sampleVel(px,py);
+    px+=fu*dt; py+=fv*dt;
+    if(px<stripX||px>stripX+stripW||py<0||py>VH||solid[(((px-stripX)/cell)|0)+((py/cell)|0)*GW]){
+      px=stripX+cell*2+Math.random()*(stripW-cell*4); py=Math.random()*VH;
+    }
+    parts[i*2]=px; parts[i*2+1]=py;
+  }
+}
+
+/* ---------------- stars (reflections on the water) ---------------- */
+let stars=[];
+function initStars(){
+  stars=[];
+  const n=Math.round(VW*VH/16000);
+  for(let i=0;i<n;i++) stars.push({x:Math.random()*VW,y:Math.random()*VH,
+    tw:Math.random()*6.28,s:0.4+Math.random()*1.1});
+}
+
+/* ---------------- rendering ---------------- */
+function draw(){
+  /* night water */
+  const bg=ctx.createLinearGradient(0,0,0,VH);
+  bg.addColorStop(0,'#070b18'); bg.addColorStop(0.6,'#081020'); bg.addColorStop(1,'#0a1626');
+  ctx.fillStyle=bg; ctx.fillRect(0,0,VW,VH);
+  /* banks outside the river */
+  if(stripX>2){
+    ctx.fillStyle='#04060d';
+    ctx.fillRect(0,0,stripX,VH); ctx.fillRect(stripX+stripW,0,stripX+2,VH);
+    ctx.fillStyle='rgba(10,16,32,.8)';
+    ctx.fillRect(stripX-8,0,8,VH); ctx.fillRect(stripX+stripW,0,8,VH);
+  }
+  /* sandbars — where the water thins */
+  for(const s of shallowsPx){
+    const g=ctx.createRadialGradient(s.x,s.y,s.r*0.12,s.x,s.y,s.r);
+    g.addColorStop(0,'rgba(128,140,104,0.42)');
+    g.addColorStop(0.5,'rgba(96,114,94,0.28)');
+    g.addColorStop(1,'rgba(60,88,84,0)');
+    ctx.fillStyle=g; ctx.beginPath(); ctx.arc(s.x,s.y,s.r,0,6.283); ctx.fill();
+    /* thin-water shimmer ring, breathing slowly */
+    ctx.beginPath(); ctx.arc(s.x,s.y,s.r*0.82,0,6.283);
+    ctx.strokeStyle=`rgba(170,185,140,${0.08+0.05*Math.sin(time*0.8+s.x)})`;
+    ctx.lineWidth=1.5; ctx.stroke();
+  }
+  ctx.fillStyle='#c2cc96';
+  for(const sp of speckles){ ctx.globalAlpha=sp.al; ctx.fillRect(sp.x,sp.y,sp.s,sp.s); }
+  ctx.globalAlpha=1;
+  /* star reflections */
+  ctx.globalCompositeOperation='lighter';
+  for(const st of stars){
+    const a=0.05+0.09*(0.5+0.5*Math.sin(time*0.7+st.tw));
+    ctx.fillStyle=`rgba(190,210,255,${a})`;
+    ctx.fillRect(st.x, st.y+Math.sin(time*0.3+st.tw)*1.2, st.s, st.s*2.2);
+  }
+  /* dye + speed glow, rendered at grid res then upscaled */
+  const d=dyeImg.data;
+  for(let i=0;i<N;i++){
+    const o=i*4;
+    if(solid[i]){d[o+3]=0;continue;}
+    const sp=Math.min(1,(Math.abs(u[i])+Math.abs(v[i]))/380);
+    const val=Math.min(1.7, dye[i]*1.15 + sp*sp*0.55);
+    d[o]  = 22*val; d[o+1]= 120*val; d[o+2]= 155*val;
+    d[o+3]= Math.min(255, 190*val);
+  }
+  dyeCtx.putImageData(dyeImg,0,0);
+  ctx.imageSmoothingEnabled=true;
+  ctx.drawImage(dyeCan, stripX,0, stripW, GH*cell);
+  /* motes */
+  ctx.fillStyle='rgba(120,200,225,0.5)';
+  for(let i=0;i<NPART;i++){
+    const px=parts[i*2],py=parts[i*2+1];
+    const [fu,fv]=sampleVel(px,py);
+    const a=Math.min(0.55, 0.11+ (Math.abs(fu)+Math.abs(fv))/800);
+    ctx.globalAlpha=a;
+    ctx.fillRect(px,py,1.6,1.6);
+  }
+  ctx.globalAlpha=1;
+  ctx.globalCompositeOperation='source-over';
+  /* the sea */
+  const sg=ctx.createLinearGradient(0,seaTop-40,0,VH);
+  sg.addColorStop(0,'rgba(40,120,130,0)'); sg.addColorStop(0.35,'rgba(45,140,150,0.14)');
+  sg.addColorStop(1,'rgba(60,190,190,0.30)');
+  ctx.fillStyle=sg; ctx.fillRect(stripX,seaTop-40,stripW,VH-seaTop+40);
+  ctx.strokeStyle='rgba(125,232,216,0.35)'; ctx.lineWidth=1.2;
+  for(let k=0;k<3;k++){
+    ctx.beginPath();
+    const yy=seaTop+6+k*13;
+    for(let x=0;x<=stripW;x+=8)
+      ctx.lineTo(stripX+x, yy+Math.sin(x*0.03+time*(1.1+k*0.2)+k*2)*2.2);
+    ctx.globalAlpha=0.5-k*0.13; ctx.stroke();
+  }
+  ctx.globalAlpha=1;
+  /* solid mask (banks, rocks) */
+  ctx.drawImage(solCan, stripX,0, stripW, GH*cell);
+  /* headland waterlines (the narrows) */
+  if(bulgesPx.length){
+    ctx.save(); ctx.beginPath(); ctx.rect(stripX,0,stripW,VH); ctx.clip();
+    for(const b of bulgesPx){
+      ctx.beginPath(); ctx.arc(b.x,b.y,b.r+2,0,6.283);
+      ctx.strokeStyle='rgba(140,190,225,0.15)'; ctx.lineWidth=3; ctx.stroke();
+      const bg2=ctx.createRadialGradient(b.x,b.y,b.r*0.5,b.x,b.y,b.r);
+      bg2.addColorStop(0,'rgba(18,24,42,0)'); bg2.addColorStop(0.85,'rgba(24,32,56,0.35)');
+      bg2.addColorStop(1,'rgba(60,80,120,0.18)');
+      ctx.beginPath(); ctx.arc(b.x,b.y,b.r,0,6.283); ctx.fillStyle=bg2; ctx.fill();
+    }
+    ctx.restore();
+  }
+  /* crisp rock shading */
+  for(const r of rocksPx){
+    /* waterline foam ring */
+    ctx.beginPath(); ctx.arc(r.x,r.y,r.r+2.5,0,6.283);
+    ctx.strokeStyle='rgba(140,190,225,0.13)'; ctx.lineWidth=3; ctx.stroke();
+    const rr=Math.max(2,r.r-cell*0.8);
+    const rg=ctx.createRadialGradient(r.x-rr*0.35,r.y-rr*0.45,rr*0.1,r.x,r.y,rr);
+    rg.addColorStop(0,'#2c3a58'); rg.addColorStop(0.55,'#1b2440'); rg.addColorStop(1,'#0e1426');
+    ctx.beginPath(); ctx.arc(r.x,r.y,rr,0,6.283);
+    ctx.fillStyle=rg; ctx.fill();
+    ctx.beginPath(); ctx.arc(r.x,r.y,rr,-2.75,-0.45);
+    ctx.strokeStyle='rgba(175,205,255,0.30)'; ctx.lineWidth=2; ctx.stroke();
+  }
+  /* drains */
+  for(const dr of drainsPx){
+    dr.a+= 0.9*lastDt;
+    const g=ctx.createRadialGradient(dr.x,dr.y,0,dr.x,dr.y,dr.r);
+    g.addColorStop(0,'rgba(2,4,8,0.85)'); g.addColorStop(0.35,'rgba(4,10,18,0.45)');
+    g.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.fillStyle=g; ctx.beginPath(); ctx.arc(dr.x,dr.y,dr.r,0,6.283); ctx.fill();
+    ctx.strokeStyle='rgba(110,170,200,0.24)'; ctx.lineWidth=1.4;
+    for(let k=0;k<2;k++){
+      ctx.beginPath();
+      for(let a=0;a<4.6;a+=0.14){
+        const rr=dr.r*0.16+ a/4.6*dr.r*0.62;
+        const aa=a*1.7+dr.a+k*3.14;
+        ctx.lineTo(dr.x+Math.cos(aa)*rr, dr.y+Math.sin(aa)*rr);
+      }
+      ctx.stroke();
+    }
+    ctx.beginPath(); ctx.arc(dr.x,dr.y,dr.r*0.14,0,6.283);
+    ctx.fillStyle='rgba(0,2,5,0.9)'; ctx.fill();
+  }
+  /* ripples */
+  for(const rp of ripples){
+    ctx.beginPath(); ctx.arc(rp.x,rp.y,rp.r,0,6.283);
+    ctx.strokeStyle= rp.gray? `rgba(150,160,175,${rp.a})` : `rgba(150,225,235,${rp.a})`;
+    ctx.lineWidth=1.4; ctx.stroke();
+  }
+  /* arrived lanterns bobbing in the sea */
+  ctx.globalCompositeOperation='lighter';
+  for(const a of arrived){
+    const bob=Math.sin(time*1.3+a.phase)*3;
+    const g=ctx.createRadialGradient(a.x,a.y+bob,0,a.x,a.y+bob,20);
+    g.addColorStop(0,'rgba(255,190,110,0.85)'); g.addColorStop(0.4,'rgba(255,150,70,0.25)');
+    g.addColorStop(1,'rgba(255,150,70,0)');
+    ctx.fillStyle=g; ctx.beginPath(); ctx.arc(a.x,a.y+bob,20,0,6.283); ctx.fill();
+    ctx.fillStyle='rgba(255,225,180,0.95)';
+    ctx.fillRect(a.x-2.5,a.y+bob-2.5,5,5);
+  }
+  ctx.globalCompositeOperation='source-over';
+  /* lanterns */
+  for(const t of lanterns){
+    if(t.state==='saved')continue;
+    if(t.state==='dead'){
+      if(t.deadT<1.6){
+        const k=1-t.deadT/1.6;
+        ctx.save(); ctx.translate(t.x,t.y); ctx.rotate(t.ang);
+        ctx.globalAlpha=k*0.8; ctx.scale(1-t.deadT*0.25,1-t.deadT*0.25);
+        ctx.fillStyle='#151217'; rrect(-8,-8,16,16,4); ctx.fill();
+        ctx.restore(); ctx.globalAlpha=1;
+      }
+      continue;
+    }
+    const wait = t.state==='wait';
+    const bob= t.grounded? 1 : 1+0.035*Math.sin(time*2+t.phase);
+    const fl = (0.75+0.25*Math.sin(time*11+t.phase*3)+t.flick*0.7*Math.sin(time*33))
+               * (t.grounded? Math.max(0.15,1-t.groundT*0.16) : 1);
+    if(t.grounded){ /* stranded: a dull ring of disturbed sand */
+      ctx.beginPath(); ctx.arc(t.x,t.y,15,0,6.283);
+      ctx.strokeStyle='rgba(154,167,126,0.4)'; ctx.lineWidth=2.5; ctx.stroke();
+    }
+    ctx.globalCompositeOperation='lighter';
+    const gr=(t.grounded? 20:26)*bob+(t.flick>0? 5:0);
+    const g=ctx.createRadialGradient(t.x,t.y,2,t.x,t.y,gr);
+    const ga=(wait?0.35:0.62)*(t.grounded? Math.max(0.25,1-t.groundT*0.13):1);
+    g.addColorStop(0,`rgba(255,195,115,${ga*fl})`);
+    g.addColorStop(0.45,`rgba(255,145,60,${ga*0.38*fl})`);
+    g.addColorStop(1,'rgba(255,140,60,0)');
+    ctx.fillStyle=g; ctx.beginPath(); ctx.arc(t.x,t.y,gr,0,6.283); ctx.fill();
+    ctx.globalCompositeOperation='source-over';
+    ctx.save(); ctx.translate(t.x,t.y); ctx.rotate(t.ang); ctx.scale(bob,bob);
+    ctx.fillStyle= wait? '#241a10':'#2c1a09';
+    ctx.strokeStyle= wait? '#4f3d22':'#8a5526'; ctx.lineWidth=1.4;
+    rrect(-8,-8,16,16,4); ctx.fill(); ctx.stroke();
+    ctx.fillStyle=`rgba(255,235,190,${wait?0.5:0.85*fl})`;
+    ctx.beginPath(); ctx.arc(0.6*Math.sin(time*9+t.phase),-0.5,3.1,0,6.283); ctx.fill();
+    ctx.restore();
+  }
+}
+function rrect(x,y,w,h,r){
+  ctx.beginPath();
+  ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r);
+  ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath();
+}
+
+/* ---------------- audio ---------------- */
+let ac=null, comp=null, master=null, stirGain=null, stirFilt=null, recDest=null, muted=false;
+function noiseBuf(sec){
+  const b=ac.createBuffer(1, ac.sampleRate*sec, ac.sampleRate);
+  const d=b.getChannelData(0);
+  for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;
+  return b;
+}
+function audioBoot(){
+  if(ac){ if(ac.state==='suspended')ac.resume(); return; }
+  const AC=window.AudioContext||window.webkitAudioContext; if(!AC)return;
+  ac=new AC();
+  comp=ac.createDynamicsCompressor();
+  comp.threshold.value=-18; comp.ratio.value=6; comp.attack.value=0.004; comp.release.value=0.24;
+  master=ac.createGain(); master.gain.value= muted?0:0.8;
+  comp.connect(master); master.connect(ac.destination);
+  if(REC){ recDest=ac.createMediaStreamDestination(); master.connect(recDest); }
+  const nb=noiseBuf(4);
+  const bed=(f,g0,pan,rate,ph)=>{
+    const s=ac.createBufferSource(); s.buffer=nb; s.loop=true;
+    const f1=ac.createBiquadFilter(); f1.type='lowpass'; f1.frequency.value=f; f1.Q.value=0.4;
+    const g=ac.createGain(); g.gain.value=g0;
+    const lfo=ac.createOscillator(); lfo.frequency.value=rate;
+    const lg=ac.createGain(); lg.gain.value=g0*0.55;
+    lfo.connect(lg).connect(g.gain);
+    const pn=ac.createStereoPanner(); pn.pan.value=pan;
+    s.connect(f1).connect(g).connect(pn).connect(comp);
+    s.start(ac.currentTime+ph); lfo.start();
+  };
+  bed(300,0.055,-0.55,0.05,0); bed(500,0.034,0.55,0.083,1.3); bed(150,0.05,0,0.031,0.6);
+  const s2=ac.createBufferSource(); s2.buffer=nb; s2.loop=true;
+  stirFilt=ac.createBiquadFilter(); stirFilt.type='bandpass'; stirFilt.frequency.value=650; stirFilt.Q.value=0.7;
+  stirGain=ac.createGain(); stirGain.gain.value=0;
+  s2.connect(stirFilt).connect(stirGain).connect(comp); s2.start();
+}
+function tine(freq, when, vel, pan){
+  if(!ac||muted)return;
+  const t=ac.currentTime+when;
+  const pn=ac.createStereoPanner(); pn.pan.value=pan||0; pn.connect(comp);
+  const mk=(f,g0,dec)=>{
+    const o=ac.createOscillator(); o.frequency.value=f;
+    const g=ac.createGain();
+    g.gain.setValueAtTime(0,t);
+    g.gain.linearRampToValueAtTime(g0*vel,t+0.006);
+    g.gain.exponentialRampToValueAtTime(0.0004,t+dec);
+    o.connect(g).connect(pn); o.start(t); o.stop(t+dec+0.05);
+  };
+  mk(freq,0.30,1.9); mk(freq*2.756,0.10,0.7); mk(freq*5.404,0.035,0.32);
+  const nz=ac.createBufferSource(); nz.buffer=noiseBuf(0.05);
+  const nf=ac.createBiquadFilter(); nf.type='bandpass'; nf.frequency.value=freq*3; nf.Q.value=2;
+  const ng=ac.createGain(); ng.gain.setValueAtTime(0.05*vel,t);
+  ng.gain.exponentialRampToValueAtTime(0.0004,t+0.05);
+  nz.connect(nf).connect(ng).connect(pn); nz.start(t);
+}
+const PENT=[392.0,440.0,523.25,587.33,659.26];
+function sfxArrive(){ if(!ac)return;
+  const a=PENT[(Math.random()*5)|0], b=PENT[(Math.random()*5)|0];
+  tine(a,0,0.9,(Math.random()-0.5)*0.7); tine(b*2,0.09,0.4,(Math.random()-0.5)*0.7); }
+function sfxRelease(){ if(!ac)return; tine(PENT[0]*0.5,0,0.35,0); }
+function sfxDie(){ if(!ac||muted)return;
+  const t=ac.currentTime;
+  const o=ac.createOscillator(); o.frequency.setValueAtTime(150,t);
+  o.frequency.exponentialRampToValueAtTime(52,t+0.55);
+  const g=ac.createGain(); g.gain.setValueAtTime(0.24,t);
+  g.gain.exponentialRampToValueAtTime(0.0004,t+0.6);
+  o.connect(g).connect(comp); o.start(t); o.stop(t+0.7);
+  const nz=ac.createBufferSource(); nz.buffer=noiseBuf(0.5);
+  const nf=ac.createBiquadFilter(); nf.type='highpass'; nf.frequency.value=1800;
+  const ng=ac.createGain(); ng.gain.setValueAtTime(0.10,t);
+  ng.gain.exponentialRampToValueAtTime(0.0004,t+0.45);
+  nz.connect(nf).connect(ng).connect(comp); nz.start(t);
+}
+function sfxGround(){ if(!ac||muted)return;
+  const t=ac.currentTime;
+  const nz=ac.createBufferSource(); nz.buffer=noiseBuf(0.35);
+  const nf=ac.createBiquadFilter(); nf.type='lowpass'; nf.frequency.setValueAtTime(900,t);
+  nf.frequency.exponentialRampToValueAtTime(180,t+0.3);
+  const ng=ac.createGain(); ng.gain.setValueAtTime(0.16,t);
+  ng.gain.exponentialRampToValueAtTime(0.0004,t+0.35);
+  nz.connect(nf).connect(ng).connect(comp); nz.start(t);
+}
+function sfxRefloat(){ if(!ac)return; tine(PENT[1],0,0.4,0); }
+function sfxLevelDone(win){
+  if(!ac)return;
+  if(win){ tine(PENT[0],0,0.8,-0.3); tine(PENT[2],0.16,0.8,0.1); tine(PENT[4],0.34,0.9,0.3); tine(PENT[2]*2,0.62,0.5,0); }
+  else { tine(PENT[1]*0.5,0,0.6,0); tine(PENT[0]*0.5,0.3,0.6,0); }
+}
+
+/* ---------------- UI / flow ---------------- */
+const $=id=>document.getElementById(id);
+const ov=$('ov'), card=$('card'), kick=$('kick'), ttl=$('ttl'), sub=$('sub'),
+      poem=$('poem'), btn=$('btn'), lvls=$('lvls'), hud=$('hud'),
+      lname=$('lname'), dots=$('dots'), hint=$('hint');
+
+function renderDots(){
+  dots.innerHTML='';
+  for(const t of lanterns){
+    const d=document.createElement('div');
+    d.className='dot '+(t.state==='saved'?'saved':t.state==='dead'?'dead':t.state==='alive'?'alive':'');
+    dots.appendChild(d);
+  }
+}
+function showTitle(){
+  state='title'; hud.classList.remove('on');
+  kick.textContent='a game about being the current';
+  ttl.textContent='NAGASHI'; ttl.classList.add('big');
+  sub.style.display='block';
+  poem.textContent='Tonight the paper lanterns go back to the sea,\ncarrying what they carry.\n\n'+
+    (COARSE?'Drag across the water to make currents.':'Click and drag across the water to make currents.')+
+    '\nYou never touch a lantern. You are the water.';
+  btn.textContent='Begin';
+  lvls.style.display='flex'; lvls.innerHTML='';
+  for(let i2=0;i2<LEVELS.length;i2++){
+    const b=document.createElement('button');
+    b.className='lb'+(i2>=unlocked?' lock':'')+(i2<bestClear?' done':'');
+    b.textContent=ROMAN[i2];
+    b.onclick=e=>{e.stopPropagation(); startLevel(i2);};
+    lvls.appendChild(b);
+  }
+  ov.classList.add('on');
+  loadLevel(0,true);
+}
+function loadLevel(i2, ambient){
+  li=i2; L=LEVELS[li];
+  buildLevelFields();
+  if(!ambient) spawnLevel(); else {lanterns=[];arrived=[];}
+}
+function startLevel(i2){
+  li=i2; L=LEVELS[li];
+  buildLevelFields(); spawnLevel();
+  state='intro'; hintShown=false;
+  kick.textContent='night '+ROMAN[li]+' of '+ROMAN[LEVELS.length-1];
+  ttl.textContent=L.name; ttl.classList.remove('big');
+  sub.style.display='none'; lvls.style.display='none';
+  poem.textContent=L.poem;
+  btn.textContent='Release the lanterns';
+  ov.classList.add('on');
+  lname.innerHTML='night '+ROMAN[li]+' · <b>'+L.name+'</b> · save '+L.need;
+  hud.classList.add('on');
+}
+function beginPlay(){
+  ov.classList.remove('on');
+  state='play'; doneAt=0; lastInputT=time;
+  if(li===0&&!hintShown){
+    setTimeout(()=>{ if(state==='play'&&time-lastInputT>2.5){
+      hint.textContent=COARSE?'drag across the water':'click and drag across the water';
+      hint.classList.add('on'); hintShown=true;
+      const off=()=>{hint.classList.remove('on');cv.removeEventListener('pointermove',off);};
+      cv.addEventListener('pointermove',off);
+    }},3200);
+  }
+}
+const FAILS=['The water was not kind tonight.','Some lights go under.\nThe river is sorry, in its way.','The river kept them.'];
+function finishLevel(win){
+  if(state!=='play')return;
+  state='done'; doneAt=time;
+  sessionTotal+=lanterns.length;
+  sfxLevelDone(win);
+  setTimeout(()=>{
+    if(win){
+      if(li+1>=LEVELS.length){ showEnd(); return; }
+      unlocked=Math.max(unlocked,li+2); bestClear=Math.max(bestClear,li+1);
+      try{localStorage.setItem('nagashi_unlocked',unlocked);
+          localStorage.setItem('nagashi_clear',bestClear);}catch(e){}
+      kick.textContent='night '+ROMAN[li]+' — complete';
+      ttl.textContent= saved===lanterns.length? 'All of them came home.' : saved+' of '+lanterns.length+' came home.';
+      ttl.classList.remove('big');
+      poem.textContent= saved===lanterns.length? 'The sea is a little brighter.' : 'The others will find another way.\nThe river keeps its own.';
+      btn.textContent='Night '+ROMAN[li+1];
+      ov.classList.add('on');
+    } else {
+      kick.textContent='night '+ROMAN[li];
+      ttl.textContent='Only '+saved+' reached the sea.'; ttl.classList.remove('big');
+      poem.textContent=FAILS[(Math.random()*FAILS.length)|0]+'\nIt needs '+L.need+'.';
+      btn.textContent='Again';
+      ov.classList.add('on');
+    }
+  }, win?1100:900);
+}
+function showEnd(){
+  state='end';
+  bestClear=LEVELS.length; unlocked=LEVELS.length;
+  try{localStorage.setItem('nagashi_unlocked',unlocked);
+      localStorage.setItem('nagashi_clear',bestClear);}catch(e){}
+  kick.textContent='the festival is over';
+  ttl.textContent='The sea is full of light.'; ttl.classList.remove('big');
+  poem.textContent=sessionSaved+' of '+sessionTotal+' lanterns came home\nacross nine nights of water.\n\nThank you for carrying them.';
+  btn.textContent='Begin again';
+  ov.classList.add('on');
+}
+btn.addEventListener('click',e=>{
+  e.stopPropagation(); audioBoot();
+  if(state==='title'){ startLevel(unlocked-1); }
+  else if(state==='intro'){ beginPlay(); }
+  else if(state==='done'){
+    const won = saved>=L.need;
+    if(won) startLevel(li+1); else startLevel(li);
+  }
+  else if(state==='end'){ sessionSaved=0; sessionTotal=0; showTitle(); }
+});
+$('bMute').addEventListener('click',()=>{
+  muted=!muted; $('bMute').textContent=muted?'∅':'♪';
+  if(master)master.gain.value=muted?0:0.8;
+});
+$('bRe').addEventListener('click',()=>{ if(L&&state!=='title')startLevel(li); });
+
+/* ---------------- resize (keep the level; remap geometry) ---------------- */
+let rsT=null;
+addEventListener('resize',()=>{ clearTimeout(rsT); rsT=setTimeout(onResize,250); });
+addEventListener('orientationchange',()=>{ clearTimeout(rsT); rsT=setTimeout(onResize,350); });
+function onResize(){
+  const keep=lanterns.map(t=>({t,nx:(t.x-stripX)/stripW,ny:t.y/VH}));
+  const keepA=arrived.map(a=>({a,nx:(a.x-stripX)/stripW}));
+  layout();
+  for(const k of keep){ k.t.x=stripX+k.nx*stripW; k.t.y=k.ny*VH; }
+  for(const k of keepA){ k.a.x=stripX+k.nx*stripW; k.a.y=seaTop+30; }
+}
+
+/* ---------------- recorder (?rec=1) ---------------- */
+let mediaRec=null, recChunks=[];
+window.__rec={
+  start(){
+    audioBoot();
+    const vs=cv.captureStream(60);
+    if(recDest) for(const tr of recDest.stream.getAudioTracks()) vs.addTrack(tr);
+    recChunks=[];
+    mediaRec=new MediaRecorder(vs,{mimeType:'video/webm;codecs=vp9,opus',videoBitsPerSecond:24_000_000});
+    mediaRec.ondataavailable=e=>{if(e.data.size)recChunks.push(e.data);};
+    mediaRec.onstop=()=>{ window.__recBlob=new Blob(recChunks,{type:'video/webm'}); };
+    mediaRec.start();
+  },
+  stop(){ if(mediaRec)mediaRec.stop(); },
+  size(){ return window.__recBlob? window.__recBlob.size : -1; },
+  read(off,len){ return new Promise(res=>{
+    const fr=new FileReader();
+    fr.onload=()=>res(fr.result.split(',')[1]);
+    fr.readAsDataURL(window.__recBlob.slice(off,off+len));
+  }); }
+};
+
+/* expose state for automated gates */
+window.__game={
+  get state(){return state;}, get level(){return li;}, get saved(){return saved;},
+  get dead(){return dead;}, get lanterns(){return lanterns.map(t=>({x:t.x,y:t.y,s:t.state,g:t.grounded}));},
+  get drains(){return drainsPx.map(d=>({x:d.x,y:d.y,r:d.r}));},
+  get seaTop(){return seaTop;}, get strip(){return {x:stripX,w:stripW};},
+  startLevel, beginPlay,
+};
+
+/* ---------------- main loop ---------------- */
+let lastT=performance.now(), lastDt=1/60, acc=0;
+const TICK=Q.has('tick'); // test mode: fixed-step interval loop, immune to rAF throttling
+function frame(now){
+  if(!TICK) requestAnimationFrame(frame);
+  let dt=(now-lastT)/1000; lastT=now;
+  if(dt>0.1)dt=0.1; if(dt<0)dt=0;
+  if(TICK)dt=1/60;
+  lastDt=dt; time+=dt;
+  if(document.hidden&&!TICK)return;
+  fluidStep(Math.min(dt,1/30));
+  partStep(dt);
+  if(state==='play'||state==='done') lanternStep(dt);
+  for(let i=ripples.length-1;i>=0;i--){
+    const rp=ripples[i]; rp.r+=95*dt; rp.a-=1.05*dt;
+    if(rp.a<=0)ripples.splice(i,1);
+  }
+  stirEnergy*=Math.pow(0.14,dt);
+  if(stirGain){
+    const tgt=Math.min(1,stirEnergy/1000)*0.20;
+    const cur=stirGain.gain.value;
+    stirGain.gain.value=cur+(tgt-cur)*(tgt>cur?0.5:0.06);
+    stirFilt.frequency.value=480+Math.min(1,stirEnergy/1000)*950;
+  }
+  draw();
+}
+
+/* ---------------- boot ---------------- */
+layout();
+{
+  const lvlQ=Q.get('level');
+  if(lvlQ!==null){ startLevel(Math.max(0,Math.min(LEVELS.length-1,(+lvlQ||0)))); }
+  else showTitle();
+}
+if(TICK) setInterval(()=>frame(performance.now()),16);
+else requestAnimationFrame(frame);
+</script>
+</body>
+</html>

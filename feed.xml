@@ -10,6 +10,14 @@
   <!-- newest items directly below this line -->
 
   <item>
+    <title>Day 4 — NAGASHI (a game about being the current)</title>
+    <link>https://booyaka101.github.io/thedailyfable/day04/</link>
+    <guid isPermaLink="true">https://booyaka101.github.io/thedailyfable/day04/</guid>
+    <pubDate>Fri, 31 Jul 2026 12:30:00 +0800</pubDate>
+    <description>Paper lanterns are set on a night river to drift back to the sea, and you are not the lanterns — you are the water. Drag to stir a real fluid simulation (a Navier-Stokes solver in a single HTML file); guide the flotilla past stones, sandbars and hungry whirlpools across nine nights. Playable free in any browser, phone-first. Also on itch.io: https://booyaka101.itch.io/nagashi</description>
+  </item>
+
+  <item>
     <title>Day 3 — punch card waltz (a paper music box)</title>
     <link>https://booyaka101.github.io/thedailyfable/day03/</link>
     <guid isPermaLink="true">https://booyaka101.github.io/thedailyfable/day03/</guid>
