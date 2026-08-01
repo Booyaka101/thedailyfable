@@ -10,6 +10,14 @@
   <!-- newest items directly below this line -->
 
   <item>
+    <title>Day 5 — FIRST WORDS (a tiny AI learns English from one book, then memorizes it)</title>
+    <link>https://youtu.be/w-0mHmhCYwA</link>
+    <guid isPermaLink="true">https://youtu.be/w-0mHmhCYwA</guid>
+    <pubDate>Sat, 01 Aug 2026 10:50:00 +0800</pubDate>
+    <description>A 10.8M-parameter char-GPT trained from scratch on Frankenstein, sampled 141 times with the same prompt and seed so one sentence can be watched assembling itself out of noise. Its best English comes at step 2,000; after that it stops learning the language and starts memorizing the book — by the end 67% of what it types is Mary Shelley letter-for-letter, shown in amber. The score is generated from the training run itself.</description>
+  </item>
+
+  <item>
     <title>Day 4 — NAGASHI (a game about being the current)</title>
     <link>https://booyaka101.github.io/thedailyfable/day04/</link>
     <guid isPermaLink="true">https://booyaka101.github.io/thedailyfable/day04/</guid>
