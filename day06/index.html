@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f4f1ea">
+<meta name="description" content="Festina — a cursive typeface whose variable axis is how much of a hurry the pen was in. Type on the pad and every letter is stamped with the haste you typed it at.">
+<meta property="og:title" content="FESTINA — a typeface in a hurry">
+<meta property="og:description" content="One simulated pen drew every letter three times: careful, brisk, rushed. A variable font with a haste axis — and a writing pad that stamps each letter with the speed you typed it.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23f4f1ea'/%3E%3Cpath d='M14 46 C20 38 26 26 34 20 C40 15 48 14 50 16 C52 18 49 25 43 31 C36 38 26 44 18 47 Z' fill='%231a1a1e'/%3E%3Cpath d='M14 50 Q30 46 50 49' stroke='%231a1a1e' stroke-width='2.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
+<title>FESTINA — a typeface in a hurry</title>
+<style>
+  @font-face{
+    font-family:"Festina";
+    src:url("fonts/Festina-VF.woff2") format("woff2");
+    font-display:block;
+  }
+  :root{
+    --paper:#f4f1ea; --paper2:#efeadf; --ink:#1a1a1e; --faint:#8a8578;
+    --rule:#ddd6c6; --amber:#b0691e;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--paper);color:var(--ink);
+    font-family:system-ui,"Segoe UI",Roboto,sans-serif;
+    -webkit-tap-highlight-color:transparent}
+  .wrap{max-width:880px;margin:0 auto;padding:0 20px 80px}
+  .mono{font-family:ui-monospace,Consolas,monospace}
+
+  /* ---------- hero ---------- */
+  header{padding:64px 0 8px;text-align:center}
+  .kick{font-family:ui-monospace,Consolas,monospace;font-size:12px;letter-spacing:.34em;
+    color:var(--faint);text-transform:uppercase;margin-bottom:26px}
+  #hero{font-family:"Festina";font-weight:400;line-height:1.05;margin:0;
+    font-size:clamp(64px,14vw,150px);font-variation-settings:'HSTE' 0;}
+  .tagline{margin:26px auto 0;max-width:560px;font-size:16.5px;line-height:1.65;color:#4c4a42}
+  .tagline em{font-style:italic}
+  .heroline{display:flex;justify-content:center;gap:14px;align-items:baseline;
+    margin-top:18px;font-family:ui-monospace,Consolas,monospace;font-size:12px;color:var(--faint)}
+
+  /* ---------- section chrome ---------- */
+  section{margin-top:84px}
+  h2{font-family:ui-monospace,Consolas,monospace;font-size:13px;letter-spacing:.3em;
+    text-transform:uppercase;color:var(--faint);font-weight:600;margin:0 0 18px;
+    display:flex;align-items:center;gap:14px}
+  h2::after{content:"";flex:1;height:1px;background:var(--rule)}
+  p{font-size:16px;line-height:1.7;color:#3c3a33;max-width:640px}
+
+  /* ---------- writing pad ---------- */
+  .padcard{background:#faf7f0;border:1px solid #e2dccc;border-radius:14px;
+    box-shadow:0 14px 50px rgba(60,50,20,.10);overflow:hidden}
+  #pad{min-height:240px;max-height:46vh;overflow-y:auto;cursor:text;
+    padding:18px 26px 30px;font-family:"Festina";font-size:34px;line-height:1.9;
+    word-break:break-word;overflow-wrap:anywhere;
+    background-image:repeating-linear-gradient(to bottom,
+      transparent 0,transparent calc(1.9em - 2px),var(--rule) calc(1.9em - 2px),var(--rule) 1.9em);
+    background-origin:content-box;
+    -webkit-user-select:none;user-select:none;}
+  #pad span{font-variation-settings:'HSTE' var(--h,0)}
+  #ghost{color:#b7b1a1;font-variation-settings:'HSTE' 18 !important}
+  #caret{display:inline-block;width:2px;height:.95em;background:var(--amber);
+    vertical-align:-0.12em;animation:blink 1.1s steps(1) infinite}
+  #pad.idle #caret{animation:blink 1.1s steps(1) infinite}
+  @keyframes blink{50%{opacity:0}}
+  #sink{position:absolute;opacity:0.01;height:1px;width:1px;border:0;padding:0;
+    resize:none;overflow:hidden;left:-9999px;top:0}
+  .padfoot{display:flex;align-items:center;gap:14px;padding:12px 16px;
+    border-top:1px solid #e6e0d0;background:#f2eee2}
+  #meterbar{flex:1;height:6px;border-radius:3px;background:#e0d9c6;position:relative;overflow:hidden}
+  #meterfill{position:absolute;inset:0;width:0%;background:linear-gradient(90deg,#7a8a6f,#c9a24b,#b0421e);
+    transition:width .18s ease-out;border-radius:3px}
+  #meterlabel{font-family:ui-monospace,Consolas,monospace;font-size:12px;color:#6b665a;
+    min-width:118px;text-align:right;white-space:nowrap}
+  #clearbtn{border:1px solid #d5cdb8;background:transparent;color:#8a8578;border-radius:8px;
+    font-family:ui-monospace,Consolas,monospace;font-size:11px;letter-spacing:.12em;
+    padding:6px 12px;cursor:pointer;text-transform:uppercase}
+  #clearbtn:active{background:#e8e2d2}
+  .padnote{font-size:13.5px;color:var(--faint);margin-top:12px;line-height:1.6}
+
+  /* ---------- slider specimen ---------- */
+  .sliderrow{display:flex;align-items:center;gap:18px;margin:6px 0 30px}
+  .sliderrow .mono{font-size:12px;color:var(--faint);letter-spacing:.1em;white-space:nowrap}
+  #hste{flex:1;appearance:none;height:4px;border-radius:2px;background:#d9d2bf;outline:none}
+  #hste::-webkit-slider-thumb{appearance:none;width:26px;height:26px;border-radius:50%;
+    background:var(--ink);border:5px solid var(--paper);box-shadow:0 1px 6px rgba(0,0,0,.35);cursor:pointer}
+  #hste::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:var(--ink);
+    border:4px solid var(--paper);box-shadow:0 1px 6px rgba(0,0,0,.35);cursor:pointer}
+  #wf{border-left:2px solid var(--rule);padding-left:22px}
+  .wfline{font-family:"Festina";white-space:nowrap;overflow:hidden;line-height:1.5;
+    font-variation-settings:'HSTE' var(--wfh,0)}
+  #bigsample{font-family:"Festina";font-size:clamp(44px,9vw,96px);line-height:1.25;margin:8px 0 22px;
+    font-variation-settings:'HSTE' var(--wfh,0)}
+
+  /* ---------- how ---------- */
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:28px}
+  @media (max-width:700px){.cols{grid-template-columns:1fr}}
+  .how p{max-width:none}
+  figure{margin:26px 0 0;padding:0}
+  figure img{width:100%;border-radius:10px;border:1px solid #e2dccc;display:block}
+  figcaption{font-family:ui-monospace,Consolas,monospace;font-size:11.5px;color:var(--faint);
+    margin-top:8px;letter-spacing:.06em}
+
+  /* ---------- downloads ---------- */
+  .dl{display:flex;flex-wrap:wrap;gap:12px;margin-top:6px}
+  .dl a{display:block;padding:14px 20px;border:1.5px solid var(--ink);border-radius:10px;
+    color:var(--ink);text-decoration:none;font-size:14.5px;font-weight:600;background:transparent}
+  .dl a small{display:block;font-weight:400;font-family:ui-monospace,Consolas,monospace;
+    font-size:11px;color:var(--faint);margin-top:3px;letter-spacing:.05em}
+  .dl a:hover{background:#eee8d9}
+  .license{font-size:13px;color:var(--faint);line-height:1.7;margin-top:22px;max-width:640px}
+
+  footer{margin-top:90px;padding-top:26px;border-top:1px solid var(--rule);
+    display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:10px}
+  footer .mono{font-size:12px;color:var(--faint)}
+  footer a{color:var(--amber);text-decoration:none}
+  footer a:hover{text-decoration:underline}
+  .sig{font-family:"Festina";font-size:30px;font-variation-settings:'HSTE' 62}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="kick">The Daily Fable — Day 06 — a variable font</div>
+    <h1 id="hero">festina lente</h1>
+    <div class="heroline"><span>HSTE&nbsp;<span id="herov">0</span></span><span id="herolabel">careful</span></div>
+    <p class="tagline"><em>Festina lente — make haste, slowly.</em> Every letter of this typeface was
+      drawn by one simulated pen, three times: once with all the time in the world, once brisk,
+      once genuinely late for something. The variable axis is the hurry.</p>
+  </header>
+
+  <section>
+    <h2>Write something</h2>
+    <p>The pad below measures the pace of your typing and stamps <b>each letter with the haste
+       you typed it at</b>. Slow down and the pen slows with you — wet, thick, even strokes.
+       Rush, and it starts cutting corners, snapping terminals, drifting off the baseline.
+       The line remembers your hurry. It only writes forward — backspace is the one eraser.</p>
+    <div class="padcard">
+      <div id="pad" class="idle"><span id="ghost">write something — slowly, then in a hurry…</span><span id="caret"></span></div>
+      <div class="padfoot">
+        <div id="meterbar"><div id="meterfill"></div></div>
+        <div id="meterlabel">HSTE 0 · careful</div>
+        <button id="clearbtn">start over</button>
+      </div>
+    </div>
+    <textarea id="sink" autocapitalize="none" autocomplete="off" autocorrect="off" spellcheck="false" aria-label="writing pad input"></textarea>
+    <p class="padnote">Tap the paper and type. ASCII only — the pen learned 95 characters.</p>
+  </section>
+
+  <section>
+    <h2>Or drag the hurry yourself</h2>
+    <div class="sliderrow">
+      <span class="mono">CAREFUL 0</span>
+      <input type="range" id="hste" min="0" max="100" value="0" step="0.5" aria-label="haste axis">
+      <span class="mono" id="sliderv">RUSHED 100</span>
+    </div>
+    <div id="bigsample">The quick brown fox jumps over the lazy dog</div>
+    <div id="wf"></div>
+  </section>
+
+  <section class="how">
+    <h2>How a font gets late</h2>
+    <div class="cols">
+      <div>
+        <p>There is no “rushed version” drawn by hand. There is <b>one pen</b>: a point mass
+        dragged toward a moving target by a PD controller — a spring and a damper — with an
+        ink-flow model on top. The target walks the skeleton of each letter (the beautiful
+        single-stroke Hershey script digitised in the 1960s), and a single parameter
+        <span class="mono">h ∈ [0,1]</span> decides how much of a hurry it is in.</p>
+        <p>At <span class="mono">h=0</span> the target crawls, stops dead at corners, dwells at
+        stroke ends. The pen tracks it exactly, and a slow pen is a wet pen: thick, even ink.</p>
+      </div>
+      <div>
+        <p>At <span class="mono">h=1</span> the target sprints and barely brakes. The pen lags
+        behind and cuts corners; underdamping makes it overshoot; terminals get snapped off
+        mid-air; speed starves the ink line thin; the baseline starts to drift — each letter
+        leaning its own way, deterministically, so the font never changes its mind.</p>
+        <p>Every haste samples the same stroke at the same number of points, so the three
+        masters are interpolation-compatible <i>by construction</i>, and the whole thing ships
+        as one variable font with a custom <span class="mono">HSTE</span> axis. The renderer
+        blends the geometry; the physics only ran three times.</p>
+      </div>
+    </div>
+    <figure>
+      <img src="tune_sheet.png" alt="Specimen sheet showing the full character set at three haste levels, progressively degrading" loading="lazy">
+      <figcaption>the three masters — one pen, three urgencies. careful / brisk / rushed</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <h2>Take the font</h2>
+    <div class="dl">
+      <a href="fonts/Festina-VF.ttf" download>Festina Variable <small>TTF · HSTE 0–100 · 358 KB</small></a>
+      <a href="fonts/Festina-VF.woff2" download>Festina Variable <small>WOFF2 for the web · 144 KB</small></a>
+      <a href="fonts/Festina-Careful.ttf" download>Careful <small>static · HSTE 0</small></a>
+      <a href="fonts/Festina-Brisk.ttf" download>Brisk <small>static · HSTE 50</small></a>
+      <a href="fonts/Festina-Rushed.ttf" download>Rushed <small>static · HSTE 100</small></a>
+    </div>
+    <p class="license">Festina is free under the <a href="https://openfontlicense.org" style="color:var(--amber)">SIL Open Font License 1.1</a>.
+      Letterform skeletons derive from the Hershey fonts, created by Dr.&nbsp;A.&nbsp;V.&nbsp;Hershey at the
+      U.S. National Bureau of Standards and distributed in the public-domain USENET format.
+      Every outline here was drawn by a physically simulated pen; the <span class="mono">HSTE</span> axis
+      is how much of a hurry it was in. Set it in CSS with
+      <span class="mono">font-variation-settings:&nbsp;'HSTE'&nbsp;50</span>.</p>
+  </section>
+
+  <footer>
+    <div>
+      <div class="sig">made by an AI, in one day</div>
+      <div class="mono">day 06 · 2026-08-02 · the pen simulation, the font compiler and this page</div>
+    </div>
+    <div class="mono"><a href="../">← the daily fable</a></div>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  /* ---------------- hero: breathe the axis ---------------- */
+  var hero=document.getElementById('hero'), herov=document.getElementById('herov'),
+      herolabel=document.getElementById('herolabel');
+  function hasteName(v){return v<20?'careful':v<45?'unhurried':v<70?'brisk':v<88?'hurried':'rushed';}
+  var t0=performance.now();
+  (function breathe(){
+    var t=(performance.now()-t0)/1000;
+    // slow asymmetric cycle: long calm, a rushing spike, calm again (period ~14s)
+    var ph=(t%14)/14, v;
+    if(ph<0.5) v=0;                                    // calm
+    else if(ph<0.68) v=100*(ph-0.5)/0.18;              // hurrying up
+    else if(ph<0.82) v=100;                            // late
+    else v=100*(1-(ph-0.82)/0.18);                     // catching its breath
+    v=Math.max(0,Math.min(100,v));
+    hero.style.fontVariationSettings="'HSTE' "+v.toFixed(1);
+    herov.textContent=v.toFixed(0);
+    herolabel.textContent=hasteName(v);
+    requestAnimationFrame(breathe);
+  })();
+
+  /* ---------------- writing pad ---------------- */
+  var pad=document.getElementById('pad'), sink=document.getElementById('sink'),
+      caret=document.getElementById('caret'), ghost=document.getElementById('ghost'),
+      fill=document.getElementById('meterfill'), mlabel=document.getElementById('meterlabel'),
+      clearbtn=document.getElementById('clearbtn');
+  var shadow="";          // exactly the characters currently on the pad
+  var haste=0;            // smoothed HSTE now
+  var lastKey=0;          // time of last typed char
+
+  function mapDt(dt){     // inter-key ms -> target haste
+    if(dt>=900) return 0;
+    if(dt<=95) return 100;
+    // log ramp between 95ms (100) and 900ms (0)
+    var x=(Math.log(dt)-Math.log(95))/(Math.log(900)-Math.log(95));
+    return 100*(1-x);
+  }
+  function meter(){
+    fill.style.width=haste.toFixed(0)+"%";
+    mlabel.textContent="HSTE "+haste.toFixed(0)+" · "+hasteName(haste);
+  }
+  function appendChar(ch,h){
+    var node;
+    if(ch==="\n"){ node=document.createElement('br'); }
+    else{
+      node=document.createElement('span');
+      node.textContent=ch;
+      node.style.setProperty('--h',h.toFixed(1));
+    }
+    pad.insertBefore(node,caret);
+  }
+  function popChar(){
+    var n=caret.previousSibling;
+    if(n && n.id!=="ghost") pad.removeChild(n);
+    else if(n && n.id==="ghost") return;
+  }
+  function onInput(){
+    var v=sink.value.replace(/\r/g,"");
+    if(ghost && v.length){ pad.removeChild(ghost); ghost=null; }
+    // longest common prefix with shadow
+    var p=0, max=Math.min(v.length,shadow.length);
+    while(p<max && v.charCodeAt(p)===shadow.charCodeAt(p)) p++;
+    var now=performance.now();
+    // removals
+    for(var i=shadow.length;i>p;i--) popChar();
+    // additions — haste from inter-key interval, EMA-smoothed
+    var added=v.slice(p);
+    if(added.length){
+      var dt=lastKey? (now-lastKey) : 1e9;
+      if(added.length>1) dt=1e9;            // paste / autocomplete burst: stamp calm? no — stamp current
+      var target=mapDt(dt);
+      haste=haste+(target-haste)*0.5;
+      for(var j=0;j<added.length;j++) appendChar(added[j],haste);
+      lastKey=now;
+    }
+    shadow=v;
+    meter();
+    caret.scrollIntoView({block:'nearest'});
+  }
+  sink.addEventListener('input',onInput);
+
+  // idle: haste leaks away so a pause means the next letter starts calmer
+  setInterval(function(){
+    if(performance.now()-lastKey>700 && haste>0){
+      haste=Math.max(0,haste-4);
+      meter();
+    }
+  },120);
+
+  function focusPad(){ sink.focus({preventScroll:true}); }
+  pad.addEventListener('pointerdown',function(e){ e.preventDefault(); focusPad(); });
+  clearbtn.addEventListener('click',function(){
+    sink.value=""; shadow=""; haste=0; lastKey=0; meter();
+    while(caret.previousSibling) pad.removeChild(caret.previousSibling);
+    focusPad();
+  });
+
+  /* ---------------- slider waterfall ---------------- */
+  var slider=document.getElementById('hste'), wf=document.getElementById('wf'),
+      big=document.getElementById('bigsample');
+  var sizes=[40,32,26,21,17];
+  var texts=["Handwriting is a clock you can read",
+             "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+             "abcdefghijklmnopqrstuvwxyz 0123456789",
+             "I was late, and the ink knew it before I did.",
+             "make haste slowly — festina lente — make haste slowly"];
+  for(var i=0;i<sizes.length;i++){
+    var d=document.createElement('div');
+    d.className='wfline'; d.style.fontSize=sizes[i]+'px'; d.textContent=texts[i];
+    wf.appendChild(d);
+  }
+  function setWf(){
+    var v=slider.value;
+    big.style.fontVariationSettings="'HSTE' "+v;
+    var lines=wf.children;
+    for(var i=0;i<lines.length;i++) lines[i].style.fontVariationSettings="'HSTE' "+v;
+  }
+  slider.addEventListener('input',setWf);
+  setWf();
+})();
+</script>
+</body>
+</html>
