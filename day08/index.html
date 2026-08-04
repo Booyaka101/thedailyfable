@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ORUND — The Atlas of the One Land — The Daily Fable, Day 8</title>
+<meta name="description" content="An atlas of a world that does not exist. Grown from plate tectonics, erosion, wind and rain — then surveyed, named in four invented tongues, and engraved. Made end-to-end by an AI.">
+<link rel="stylesheet" href="leaflet/leaflet.css">
+<style>
+  :root { --paper:#f5edda; --ink:#2f2a22; --dim:#7a7060; --accent:#8c5b3f; }
+  html, body { margin:0; height:100%; background:var(--paper); color:var(--ink);
+    font: 16px/1.55 Georgia, 'Times New Roman', serif; overflow:hidden; }
+  #map { position:absolute; inset:0; background:var(--paper); }
+  .leaflet-container { font: inherit; }
+
+  /* title card */
+  #card { position:absolute; top:12px; left:12px; z-index:1000; background:rgba(245,237,218,0.94);
+    border:1px solid var(--ink); box-shadow: 3px 3px 0 rgba(47,42,34,0.25); padding:10px 14px 9px;
+    max-width: min(74vw, 340px); }
+  #card h1 { margin:0; font-size:clamp(20px,4.5vw,26px); letter-spacing:6px; font-weight:normal; }
+  #card .sub { font-style:italic; color:var(--dim); font-size:12.5px; margin-top:2px; }
+  #card .links { font-size:12.5px; margin-top:6px; }
+  #card a { color:var(--accent); }
+  #about { display:none; font-size:13px; margin-top:8px; border-top:1px solid rgba(47,42,34,.25); padding-top:8px; }
+  #about.open { display:block; }
+
+  /* gazetteer */
+  #gz-toggle { position:absolute; z-index:1000; right:12px; top:12px; background:var(--ink); color:var(--paper);
+    border:none; font:14px Georgia,serif; letter-spacing:2px; padding:9px 14px; cursor:pointer;
+    box-shadow: 3px 3px 0 rgba(47,42,34,0.25); }
+  #gz { position:absolute; z-index:1001; background:var(--paper); border-left:1px solid var(--ink);
+    top:0; right:0; height:100%; width:min(400px, 92vw); transform:translateX(102%);
+    transition:transform .25s ease; overflow-y:auto; -webkit-overflow-scrolling:touch;
+    box-shadow:-4px 0 18px rgba(47,42,34,0.25); }
+  #gz.open { transform:none; }
+  #gz .head { position:sticky; top:0; background:var(--paper); border-bottom:1px solid var(--ink);
+    padding:14px 18px 10px; display:flex; justify-content:space-between; align-items:baseline; }
+  #gz .head h2 { margin:0; font-size:16px; letter-spacing:4px; font-weight:normal; }
+  #gz .head button { background:none; border:none; font-size:22px; color:var(--ink); cursor:pointer; padding:4px 8px; }
+  .entry { padding:13px 18px 12px; border-bottom:1px solid rgba(47,42,34,.18); cursor:pointer; }
+  .entry:hover { background:rgba(140,91,63,.07); }
+  .entry h3 { margin:0 0 3px; font-size:15px; font-weight:normal; letter-spacing:1px; }
+  .entry h3 .g { color:var(--dim); font-style:italic; letter-spacing:0; font-size:12.5px; }
+  .entry p { margin:0; font-size:13.5px; color:#4a4336; }
+  .entry .go { font-size:11.5px; color:var(--accent); font-style:italic; }
+
+  /* attribution-ish footer chip */
+  #chip { position:absolute; z-index:1000; left:12px; bottom:12px; font-size:11.5px; color:var(--dim);
+    background:rgba(245,237,218,0.85); padding:3px 8px; border:1px solid rgba(47,42,34,.3); }
+  #chip a { color:var(--accent); }
+  .leaflet-control-zoom { display:none; }
+  @media (min-width:700px){ .leaflet-control-zoom { display:block; } }
+
+  /* flyTo pulse */
+  .pulse { border:2px solid var(--accent); border-radius:50%; animation:pl 1.6s ease-out 3; }
+  @keyframes pl { 0% { transform:scale(.25); opacity:.95 } 100% { transform:scale(1.6); opacity:0 } }
+</style>
+</head>
+<body>
+<div id="map"></div>
+
+<div id="card">
+  <h1>ORUND</h1>
+  <div class="sub">an atlas of a world that does not exist · Day 8 of <a href="../" style="color:var(--accent)">The Daily Fable</a></div>
+  <div class="links">
+    <a href="orund-poster.pdf">the poster (PDF)</a> ·
+    <a href="#" id="about-btn">how this world was grown</a>
+  </div>
+  <div id="about">
+    Orund was not drawn; it was grown. Fifteen tectonic plates were set drifting and their
+    collisions raised the mountain arcs. Seven hundred thousand simulated raindrops carved the
+    valleys; the rivers follow real watersheds, every one downhill all the way to the sea.
+    Winds were blown across the map by latitude, wringing rain out on the windward slopes —
+    the deserts sit exactly where the mountains left them in shadow. Cities grew where harbors,
+    rivers and mild weather invited them; four invented languages named what grew. Then the
+    whole world was engraved in the manner of a nineteenth-century atlas plate.
+    Everything follows from seed 8. Nothing was placed by hand except the names.
+  </div>
+</div>
+
+<button id="gz-toggle">GAZETTEER</button>
+<aside id="gz">
+  <div class="head"><h2>GAZETTEER</h2><button id="gz-close" aria-label="close">×</button></div>
+  <div id="entries"></div>
+</aside>
+
+<div id="chip">made end-to-end by an AI · <a href="https://www.youtube.com/@thedailyfable5">the daily fable</a></div>
+
+<script src="leaflet/leaflet.js"></script>
+<script>
+const MAXZ = 5, NATIVE_W = 8192, NATIVE_H = 4096;
+
+const map = L.map('map', {
+  crs: L.CRS.Simple, minZoom: 1, maxZoom: 7, zoomSnap: 0.25,
+  attributionControl: false, worldCopyJump: false, inertia: true,
+});
+
+// vertical clamp, horizontal freedom (the world wraps)
+const south = map.unproject([0, NATIVE_H], MAXZ), north = map.unproject([0, 0], MAXZ);
+map.setMaxBounds(L.latLngBounds(L.latLng(south.lat - 20, -1e9), L.latLng(north.lat + 20, 1e9)));
+
+const Wrap = L.TileLayer.extend({
+  getTileUrl(c) {
+    const cols = Math.pow(2, c.z), rows = cols / 2;
+    if (c.y < 0 || c.y >= rows) return 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
+    const x = ((c.x % cols) + cols) % cols;
+    return `tiles/${c.z}/${x}/${c.y}.jpg`;
+  }
+});
+new Wrap('', { tileSize: 256, minNativeZoom: 1, maxNativeZoom: MAXZ, updateWhenIdle: false,
+               keepBuffer: 4 }).addTo(map);
+
+function goto(x, y, z) {   // sim coords (2048x1024) -> latlng
+  return map.unproject([x * 4, y * 4], MAXZ);
+}
+map.setView(goto(1080, 470), window.innerWidth < 700 ? 1.5 : 2.25);
+
+// ------------------------------------------------ gazetteer
+const G = [
+ ["ORUND", "the One Land", 1080, 470, 2,
+  "There is one continent, and one sea. Every coast on the world faces the same water, and a traveler who walks east long enough comes home by the west gate. The far south of the One Land carries the ice on its back; the dry heart of it has never once heard rain."],
+ ["OMERA", "the All-Sea", 1000, 545, 2.5,
+  "Maro sailors named it o-mera, the all-sea, on the correct theory that it has no other shore than Orund's own. Cross it anywhere and you arrive back at the One Land — somewhere else, and someone else's harbor."],
+ ["THE ASHZHAR", "the dust-waste", 1430, 442, 3,
+  "The heart of Orund turned its back on the rain. Every wind that reaches the Ashzhar has already crossed a mountain range, and the mountains keep the water as toll. What is left arrives as dust. The Qhoran say the desert is not empty; it is a room the world keeps swept."],
+ ["THE ORCHAI", "the great river", 1300, 420, 3.5,
+  "The one river the desert could not kill. It rises on the Kultau snows, crosses the whole of the Ashzhar, is drunk by it daily, and reaches the Sea of Qhoras anyway. Everything the Qhorate is — the port, the caravans, the realm itself — is this river's argument with the sand."],
+ ["QHORAS", "the desert port", 1356, 411, 4,
+  "Where the Orchai finally meets its sea. Grain comes down the river; salt, copper and rumor come out of the desert on the caravans; and the city takes its tithe of both directions. In Qhoras they say: the river built the houses, the desert built the walls."],
+ ["THE YSFELL", "the ice-fells", 1731, 869, 3,
+  "The highest mountains of the world, and the wall against the ice. Their north faces feed the Onuala; their far side is the Yshelm, which does not melt. The Kaldhorn — the cold horn, 7,214 m — has no recorded ascent, because the people who live in sight of it have never seen a reason."],
+ ["THE YSHELM & YSVIK", "the ice-helm; the last city", 1900, 900, 3,
+  "South of the Ysfell the land keeps its winter all year, and the atlas keeps mostly silence. Ysvik is the southernmost roof of the world: a whaling and fur station where every window faces north, toward the sun, and the harbor is open four months in a good year."],
+ ["JORHAVN", "old harbor", 666, 247, 4,
+  "Greatest city of the north, at the mouth of the Jorneth. The Skeldic name means simply 'old harbor' — nobody remembers a time it needed distinguishing from a new one. Timber from the Jorskog, iron from the Jorbrek, and the patience of people whose river is frozen a third of the year."],
+ ["THE ALMERA", "the mother-sea", 156, 573, 3,
+  "A sea with no gate to the Omera: the west's great landlocked water. The Maro learned to sail here, on a sea with no tide and no horizon-storm, and then walked their boats over the isthmus and taught the open ocean what they had practiced. Cordos and Almos still call it the mother."],
+ ["SALMERA & SALMAR", "the salt sea", 278, 620, 3.5,
+  "An inland sea that found no outlet and gave up. What the sun takes it does not return, and the shores of the Salmera are white a mile inland. The salt goes down the Varuin to Salmar on the coast — 'salt-harbor' — which has traded one mineral for eleven hundred years."],
+ ["TALEI", "the green isle", 679, 604, 3.5,
+  "The great island of the western archipelago, and the only realm-sized land that is not the One Land. Velian sailors named it; Maro sailors kept coming anyway. The Sea of Talei between the isles is the busiest water of the world — half the Omera's trade tacks through it."],
+ ["THE ILUVERU", "the rain-forest", 1836, 500, 3,
+  "The east wind crosses half the Omera collecting water and the Talatoa combs it all out at once. Under that permanent argument grows the Iluveru — the wettest country of Orund, where Velia's rivers run full in every season and the forest owns anything left unattended for a year."],
+ ["THE KULMARK", "the lake march", 1500, 320, 3,
+  "Border country: a thousand lakes left where the Kultau's old glaciers forgot them. Three tongues meet in its markets and none of them wins. The Kulchai gathers the whole march and carries it north to the Deep of Kulvarn, past the lake-watch that gave the realm its seat."],
+ ["THE ONUALA", "mother of waters", 1660, 760, 3.5,
+  "Longest river of the world. It rises under the Ysfell in ice the atlas cannot date, and by the time it reaches Onumar it has taken a hundred rivers and kept all their water and none of their names. In Onuvea a person keeps an onuala — a debt too old to repay and too useful to cancel."],
+ ["FINOS", "land's end", 517, 815, 4,
+  "'End-port.' The last stone of the southwest: past the breakwater of Finos the Omera runs unbroken west until it reaches the ice-coast of the Ysmark — half a world away. Ships that round the point still pay the old courtesy of a lowered sail to whatever is out there."],
+ ["THE YOLTAU & ESHQAR", "the road mountains", 890, 550, 3,
+  "The isthmus ranges: the one dry-land bridge between the western lobe and the body of the One Land. Every road the west has ever needed crosses the Yoltau, and Eshqar — 'wind-city' — sits at the desert gate collecting the wind's opinion of each caravan before the sand gives its own."],
+];
+
+const entries = document.getElementById('entries');
+for (const [name, gloss, x, y, z, text] of G) {
+  const el = document.createElement('div');
+  el.className = 'entry';
+  el.innerHTML = `<h3>${name} <span class="g">— ${gloss}</span></h3><p>${text}</p><span class="go">show me ›</span>`;
+  el.addEventListener('click', () => {
+    const ll = goto(x, y);
+    map.flyTo(ll, z, { duration: 1.6 });
+    const ic = L.divIcon({ className: '', html: '<div class="pulse" style="width:64px;height:64px"></div>',
+                           iconSize: [64, 64], iconAnchor: [32, 32] });
+    const mk = L.marker(ll, { icon: ic, interactive: false }).addTo(map);
+    setTimeout(() => map.removeLayer(mk), 5200);
+    if (window.innerWidth < 700) gz.classList.remove('open');
+  });
+  entries.appendChild(el);
+}
+
+const gz = document.getElementById('gz');
+document.getElementById('gz-toggle').addEventListener('click', () => gz.classList.add('open'));
+document.getElementById('gz-close').addEventListener('click', () => gz.classList.remove('open'));
+document.getElementById('about-btn').addEventListener('click', (e) => {
+  e.preventDefault();
+  document.getElementById('about').classList.toggle('open');
+});
+</script>
+</body>
+</html>
