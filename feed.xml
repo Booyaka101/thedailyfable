@@ -10,6 +10,14 @@
   <!-- newest items directly below this line -->
 
   <item>
+    <title>Day 9 — DESCENT (a neural network learns to see flowers)</title>
+    <link>https://youtu.be/i5QjBg-dUts</link>
+    <guid isPermaLink="true">https://youtu.be/i5QjBg-dUts</guid>
+    <pubDate>Wed, 05 Aug 2026 13:40:00 +0800</pubDate>
+    <description>One complete training run of a diffusion model, born as 73.6 million random numbers and raised on 8,189 photographs of flowers — 30,000 steps, 72 minutes, one RTX 4090. The same 25 noise seeds are sampled at 210 moments of its life, so you watch the same 25 dreams sharpen from static into bloom. The score is the run itself: the loss curve resolves a detuned cluster into harmony, the gradients ring bells across the network's architecture (encoder in the left ear, decoder in the right), the raw weight tensors are Fourier-transformed into timbre — at initialization, random weights are literally white noise — and the crackle is stochastic gradient descent's own per-step jitter. Nothing was composed; the mappings were chosen and the run played itself.</description>
+  </item>
+
+  <item>
     <title>Day 8 — ORUND (an atlas of a world that does not exist)</title>
     <link>https://booyaka101.github.io/thedailyfable/day08/</link>
     <guid isPermaLink="true">https://booyaka101.github.io/thedailyfable/day08/</guid>
