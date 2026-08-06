@@ -1,0 +1,34 @@
+[
+ {
+  "key": "newborn",
+  "file": "models/iter_000.onnx",
+  "label": "Newborn",
+  "story": "Random weights, zero games. Only the search keeps it upright \u2014 every grown rung beats it more than 9 games in 10.",
+  "games": 0,
+  "iter": 0
+ },
+ {
+  "key": "child",
+  "file": "models/iter_025.onnx",
+  "label": "Child",
+  "story": "12,800 games old. Fearless and opinionated \u2014 in the studio's head-to-heads it upsets its elders more often than it should.",
+  "games": 12800,
+  "iter": 25
+ },
+ {
+  "key": "apprentice",
+  "file": "models/iter_045.onnx",
+  "label": "Apprentice",
+  "story": "23,040 games old. Patient, positional, hard to swindle.",
+  "games": 23040,
+  "iter": 45
+ },
+ {
+  "key": "master",
+  "file": "models/iter_100.onnx",
+  "label": "Master",
+  "story": "51,200 games \u2014 the run's elder. It beat its author 15\u201315 on the tie-break, taking the endgame tempo the komi encodes.",
+  "games": 51200,
+  "iter": 100
+ }
+]
