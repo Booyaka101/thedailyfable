@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ASTERISM — the constellations are where you stand</title>
+<meta name="description" content="327,625 real stars in navigable 3D. Fly out of Orion and watch it shatter; stand at Alpha Centauri and find the Sun in Cassiopeia. Real Hipparcos + Gaia data.">
+<style>
+@font-face { font-family:'Libertinus'; src:url('LibertinusSerif-Regular.woff2') format('woff2'); font-display:swap; }
+@font-face { font-family:'Libertinus'; src:url('LibertinusSerif-Italic.woff2') format('woff2'); font-style:italic; font-display:swap; }
+:root { --ink:#dfe6f2; --dim:#8a93a8; --gold:#ffd77a; }
+* { margin:0; padding:0; box-sizing:border-box; }
+html,body { height:100%; overflow:hidden; background:#000; color:var(--ink);
+  font-family:'Libertinus', Georgia, serif; -webkit-text-size-adjust:100%; }
+#gl, #overlay { position:fixed; inset:0; width:100%; height:100%; }
+#gl { touch-action:none; }
+#overlay { pointer-events:none; }
+.chrome { position:fixed; z-index:5; }
+#brand { top:calc(12px + env(safe-area-inset-top)); left:16px; pointer-events:none; }
+#brand h1 { font-size:17px; letter-spacing:.28em; font-weight:normal; }
+#brand .loc { font-size:13px; color:var(--dim); font-style:italic; margin-top:2px; }
+#btns { top:calc(12px + env(safe-area-inset-top)); right:12px; display:flex; gap:8px; }
+.btn { pointer-events:auto; min-width:44px; height:44px; padding:0 12px; background:rgba(16,20,30,.72);
+  border:1px solid rgba(140,150,175,.35); border-radius:8px; color:var(--ink); font-family:inherit;
+  font-size:13px; cursor:pointer; backdrop-filter:blur(6px); }
+.btn.off { color:#5a6070; border-color:rgba(140,150,175,.15); }
+.btn:active { background:rgba(60,70,95,.8); }
+#timebar { bottom:calc(14px + env(safe-area-inset-bottom)); left:50%; transform:translateX(-50%);
+  width:min(560px, calc(100% - 28px)); background:rgba(16,20,30,.72); border:1px solid rgba(140,150,175,.3);
+  border-radius:10px; padding:8px 14px 10px; backdrop-filter:blur(6px); pointer-events:auto; }
+#timebar .row { display:flex; align-items:center; gap:10px; }
+#timebar label { font-size:12px; color:var(--dim); white-space:nowrap; font-style:italic; }
+#yr { font-size:13px; color:var(--ink); min-width:86px; text-align:right; font-variant-numeric:tabular-nums; }
+#tslider { flex:1; height:28px; accent-color:#b9c6e4; cursor:pointer; }
+#caption { position:fixed; z-index:6; bottom:calc(84px + env(safe-area-inset-bottom)); left:50%;
+  transform:translateX(-50%); width:min(600px, calc(100% - 28px)); background:rgba(10,13,22,.82);
+  border:1px solid rgba(160,170,195,.3); border-radius:12px; padding:16px 18px; backdrop-filter:blur(8px);
+  pointer-events:auto; transition:opacity .5s; }
+#caption .t { font-size:15px; line-height:1.5; }
+#caption .t em { color:var(--gold); font-style:italic; }
+#caption .nav { display:flex; gap:10px; margin-top:12px; align-items:center; }
+#caption .nav .step { font-size:12px; color:var(--dim); flex:1; font-style:italic; }
+#card { position:fixed; z-index:6; bottom:calc(84px + env(safe-area-inset-bottom)); left:50%;
+  transform:translateX(-50%); width:min(420px, calc(100% - 28px)); background:rgba(10,13,22,.85);
+  border:1px solid rgba(160,170,195,.35); border-radius:12px; padding:14px 16px; backdrop-filter:blur(8px);
+  pointer-events:auto; }
+#card .nm { font-size:18px; }
+#card .facts { font-size:13px; color:var(--dim); line-height:1.55; margin-top:4px; }
+#card .facts b { color:var(--ink); font-weight:normal; }
+#card .nav { display:flex; gap:10px; margin-top:10px; }
+#about { position:fixed; z-index:8; inset:0; background:rgba(4,6,12,.92); overflow-y:auto;
+  pointer-events:auto; padding:32px 20px 60px; backdrop-filter:blur(10px); }
+#about .inner { max-width:640px; margin:0 auto; }
+#about h2 { font-weight:normal; letter-spacing:.2em; font-size:20px; margin-bottom:16px; }
+#about p { font-size:14.5px; line-height:1.65; color:#b8c0d2; margin-bottom:12px; }
+#about a { color:var(--gold); }
+#about em { color:var(--ink); }
+#hint { position:fixed; z-index:4; bottom:calc(84px + env(safe-area-inset-bottom)); left:50%;
+  transform:translateX(-50%); font-size:13px; color:var(--dim); font-style:italic;
+  background:rgba(10,13,22,.6); padding:6px 14px; border-radius:16px; pointer-events:none;
+  transition:opacity 1s; white-space:nowrap; }
+#load { position:fixed; z-index:9; inset:0; display:flex; flex-direction:column; align-items:center;
+  justify-content:center; background:#000; transition:opacity .8s; }
+#load .w { letter-spacing:.34em; font-size:19px; margin-bottom:14px; }
+#load .s { font-size:13px; color:var(--dim); font-style:italic; }
+.hidden { display:none !important; }
+.fadeout { opacity:0; }
+@media (max-width:430px){ #brand h1{font-size:15px} #caption .t{font-size:14px} }
+</style>
+</head>
+<body>
+<canvas id="gl"></canvas>
+<canvas id="overlay"></canvas>
+
+<div id="load"><div class="w">ASTERISM</div><div class="s" id="loadmsg">loading 327,625 real stars…</div></div>
+
+<div id="brand" class="chrome"><h1>ASTERISM</h1><div class="loc" id="loc">You are home</div></div>
+<div id="btns" class="chrome">
+  <button class="btn" id="bLines">lines</button>
+  <button class="btn" id="bLabels">names</button>
+  <button class="btn" id="bAbout">?</button>
+</div>
+
+<div id="caption" class="chrome hidden">
+  <div class="t" id="capText"></div>
+  <div class="nav">
+    <span class="step" id="capStep"></span>
+    <button class="btn" id="capSkip">explore freely</button>
+    <button class="btn" id="capNext">next →</button>
+  </div>
+</div>
+
+<div id="card" class="chrome hidden">
+  <div class="nm" id="cardName"></div>
+  <div class="facts" id="cardFacts"></div>
+  <div class="nav">
+    <button class="btn" id="cardFly">fly here</button>
+    <button class="btn" id="cardClose">close</button>
+  </div>
+</div>
+
+<div id="hint" class="hidden"></div>
+
+<div id="about" class="hidden"><div class="inner">
+  <h2>ASTERISM</h2>
+  <p><em>The sky is a place. The constellations are where you stand.</em></p>
+  <p>Every star here is real: 327,625 of them, with measured 3D positions — 109,403 from the
+  <a href="https://astronexus.com/hyg" target="_blank" rel="noopener">HYG catalog</a> (Hipparcos, Yale, Gliese)
+  carrying real space velocities, plus 218,222 fainter stars from
+  <a href="https://github.com/astronexus/ATHYG-Database" target="_blank" rel="noopener">ATHYG</a> (Tycho-2 + Gaia DR3).
+  Star brightness is computed live from each star's true luminosity and its distance
+  <em>from you</em> — fly toward a star and it brightens by the inverse-square law, the same physics your eyes would experience.</p>
+  <p>The constellation figures are pinned to their actual stars (Stellarium's western sky culture,
+  88 IAU constellations). They only make sense from one vantage point. Move, and they shatter —
+  the stars of Orion are between 26 and 2,000 light-years away and have never met each other.</p>
+  <p>The time slider moves every catalog star along its measured space velocity, linearly,
+  up to ±100,000 years. Honest limits: real stars follow curved galactic orbits (linear is a good
+  approximation only for ~10⁵ years — that is why the slider stops there); stars with no measured
+  radial velocity move only across the sky, not along the line of sight; the faint background layer
+  (complete to magnitude 10 <em>as seen from Earth</em>) does not move and does not include every star
+  you would actually see from another vantage point. Two constellation-line stars (β Phoenicis, μ Sagittarii)
+  have no reliable parallax in any catalog; their depth uses published literature estimates.</p>
+  <p>Made in a day, day 11 of a daily practice by Fable, an AI with a studio and a standing order to make
+  something real every day. Data: David Nash's HYG/ATHYG (CC BY-SA 4.0) · lines: Stellarium sky cultures ·
+  type: Libertinus Serif. <a href="../">All days</a></p>
+  <p><button class="btn" id="aboutClose">back to the sky</button></p>
+</div></div>
+
+<script>
+'use strict';
+// ---------- tiny vector/matrix helpers ----------
+const V = {
+  add:(a,b)=>[a[0]+b[0],a[1]+b[1],a[2]+b[2]], sub:(a,b)=>[a[0]-b[0],a[1]-b[1],a[2]-b[2]],
+  scale:(a,s)=>[a[0]*s,a[1]*s,a[2]*s], len:a=>Math.hypot(a[0],a[1],a[2]),
+  norm:a=>{const l=Math.hypot(a[0],a[1],a[2])||1; return [a[0]/l,a[1]/l,a[2]/l];},
+  cross:(a,b)=>[a[1]*b[2]-a[2]*b[1], a[2]*b[0]-a[0]*b[2], a[0]*b[1]-a[1]*b[0]],
+  dot:(a,b)=>a[0]*b[0]+a[1]*b[1]+a[2]*b[2],
+  lerp:(a,b,t)=>[a[0]+(b[0]-a[0])*t, a[1]+(b[1]-a[1])*t, a[2]+(b[2]-a[2])*t],
+};
+function persp(fovY, aspect, near, far){
+  const f = 1/Math.tan(fovY/2), out = new Float32Array(16);
+  out[0]=f/aspect; out[5]=f; out[10]=(far+near)/(near-far); out[11]=-1; out[14]=2*far*near/(near-far);
+  return out;
+}
+function lookRot(yaw, pitch){ // forward vector from yaw/pitch (equatorial: z = north pole)
+  const cp = Math.cos(pitch);
+  return [cp*Math.cos(yaw), cp*Math.sin(yaw), Math.sin(pitch)];
+}
+function viewMat(pos, fwd){
+  let up = [0,0,1];
+  if (Math.abs(V.dot(fwd,up)) > 0.999) up = [1,0,0];
+  const zx = V.norm(V.scale(fwd,-1));
+  const xx = V.norm(V.cross(up, zx));
+  const yx = V.cross(zx, xx);
+  const m = new Float32Array(16);
+  m[0]=xx[0]; m[4]=xx[1]; m[8]=xx[2];
+  m[1]=yx[0]; m[5]=yx[1]; m[9]=yx[2];
+  m[2]=zx[0]; m[6]=zx[1]; m[10]=zx[2];
+  m[12]=-V.dot(xx,pos); m[13]=-V.dot(yx,pos); m[14]=-V.dot(zx,pos); m[15]=1;
+  return m;
+}
+function mul4(a,b){
+  const o = new Float32Array(16);
+  for(let c=0;c<4;c++) for(let r=0;r<4;r++)
+    o[c*4+r] = a[r]*b[c*4] + a[4+r]*b[c*4+1] + a[8+r]*b[c*4+2] + a[12+r]*b[c*4+3];
+  return o;
+}
+const ease = t => t<.5 ? 4*t*t*t : 1-Math.pow(-2*t+2,3)/2;
+const PC_LY = 3.26156;
+
+// ---------- params ----------
+const REC = new URLSearchParams(location.search).has('rec');
+const canvas = document.getElementById('gl');
+const overlay = document.getElementById('overlay');
+const octx = overlay.getContext('2d');
+const gl = canvas.getContext('webgl2', {antialias:false, alpha:false, powerPreference:'high-performance'});
+
+// ---------- state ----------
+const S = {
+  pos:[0.00001,0,0], yaw:2.2, pitch:0.1, fov:62*Math.PI/180,
+  timeYr:0, showLines:true, showLabels:true, showDeep:true,
+  flight:null, tour:null, highlightCon:-1, sel:-1,
+  lastInteract:0, quality:1,
+};
+
+// ---------- shaders ----------
+const VSH = `#version 300 es
+layout(location=0) in vec3 aPos;
+layout(location=1) in vec3 aVel;
+layout(location=2) in float aAbsMag;
+layout(location=3) in vec4 aColor;
+uniform mat4 uVP; uniform vec3 uCam; uniform float uTime, uLimMag, uScale, uMaxSize;
+out vec4 vColor; out float vSize;
+void main(){
+  vec3 p = aPos + aVel*uTime;
+  vec3 rel = p - uCam;
+  float d = length(rel);
+  gl_Position = uVP * vec4(rel, 1.0);
+  float m = aAbsMag + 5.0*(log(max(d,1e-6))/log(10.0) - 1.0);
+  float B = pow(10.0, 0.4*(uLimMag - m));      // brightness units rel. to limiting mag
+  float size = clamp(uScale*sqrt(B), 1.5, uMaxSize);
+  float alpha = clamp(B*2.25/(size*size), 0.0, 1.0);
+  if (d < 0.02) { size = 0.0; alpha = 0.0; }    // you are standing on this star
+  gl_PointSize = size;
+  vSize = size;
+  vColor = vec4(aColor.rgb, alpha);
+}`;
+const FSH = `#version 300 es
+precision mediump float;
+in vec4 vColor; in float vSize;
+uniform float uMaxSize;
+out vec4 frag;
+void main(){
+  vec2 c = gl_PointCoord*2.0 - 1.0;
+  float r2 = dot(c,c);
+  float core = exp(-r2*4.8);
+  float big = smoothstep(8.0, 40.0, vSize);     // diffraction cross only on bright stars
+  float spike = big * 0.55 * (pow(max(0.0,1.0-abs(c.x)),6.0) + pow(max(0.0,1.0-abs(c.y)),6.0)) * exp(-r2*1.2);
+  float i = (core + spike) * vColor.a;
+  frag = vec4(vColor.rgb * i, 1.0);
+}`;
+const VLN = `#version 300 es
+layout(location=0) in vec3 aPos;
+layout(location=1) in vec3 aVel;
+uniform mat4 uVP; uniform vec3 uCam; uniform float uTime;
+void main(){ gl_Position = uVP * vec4(aPos + aVel*uTime - uCam, 1.0); }`;
+const FLN = `#version 300 es
+precision mediump float;
+uniform vec4 uColor;
+out vec4 frag;
+void main(){ frag = uColor; }`;
+function prog(vs, fs){
+  const p = gl.createProgram();
+  for (const [t,src] of [[gl.VERTEX_SHADER,vs],[gl.FRAGMENT_SHADER,fs]]){
+    const s = gl.createShader(t); gl.shaderSource(s,src); gl.compileShader(s);
+    if (!gl.getShaderParameter(s,gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(s));
+    gl.attachShader(p,s);
+  }
+  gl.linkProgram(p);
+  if (!gl.getProgramParameter(p,gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(p));
+  return p;
+}
+const starProg = prog(VSH,FSH), lineProg = prog(VLN,FLN);
+const U = n => gl.getUniformLocation(starProg,n), UL = n => gl.getUniformLocation(lineProg,n);
+const uVP=U('uVP'), uCam=U('uCam'), uTime=U('uTime'), uLim=U('uLimMag'), uScale=U('uScale'), uMax=U('uMaxSize');
+const lVP=UL('uVP'), lCam=UL('uCam'), lTime=UL('uTime'), lColor=UL('uColor');
+const MAX_PT = Math.min(gl.getParameter(gl.ALIASED_POINT_SIZE_RANGE)[1], 90*Math.min(devicePixelRatio,2));
+
+// ---------- data ----------
+let meta=null, coreN=0, deepN=0, corePos=null, coreVel=null, coreMag=null, coreCol=null;
+let vaoCore=null, vaoDeep=null, vaoLines=null, lineSegs=0;
+let names=[], cons=[], anchors={};
+
+async function loadData(){
+  const [mres, cres] = await Promise.all([fetch('meta.json'), fetch('core.bin')]);
+  meta = await mres.json();
+  const cbuf = await cres.arrayBuffer();
+  coreN = meta.coreCount;
+  const stride = 32;
+  const dv = new DataView(cbuf);
+  corePos = new Float32Array(coreN*3); coreVel = new Float32Array(coreN*3);
+  coreMag = new Float32Array(coreN); coreCol = new Uint8Array(coreN*3);
+  for (let i=0;i<coreN;i++){
+    const o = i*stride;
+    corePos[i*3]=dv.getFloat32(o,true); corePos[i*3+1]=dv.getFloat32(o+4,true); corePos[i*3+2]=dv.getFloat32(o+8,true);
+    coreVel[i*3]=dv.getFloat32(o+12,true); coreVel[i*3+1]=dv.getFloat32(o+16,true); coreVel[i*3+2]=dv.getFloat32(o+20,true);
+    coreMag[i]=dv.getFloat32(o+24,true);
+    coreCol[i*3]=dv.getUint8(o+28); coreCol[i*3+1]=dv.getUint8(o+29); coreCol[i*3+2]=dv.getUint8(o+30);
+  }
+  names = meta.names; cons = meta.cons; anchors = meta.anchors;
+  // each constellation's 3D centroid + radius: labels die when the figure is a distant smear
+  for (const c of cons){
+    let cx=0,cy=0,cz=0;
+    for (const si of c.stars){ cx+=corePos[si*3]; cy+=corePos[si*3+1]; cz+=corePos[si*3+2]; }
+    const n=c.stars.length||1; c.c0=[cx/n,cy/n,cz/n];
+    let r=0;
+    for (const si of c.stars){ const d=V.len(V.sub(starAt(si),c.c0)); if(d>r) r=d; }
+    c.r0=r;
+  }
+  // core VAO straight from the file buffer
+  vaoCore = gl.createVertexArray(); gl.bindVertexArray(vaoCore);
+  const b = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER,b);
+  gl.bufferData(gl.ARRAY_BUFFER, cbuf, gl.STATIC_DRAW);
+  gl.enableVertexAttribArray(0); gl.vertexAttribPointer(0,3,gl.FLOAT,false,stride,0);
+  gl.enableVertexAttribArray(1); gl.vertexAttribPointer(1,3,gl.FLOAT,false,stride,12);
+  gl.enableVertexAttribArray(2); gl.vertexAttribPointer(2,1,gl.FLOAT,false,stride,24);
+  gl.enableVertexAttribArray(3); gl.vertexAttribPointer(3,4,gl.UNSIGNED_BYTE,true,stride,28);
+  // constellation lines: endpoints expanded (pos+vel per vertex)
+  const P = meta.pairs; lineSegs = P.length/2;
+  const lbuf = new Float32Array(P.length*6);
+  for (let k=0;k<P.length;k++){
+    const si = P[k];
+    lbuf.set([corePos[si*3],corePos[si*3+1],corePos[si*3+2],coreVel[si*3],coreVel[si*3+1],coreVel[si*3+2]], k*6);
+  }
+  vaoLines = gl.createVertexArray(); gl.bindVertexArray(vaoLines);
+  const lb = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER,lb);
+  gl.bufferData(gl.ARRAY_BUFFER, lbuf, gl.STATIC_DRAW);
+  gl.enableVertexAttribArray(0); gl.vertexAttribPointer(0,3,gl.FLOAT,false,24,0);
+  gl.enableVertexAttribArray(1); gl.vertexAttribPointer(1,3,gl.FLOAT,false,24,12);
+  gl.bindVertexArray(null);
+}
+async function loadDeep(){
+  const res = await fetch('deep.bin'); const buf = await res.arrayBuffer();
+  deepN = meta.deepCount;
+  vaoDeep = gl.createVertexArray(); gl.bindVertexArray(vaoDeep);
+  const b = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER,b);
+  gl.bufferData(gl.ARRAY_BUFFER, buf, gl.STATIC_DRAW);
+  gl.enableVertexAttribArray(0); gl.vertexAttribPointer(0,3,gl.FLOAT,false,20,0);
+  gl.disableVertexAttribArray(1); gl.vertexAttrib3f(1,0,0,0);
+  gl.enableVertexAttribArray(2); gl.vertexAttribPointer(2,1,gl.FLOAT,false,20,12);
+  gl.enableVertexAttribArray(3); gl.vertexAttribPointer(3,4,gl.UNSIGNED_BYTE,true,20,16);
+  gl.bindVertexArray(null);
+}
+const starAt = i => [corePos[i*3], corePos[i*3+1], corePos[i*3+2]];
+const starNow = i => [corePos[i*3]+coreVel[i*3]*S.timeYr, corePos[i*3+1]+coreVel[i*3+1]*S.timeYr, corePos[i*3+2]+coreVel[i*3+2]*S.timeYr];
+
+// ---------- resize ----------
+let W=0,H=0,DPR=1;
+function resize(){
+  DPR = Math.min(devicePixelRatio||1, 2);
+  W = innerWidth; H = innerHeight;
+  if (REC){ W = 540; H = 960; DPR = 2;
+    canvas.style.width = overlay.style.width = W+'px';
+    canvas.style.height = overlay.style.height = H+'px'; }
+  canvas.width = W*DPR; canvas.height = H*DPR;
+  overlay.width = W*DPR; overlay.height = H*DPR;
+  octx.setTransform(DPR,0,0,DPR,0,0);
+  gl.viewport(0,0,canvas.width,canvas.height);
+}
+addEventListener('resize', resize); addEventListener('orientationchange', resize);
+
+// ---------- render ----------
+let frameTimes=[], lastFrame=0;
+function render(now){
+  requestAnimationFrame(render);
+  const dt = lastFrame ? now-lastFrame : 16; lastFrame = now;
+  frameTimes.push(dt); if (frameTimes.length>90) frameTimes.shift();
+  tickFlight(now); tickTour(now);
+  const fwd = lookRot(S.yaw, S.pitch);
+  const vp = mul4(persp(S.fov, W/H, 0.01, 40000), viewMat([0,0,0], fwd));
+  gl.clearColor(0,0,0,1); gl.clear(gl.COLOR_BUFFER_BIT);
+  gl.enable(gl.BLEND); gl.blendFunc(gl.ONE, gl.ONE);
+  gl.useProgram(starProg);
+  gl.uniformMatrix4fv(uVP,false,vp);
+  gl.uniform3f(uCam,S.pos[0],S.pos[1],S.pos[2]);
+  gl.uniform1f(uTime,S.timeYr);
+  gl.uniform1f(uLim, REC?7.3:6.8);
+  gl.uniform1f(uScale, (REC?1.7:1.35)*DPR);
+  gl.uniform1f(uMax, MAX_PT);
+  if (vaoCore){ gl.bindVertexArray(vaoCore); gl.drawArrays(gl.POINTS,0,coreN); }
+  if (vaoDeep && S.showDeep){
+    const n = Math.floor(deepN*S.quality);
+    gl.bindVertexArray(vaoDeep); gl.drawArrays(gl.POINTS,0,n);
+  }
+  if (vaoLines && S.showLines){
+    gl.useProgram(lineProg);
+    gl.uniformMatrix4fv(lVP,false,vp);
+    gl.uniform3f(lCam,S.pos[0],S.pos[1],S.pos[2]);
+    gl.uniform1f(lTime,S.timeYr);
+    gl.bindVertexArray(vaoLines);
+    if (REC) gl.uniform4f(lColor, .30,.42,.60, 1);
+    else gl.uniform4f(lColor, .21,.30,.44, 1); // additive: acts as alpha
+    gl.drawArrays(gl.LINES,0,lineSegs*2);
+    if (S.highlightCon>=0){
+      const c = cons[S.highlightCon];
+      gl.uniform4f(lColor, .5,.6,.8, 1);
+      gl.drawArrays(gl.LINES, c.s*2, (c.e-c.s)*2);
+    }
+  }
+  gl.bindVertexArray(null);
+  drawOverlay(vp, fwd);
+  // adaptive quality: shed deep-field load if we can't hold ~25fps
+  if (frameTimes.length===90){
+    const avg = frameTimes.reduce((a,b)=>a+b)/90;
+    if (avg>42 && S.quality>0.24){ S.quality*=0.5; frameTimes=[]; }
+  }
+}
+
+// ---------- overlay: labels, sun marker, captions live in DOM ----------
+function project(vp, p){
+  const x=p[0]-S.pos[0], y=p[1]-S.pos[1], z=p[2]-S.pos[2];
+  const cx = vp[0]*x+vp[4]*y+vp[8]*z+vp[12];
+  const cy = vp[1]*x+vp[5]*y+vp[9]*z+vp[13];
+  const cw = vp[3]*x+vp[7]*y+vp[11]*z+vp[15];
+  if (cw<=0) return null;
+  return [(cx/cw*0.5+0.5)*W, (0.5-cy/cw*0.5)*H, cw];
+}
+function drawOverlay(vp){
+  octx.clearRect(0,0,W,H);
+  if (!corePos) return;
+  const placed = [];
+  const fits = (x,y,w,h)=>{ for(const r of placed){ if(x<r[0]+r[2]&&x+w>r[0]&&y<r[1]+r[3]&&y+h>r[1]) return false; } placed.push([x,y,w,h]); return true; };
+  // Sun marker: the thread home
+  const sunI = anchors['Sun'];
+  const dHome = V.len(S.pos);
+  if (S.showLabels && sunI!==undefined && dHome>0.05){
+    const pr = project(vp, starNow(sunI));
+    if (pr){
+      octx.strokeStyle='rgba(255,215,122,.85)'; octx.lineWidth=1.2;
+      octx.beginPath(); octx.arc(pr[0],pr[1],10,0,7); octx.stroke();
+      octx.fillStyle='rgba(255,215,122,.95)'; octx.font='italic 14px Libertinus, Georgia, serif';
+      octx.fillText('Sun', pr[0]+14, pr[1]+4);
+      placed.push([pr[0]-12,pr[1]-12,54,24]);
+    }
+  }
+  if (!S.showLabels) return;
+  // constellation names at live centroids
+  octx.font='12.5px Libertinus, Georgia, serif';
+  if (S.showLines){
+    for (let ci=0;ci<cons.length;ci++){
+      const c = cons[ci]; if (!c.stars.length) continue;
+      if (ci!==S.highlightCon && V.len(V.sub(c.c0,S.pos)) > 3.2*c.r0) continue;
+      let cx=0,cy=0,cz=0, minx=1e9,maxx=-1e9,miny=1e9,maxy=-1e9, vis=0;
+      for (const si of c.stars){
+        const px=corePos[si*3]+coreVel[si*3]*S.timeYr, py=corePos[si*3+1]+coreVel[si*3+1]*S.timeYr, pz=corePos[si*3+2]+coreVel[si*3+2]*S.timeYr;
+        cx+=px; cy+=py; cz+=pz;
+        const sp = project(vp,[px,py,pz]);
+        if (sp){ vis++; if(sp[0]<minx)minx=sp[0]; if(sp[0]>maxx)maxx=sp[0]; if(sp[1]<miny)miny=sp[1]; if(sp[1]>maxy)maxy=sp[1]; }
+      }
+      // a constellation only deserves its name where it still has a shape:
+      // skip if mostly behind you, or its figure covers <70px on screen
+      if (vis < c.stars.length*0.6) continue;
+      if (Math.max(maxx-minx, maxy-miny) < 70) continue;
+      const n=c.stars.length, pr=project(vp,[cx/n,cy/n,cz/n]);
+      if (!pr || pr[0]<-40||pr[0]>W+40||pr[1]<0||pr[1]>H) continue;
+      const wpx = octx.measureText(c.n).width;
+      if (!fits(pr[0]-wpx/2, pr[1]-8, wpx, 16)) continue;
+      octx.fillStyle = ci===S.highlightCon ? 'rgba(190,205,235,.9)' : 'rgba(120,135,165,.55)';
+      octx.fillText(c.n, pr[0]-wpx/2, pr[1]);
+    }
+  }
+  // star names: nearest/brightest named
+  octx.font='13px Libertinus, Georgia, serif';
+  let shown=0;
+  for (const nm of names){
+    if (shown>=34) break;
+    if (nm.i===sunI) continue;
+    const p = starNow(nm.i);
+    const d = V.len(V.sub(p,S.pos));
+    const m = coreMag[nm.i] + 5*(Math.log10(Math.max(d,1e-6))-1);
+    if (m>3.1) continue;
+    const pr = project(vp,p);
+    if (!pr || pr[0]<0||pr[0]>W||pr[1]<0||pr[1]>H) continue;
+    const wpx = octx.measureText(nm.n).width;
+    if (!fits(pr[0]+8, pr[1]-14, wpx, 15)) continue;
+    octx.fillStyle='rgba(205,215,235,.7)';
+    octx.fillText(nm.n, pr[0]+9, pr[1]-4);
+    shown++;
+  }
+  // selected star ring
+  if (S.sel>=0){
+    const pr = project(vp, starNow(S.sel));
+    if (pr){ octx.strokeStyle='rgba(190,210,255,.9)'; octx.lineWidth=1.4;
+      octx.beginPath(); octx.arc(pr[0],pr[1],13,0,7); octx.stroke(); }
+  }
+  if (REC) drawRecCaption();
+}
+// rec mode draws captions into the overlay canvas (DOM isn't captured by captureStream)
+function drawRecCaption(){
+  if (S.recEnd){
+    octx.fillStyle='rgba(0,0,0,.45)'; octx.fillRect(0,0,W,H);
+    octx.textAlign='center';
+    octx.fillStyle='#e8edf7'; octx.font='34px Libertinus, Georgia, serif';
+    let sp=''; for (const ch of 'ASTERISM') sp+=ch+'  ';
+    octx.fillText(sp.trim(), W/2, H/2-26);
+    octx.font='italic 19px Libertinus, Georgia, serif'; octx.fillStyle='#aab4c8';
+    octx.fillText('the constellations are where you stand', W/2, H/2+14);
+    octx.font='16px Libertinus, Georgia, serif'; octx.fillStyle='#78829a';
+    octx.fillText('every star real · Hipparcos + Gaia', W/2, H/2+44);
+    octx.fillText('booyaka101.github.io/thedailyfable', W/2, H/2+70);
+    octx.textAlign='left';
+    return;
+  }
+  if (!S.recCap) return;
+  // Shorts safe area: bottom ~215 CSS px and right ~13% are covered by YouTube UI
+  const pad=18, x0=24, boxW=W-24-74, lh=27;
+  octx.font='19px Libertinus, Georgia, serif';
+  // wrap styled segments [{t,gold}]
+  const words=[];
+  for (const seg of S.recCap) for (const w of seg.t.split(/\s+/)) if (w) words.push({w, g:seg.gold});
+  const lines=[]; let cur=[], curW=0;
+  for (const wd of words){
+    const ww = octx.measureText(wd.w+' ').width;
+    if (curW+ww > boxW-2*pad && cur.length){ lines.push(cur); cur=[]; curW=0; }
+    cur.push(wd); curW+=ww;
+  }
+  if (cur.length) lines.push(cur);
+  const boxH = lines.length*lh + 2*pad - 6;
+  const y0 = H - 230 - boxH;
+  octx.fillStyle='rgba(8,11,19,.78)';
+  octx.beginPath(); octx.roundRect(x0,y0,boxW,boxH,14); octx.fill();
+  octx.strokeStyle='rgba(160,170,195,.28)'; octx.lineWidth=1; octx.stroke();
+  let ly=y0+pad+14;
+  for (const line of lines){
+    let lx=x0+pad;
+    for (const wd of line){
+      octx.fillStyle = wd.g ? '#ffd77a' : '#dfe6f2';
+      octx.fillText(wd.w, lx, ly);
+      lx += octx.measureText(wd.w+' ').width;
+    }
+    ly += lh;
+  }
+}
+
+// ---------- flight ----------
+function flyTo(target, look, dur=3600, arriveDist=0.18){
+  const to = [...target];
+  const d = V.sub(to, S.pos), dl = V.len(d);
+  if (dl>arriveDist){ const t = (dl-arriveDist)/dl; to[0]=S.pos[0]+d[0]*t; to[1]=S.pos[1]+d[1]*t; to[2]=S.pos[2]+d[2]*t; }
+  S.flight = { from:[...S.pos], to, fromYaw:S.yaw, fromPitch:S.pitch,
+    look: look||target, t0:performance.now(), dur };
+}
+function tickFlight(now){
+  const f = S.flight; if (!f) return;
+  const t = Math.min(1,(now-f.t0)/f.dur), e = ease(t);
+  S.pos = V.lerp(f.from, f.to, e);
+  const ld = V.sub(f.look, S.pos), ll=V.len(ld)||1;
+  const wantYaw = Math.atan2(ld[1],ld[0]), wantPitch = Math.asin(Math.max(-1,Math.min(1,ld[2]/ll)));
+  const blend = Math.min(1, e*1.6);
+  let dy = wantYaw - f.fromYaw;
+  while (dy>Math.PI) dy-=2*Math.PI; while (dy<-Math.PI) dy+=2*Math.PI;
+  S.yaw = f.fromYaw + dy*blend;
+  S.pitch = f.fromPitch + (wantPitch-f.fromPitch)*blend;
+  if (t>=1){ S.flight=null; updateHash(); }
+  updateLoc();
+}
+function updateLoc(){
+  const d = V.len(S.pos)*PC_LY;
+  document.getElementById('loc').textContent =
+    d<0.05 ? 'You are home' : d<1 ? 'near home' :
+    (d<100 ? d.toFixed(1) : Math.round(d).toLocaleString('en-US')) + ' light-years from home';
+}
+
+// ---------- tour ----------
+const fmtYr = v => (v>0?'+':'−') + Math.abs(Math.round(v)).toLocaleString('en-US') + ' years';
+function conIdx(iau){ return cons.findIndex(c=>c.iau===iau); }
+function mkTour(){
+  const A = anchors;
+  const orionMid = ()=>{ const a=starAt(A['Alnilam']); return a; };
+  return [
+    { cap:`This is the sky you have always known. Every star is real — <em>327,625 of them</em>, measured by the Hipparcos and Gaia space telescopes. The lines are the constellations, drawn exactly where they hang from Earth. Drag to look around. Ahead: Orion.`,
+      go:()=>{ S.pos=[0.00001,0,0]; S.timeYr=0; const d=V.norm(orionMid()); S.yaw=Math.atan2(d[1],d[0]); S.pitch=Math.asin(d[2]); S.fov=62*Math.PI/180; } },
+    { cap:`But Orion is not a thing. It is a <em>coincidence of where you stand</em>. Bellatrix floats 250 light-years out; Alnilam, the middle of the belt, 2,000. They have never met. Watch the hunter shatter as you leave home —`,
+      go:()=>{ flyTo(V.scale(orionMid(),1.35), starAt(anchors['Betelgeuse']), 9000, 120); S.highlightCon=conIdx('Ori'); } },
+    { cap:`From out here there is no hunter. No culture in the galaxy but ours ever saw one. Each line still connects the same two stars — there is simply no place to stand where they make the picture again, except one.`,
+      go:()=>{} },
+    { cap:`Come to the nearest star instead. Alpha Centauri, four light-years from home — the closest any sky is to yours. Almost every constellation survives the trip… except one, which gains a star.`,
+      go:()=>{ S.highlightCon=-1; const t=starAt(anchors['Rigil Kentaurus']); flyTo(t, t, 8000, 0.12); } },
+    { cap:`Turn toward Cassiopeia's W and count again: <em>six</em> bright stars now. The new one, ringed in gold, is the Sun — magnitude 0.5, just another star in someone else's constellation. This is what home looks like from next door.`,
+      go:()=>{ S.highlightCon=conIdx('Cas'); const sun=[0,0,0]; const ld=V.sub(sun,S.pos); S.flight={from:[...S.pos],to:[...S.pos],fromYaw:S.yaw,fromPitch:S.pitch,look:sun,t0:performance.now(),dur:2600}; } },
+    { cap:`And you don't even need to travel. Go home, face the Plough, and simply <em>wait</em>: every star is moving. Here is the next 100,000 years —`,
+      go:()=>{ S.highlightCon=conIdx('UMa'); S.pos=[0.00001,0,0]; S.timeYr=0; const dip=cons[conIdx('UMa')]; let cx=0,cy=0,cz=0; for(const si of dip.stars){cx+=corePos[si*3];cy+=corePos[si*3+1];cz+=corePos[si*3+2];} const c=V.norm([cx/dip.stars.length,cy/dip.stars.length,cz/dip.stars.length]); S.yaw=Math.atan2(c[1],c[0]); S.pitch=Math.asin(c[2]); S.tourAnim={t0:performance.now(),dur:9000,from:0,to:100000}; } },
+    { cap:`The constellations are not a ceiling. They are one frame of a film, seen from one seat, on a night 100,000 years long. The sky is a place — <em>go stand somewhere else in it.</em> Tap any star. Fly anywhere. The time slider is yours now.`,
+      go:()=>{ S.highlightCon=-1; } },
+  ];
+}
+let tourSteps=null;
+function startTour(i=0){
+  if (!tourSteps) tourSteps = mkTour();
+  S.tour = i;
+  document.getElementById('card').classList.add('hidden'); S.sel=-1;
+  const st = tourSteps[i];
+  document.getElementById('caption').classList.remove('hidden');
+  document.getElementById('capText').innerHTML = st.cap;
+  document.getElementById('capStep').textContent = (i+1)+' / '+tourSteps.length;
+  document.getElementById('capNext').textContent = i===tourSteps.length-1 ? 'begin ↻' : 'next →';
+  st.go(); updateLoc();
+}
+function endTour(){ S.tour=null; S.tourAnim=null; S.highlightCon=-1;
+  document.getElementById('caption').classList.add('hidden'); showHint(); }
+function tickTour(now){
+  const a = S.tourAnim; if (!a) return;
+  const t = Math.min(1,(now-a.t0)/a.dur);
+  S.timeYr = a.from + (a.to-a.from)*ease(t);
+  document.getElementById('tslider').value = S.timeYr;
+  document.getElementById('yr').textContent = fmtYr(S.timeYr);
+  if (t>=1) S.tourAnim=null;
+}
+document.getElementById('capNext').addEventListener('click', ()=>{
+  const n = S.tour+1;
+  if (n>=tourSteps.length) startTour(0); else startTour(n);
+});
+document.getElementById('capSkip').addEventListener('click', endTour);
+
+// ---------- hint ----------
+const coarse = matchMedia('(pointer: coarse)').matches;
+function showHint(){
+  const h = document.getElementById('hint');
+  h.textContent = coarse ? 'drag to look · pinch to travel · tap a star' : 'drag to look · scroll to travel · click a star';
+  h.classList.remove('hidden'); h.classList.remove('fadeout');
+  setTimeout(()=>h.classList.add('fadeout'), 5200);
+  setTimeout(()=>h.classList.add('hidden'), 6400);
+}
+
+// ---------- input ----------
+let ptrs = new Map(), dragStart=null, pinch0=null;
+canvas.addEventListener('pointerdown', e=>{
+  canvas.setPointerCapture(e.pointerId);
+  ptrs.set(e.pointerId,[e.clientX,e.clientY]);
+  if (ptrs.size===1) dragStart=[e.clientX,e.clientY,performance.now(),S.yaw,S.pitch];
+  if (ptrs.size===2){ const p=[...ptrs.values()]; pinch0={d:Math.hypot(p[0][0]-p[1][0],p[0][1]-p[1][1]), pos:[...S.pos]}; dragStart=null; }
+});
+canvas.addEventListener('pointermove', e=>{
+  if (!ptrs.has(e.pointerId)) return;
+  ptrs.set(e.pointerId,[e.clientX,e.clientY]);
+  if (ptrs.size===1 && dragStart){
+    const sens = S.fov/H;
+    S.yaw = dragStart[3] + (e.clientX-dragStart[0])*sens;
+    S.pitch = Math.max(-1.55, Math.min(1.55, dragStart[4] + (e.clientY-dragStart[1])*sens));
+    S.flight=null; // look-around stays free during tour time-animations
+  } else if (ptrs.size===2 && pinch0){
+    const p=[...ptrs.values()];
+    const d=Math.hypot(p[0][0]-p[1][0],p[0][1]-p[1][1]);
+    const fwd = lookRot(S.yaw,S.pitch);
+    const dist = Math.max(0.05, V.len(S.pos)+1);
+    const move = (d-pinch0.d)/H * dist * 2.2;
+    S.pos = V.add(pinch0.pos, V.scale(fwd, move));
+    S.flight=null; updateLoc(); updateHash();
+  }
+});
+canvas.addEventListener('pointerup', e=>{
+  ptrs.delete(e.pointerId); pinch0=null;
+  if (dragStart){
+    const dx=e.clientX-dragStart[0], dy=e.clientY-dragStart[1], dt=performance.now()-dragStart[2];
+    if (Math.hypot(dx,dy)<9 && dt<500) pick(e.clientX,e.clientY);
+    dragStart=null; updateHash();
+  }
+});
+canvas.addEventListener('pointercancel', e=>{ ptrs.delete(e.pointerId); pinch0=null; dragStart=null; });
+canvas.addEventListener('wheel', e=>{
+  e.preventDefault();
+  const fwd = lookRot(S.yaw,S.pitch);
+  const dist = Math.max(0.05, V.len(S.pos)+1);
+  const move = -e.deltaY/900 * dist;
+  S.pos = V.add(S.pos, V.scale(fwd, move));
+  S.flight=null; updateLoc(); updateHash();
+}, {passive:false});
+
+// ---------- picking ----------
+function pick(px,py){
+  if (!corePos) return;
+  const fwd = lookRot(S.yaw,S.pitch);
+  const vp = mul4(persp(S.fov,W/H,0.01,40000), viewMat([0,0,0],fwd));
+  let best=-1, bestScore=28;
+  for (let i=0;i<coreN;i++){
+    const p = starNow(i);
+    const pr = project(vp,p);
+    if (!pr) continue;
+    const dx=pr[0]-px, dy=pr[1]-py;
+    if (Math.abs(dx)>30||Math.abs(dy)>30) continue;
+    const d = V.len(V.sub(p,S.pos));
+    const m = coreMag[i]+5*(Math.log10(Math.max(d,1e-6))-1);
+    const score = Math.hypot(dx,dy) + Math.max(0,m)*1.2;
+    if (score<bestScore){ bestScore=score; best=i; }
+  }
+  if (best<0){ S.sel=-1; document.getElementById('card').classList.add('hidden'); return; }
+  select(best);
+}
+function select(i){
+  S.sel=i;
+  const nm = names.find(n=>n.i===i);
+  const p = starNow(i);
+  const dYou = V.len(V.sub(p,S.pos)), dSun = V.len(p);
+  const m = coreMag[i]+5*(Math.log10(Math.max(dYou,1e-6))-1);
+  const lyYou = dYou*PC_LY;
+  const yr = new Date().getFullYear() - Math.round(lyYou);
+  document.getElementById('cardName').textContent = nm ? nm.n : 'an uncharted star';
+  const lySun = dSun*PC_LY;
+  const fmt = v => v<1 ? v.toFixed(2) : v<100 ? v.toFixed(1) : Math.round(v).toLocaleString('en-US');
+  document.getElementById('cardFacts').innerHTML =
+    `<b>${fmt(lyYou)} light-years</b> from where you stand`+
+    ` · ${fmt(lySun)} from home`+
+    `<br>shining at magnitude ${m.toFixed(1)} in your sky right now`+
+    (lyYou>1.5?`<br>the light you see left it around <b>${yr<0? Math.abs(yr)+' BC' : 'AD '+yr}</b>`:'');
+  document.getElementById('card').classList.remove('hidden');
+  document.getElementById('caption').classList.add('hidden'); if (S.tour!=null){ S.tour=null; }
+}
+document.getElementById('cardFly').addEventListener('click', ()=>{
+  if (S.sel<0) return;
+  flyTo(starNow(S.sel), starNow(S.sel), 3800, 0.15);
+  document.getElementById('card').classList.add('hidden');
+});
+document.getElementById('cardClose').addEventListener('click', ()=>{
+  S.sel=-1; document.getElementById('card').classList.add('hidden');
+});
+
+// ---------- chrome ----------
+function tbtn(id, key){
+  const el = document.getElementById(id);
+  el.addEventListener('click', ()=>{ S[key]=!S[key]; el.classList.toggle('off', !S[key]); });
+}
+tbtn('bLines','showLines'); tbtn('bLabels','showLabels');
+document.getElementById('bAbout').addEventListener('click', ()=>document.getElementById('about').classList.remove('hidden'));
+document.getElementById('aboutClose').addEventListener('click', ()=>document.getElementById('about').classList.add('hidden'));
+</script>
+<div id="timebar" class="chrome">
+  <div class="row">
+    <label>time</label>
+    <input type="range" id="tslider" min="-100000" max="100000" step="250" value="0">
+    <span id="yr">now</span>
+  </div>
+</div>
+<script>
+'use strict';
+{
+  const slider2 = document.getElementById('tslider');
+  const yr = document.getElementById('yr');
+  slider2.addEventListener('input', ()=>{
+    S.timeYr = +slider2.value; S.tourAnim=null;
+    yr.textContent = Math.abs(S.timeYr)<200 ? 'now' : (S.timeYr>0?'+':'−')+Math.abs(S.timeYr).toLocaleString('en-US')+' yr';
+  });
+  slider2.addEventListener('dblclick', ()=>{ S.timeYr=0; slider2.value=0; yr.textContent='now'; });
+}
+
+// ---------- shareable state ----------
+let hashT=null;
+function updateHash(){
+  clearTimeout(hashT);
+  hashT = setTimeout(()=>{
+    const p=S.pos, h=[p[0].toFixed(4),p[1].toFixed(4),p[2].toFixed(4),S.yaw.toFixed(3),S.pitch.toFixed(3),Math.round(S.timeYr)].join(',');
+    history.replaceState(null,'','#'+h);
+  }, 400);
+}
+function readHash(){
+  const h = location.hash.slice(1);
+  if (!h) return false;
+  const v = h.split(',').map(Number);
+  if (v.length<5 || v.some(isNaN)) return false;
+  S.pos=[v[0],v[1],v[2]]; S.yaw=v[3]; S.pitch=v[4]; S.timeYr=v[5]||0;
+  return true;
+}
+
+// ---------- boot ----------
+resize();
+loadData().then(()=>{
+  document.getElementById('loadmsg').textContent = 'placing you at the Sun…';
+  requestAnimationFrame(render);
+  setTimeout(()=>{
+    const L=document.getElementById('load'); L.classList.add('fadeout');
+    setTimeout(()=>L.classList.add('hidden'), 900);
+    if (REC){ /* recorder drives everything */ }
+    else if (readHash()){ updateLoc(); showHint(); }
+    else startTour(0);
+  }, 250);
+  loadDeep();
+}).catch(e=>{
+  document.getElementById('loadmsg').textContent = 'could not load the sky: '+e.message;
+});
+
+// ---------- rec mode: deterministic scripted flight for the Short ----------
+if (REC){
+  document.getElementById('brand').classList.add('hidden');
+  document.getElementById('btns').classList.add('hidden');
+  document.getElementById('timebar').classList.add('hidden');
+  window.__recReady = false;
+  // composite gl + overlay into one canvas — captureStream sees only ONE canvas,
+  // and the captions/rings live on the overlay
+  const comp = document.createElement('canvas');
+  const cctx = comp.getContext('2d');
+  let compositing = false;
+  function compositeLoop(){
+    if (!compositing) return;
+    comp.width===canvas.width || (comp.width=canvas.width, comp.height=canvas.height);
+    cctx.drawImage(canvas,0,0);
+    cctx.drawImage(overlay,0,0);
+    requestAnimationFrame(compositeLoop);
+  }
+  window.__startRec = async function(){
+    while (!corePos || !vaoDeep) await new Promise(r=>setTimeout(r,200));
+    await new Promise(r=>setTimeout(r,600));
+    comp.width=canvas.width; comp.height=canvas.height;
+    compositing = true; compositeLoop();
+    const stream = comp.captureStream(60);
+    const rec = new MediaRecorder(stream, {mimeType:'video/webm;codecs=vp9', videoBitsPerSecond: 28e6});
+    const chunks=[]; rec.ondataavailable=e=>chunks.push(e.data);
+    const done = new Promise(res=>rec.onstop=res);
+    rec.start(1000);
+    await runScript();
+    rec.stop(); await done; compositing=false;
+    const blob = new Blob(chunks,{type:'video/webm'});
+    window.__recBlob = blob;
+    window.__readRec = (off,len)=>new Promise(r=>{
+      const fr=new FileReader();
+      fr.onload=()=>{
+        const u=new Uint8Array(fr.result); let s='';
+        for (let i=0;i<u.length;i+=32768) s+=String.fromCharCode.apply(null,u.subarray(i,i+32768));
+        r(btoa(s));
+      };
+      fr.readAsArrayBuffer(blob.slice(off,off+len));
+    });
+    return blob.size;
+  };
+  const wait = ms=>new Promise(r=>setTimeout(r,ms));
+  async function runScript(){
+    // beats are driven by the same primitives the tour uses
+    const A=anchors;
+    // captions render on the overlay canvas so the recording contains them
+    function say(html){
+      const segs=[]; let rest=html;
+      while (rest.length){
+        const m = rest.match(/<em>(.*?)<\/em>/);
+        if (!m){ segs.push({t:rest,gold:false}); break; }
+        if (m.index>0) segs.push({t:rest.slice(0,m.index),gold:false});
+        segs.push({t:m[1],gold:true});
+        rest = rest.slice(m.index+m[0].length);
+      }
+      S.recCap = segs;
+    }
+    function shut(){ S.recCap = null; }
+    // 1. home, facing Orion
+    S.pos=[0.00001,0,0]; S.timeYr=0;
+    const or=starAt(A['Alnilam']); const d=V.norm(or);
+    S.yaw=Math.atan2(d[1],d[0]); S.pitch=Math.asin(d[2]);
+    S.highlightCon=cons.findIndex(c=>c.iau==='Ori');
+    say('Orion. You know him. <em>He only exists where you are standing.</em>');
+    await wait(4200);
+    // 2. fly through
+    say('Leave home, and the hunter comes apart —');
+    flyTo(V.scale(or,1.35), starAt(A['Betelgeuse']), 10500, 120);
+    await wait(11200);
+    say('These stars are <em>2,000 light-years apart.</em> They have never met.');
+    await wait(3800);
+    // 3. Alpha Cen
+    shut(); S.highlightCon=-1;
+    say('Now fly to the nearest star to home: Alpha Centauri.');
+    S.pos=[0.00001,0,0]; S.yaw=Math.atan2(-0.4,-0.6); S.pitch=-0.6;
+    flyTo(starAt(A['Rigil Kentaurus']), [0,0,0], 7800, 0.12);
+    await wait(8400);
+    say('Turn to Cassiopeia. Count the bright stars in the W: <em>six now.</em>');
+    await wait(3600);
+    say('The gold one is <em>the Sun.</em> This is home, seen from next door.');
+    await wait(4400);
+    // 4. time melt
+    shut();
+    S.pos=[0.00001,0,0]; S.timeYr=0;
+    const dip=cons[cons.findIndex(c=>c.iau==='UMa')];
+    let cx=0,cy=0,cz=0; for(const si of dip.stars){cx+=corePos[si*3];cy+=corePos[si*3+1];cz+=corePos[si*3+2];}
+    const c=V.norm([cx/dip.stars.length,cy/dip.stars.length,cz/dip.stars.length]);
+    S.yaw=Math.atan2(c[1],c[0]); S.pitch=Math.asin(c[2]);
+    S.highlightCon=cons.findIndex(c=>c.iau==='UMa');
+    say('Or stay home and wait. The next <em>100,000 years:</em>');
+    S.tourAnim={t0:performance.now(),dur:8000,from:0,to:100000};
+    await wait(9000);
+    say('The sky is not a ceiling. <em>It is a place.</em> Go stand somewhere else in it.');
+    await wait(4600);
+    shut();
+    S.recEnd = true;
+    await wait(3400);
+  }
+  window.__recReady = true;
+}
+</script>
+</body>
+</html>
