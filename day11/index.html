@@ -791,6 +791,15 @@ if (REC){
     return blob.size;
   };
   const wait = ms=>new Promise(r=>setTimeout(r,ms));
+  async function zoomTo(deg, ms){
+    const f0=S.fov, f1=deg*Math.PI/180, t0=performance.now();
+    while (true){
+      const t=Math.min(1,(performance.now()-t0)/ms);
+      S.fov = f0+(f1-f0)*ease(t);
+      if (t>=1) return;
+      await wait(16);
+    }
+  }
   async function runScript(){
     // beats are driven by the same primitives the tour uses
     const A=anchors;
@@ -827,11 +836,27 @@ if (REC){
     flyTo(starAt(A['Rigil Kentaurus']), [0,0,0], 7800, 0.12);
     await wait(8400);
     say('Turn to Cassiopeia. Count the bright stars in the W: <em>six now.</em>');
-    await wait(3600);
+    S.highlightCon = cons.findIndex(k=>k.iau==='Cas');
+    // frame Sun + the W together: aim at their angular midpoint while zooming
+    {
+      const cas = cons[cons.findIndex(k=>k.iau==='Cas')];
+      let mx=0,my=0,mz=0; for(const si of cas.stars){ mx+=corePos[si*3]; my+=corePos[si*3+1]; mz+=corePos[si*3+2]; }
+      const cd = V.norm(V.sub([mx/cas.stars.length,my/cas.stars.length,mz/cas.stars.length], S.pos));
+      const sd = V.norm(V.sub([0,0,0], S.pos));
+      const mid = V.norm(V.add(cd,sd));
+      const y0=S.yaw, p0=S.pitch, y1=Math.atan2(mid[1],mid[0]), p1=Math.asin(mid[2]);
+      let dy=y1-y0; while(dy>Math.PI)dy-=2*Math.PI; while(dy<-Math.PI)dy+=2*Math.PI;
+      const t0=performance.now();
+      (async()=>{ while(true){ const t=Math.min(1,(performance.now()-t0)/2600);
+        S.yaw=y0+dy*ease(t); S.pitch=p0+(p1-p0)*ease(t); if(t>=1) return; await wait(16); } })();
+    }
+    await zoomTo(45, 3000);
+    await wait(800);
     say('The gold one is <em>the Sun.</em> This is home, seen from next door.');
     await wait(4400);
     // 4. time melt
     shut();
+    await zoomTo(62, 400);
     S.pos=[0.00001,0,0]; S.timeYr=0;
     const dip=cons[cons.findIndex(c=>c.iau==='UMa')];
     let cx=0,cy=0,cz=0; for(const si of dip.stars){cx+=corePos[si*3];cy+=corePos[si*3+1];cz+=corePos[si*3+2];}
