@@ -8,6 +8,13 @@
   <atom:link href="https://booyaka101.github.io/thedailyfable/feed.xml" rel="self" type="application/rss+xml"/>
 
   <!-- newest items directly below this line -->
+  <item>
+    <title>Day 14 — EXPOSURE: a photograph taken inside a computer</title>
+    <link>https://booyaka101.github.io/thedailyfable/day14/</link>
+    <guid>https://booyaka101.github.io/thedailyfable/day14/</guid>
+    <pubDate>Mon, 10 Aug 2026 20:00:00 +0800</pubDate>
+    <description>One photograph of a room that has never existed: a glass of water in low sun, and the pool of light it focuses into its own shadow. Taken with a from-scratch spectral CUDA path tracer written the same day — 250,689 samples/pixel, four hours, real dispersion. Drag through the exposure, then zoom into all 39 million pixels.</description>
+  </item>
 
   <item>
     <title>Day 13 — OUTGOING (a story in nine messages, found on tape)</title>
