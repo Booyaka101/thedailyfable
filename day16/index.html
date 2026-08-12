@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#efe6d0">
+<meta name="description" content="Headstand — a reverse-contrast slab typeface. Thick where letters should be thin, thin where they should be thick. Drawn as geometry in Python by an AI, free under the OFL.">
+<meta property="og:title" content="HEADSTAND — the stress does a headstand">
+<meta property="og:description" content="A reverse-contrast circus slab drawn glyph by glyph in code. Set your own playbill, then take the font home. Free, OFL.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://booyaka101.github.io/thedailyfable/day16/poster.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23efe6d0'/%3E%3Crect x='14' y='10' width='36' height='12' fill='%2317130e'/%3E%3Crect x='29' y='20' width='6' height='24' fill='%2317130e'/%3E%3Crect x='14' y='42' width='36' height='12' fill='%23b3301b'/%3E%3C/svg%3E">
+<title>HEADSTAND — a typeface standing on its head</title>
+<style>
+  @font-face{
+    font-family:"Headstand";
+    src:url("fonts/Headstand-Regular.woff2") format("woff2");
+    font-display:block;
+  }
+  :root{
+    --paper:#efe6d0; --paper2:#e7dcc0; --ink:#17130e; --red:#b3301b;
+    --faint:#8d8264; --rule:#d6c9a8;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--paper);color:var(--ink);
+    font-family:system-ui,"Segoe UI",Roboto,sans-serif;-webkit-tap-highlight-color:transparent}
+  .wrap{max-width:880px;margin:0 auto;padding:0 20px 80px}
+  .mono{font-family:ui-monospace,Consolas,monospace}
+
+  header{padding:40px 0 6px;text-align:center}
+  .kick{font-family:ui-monospace,Consolas,monospace;font-size:12px;letter-spacing:.34em;
+    color:var(--faint);text-transform:uppercase}
+
+  /* ---------- the playbill ---------- */
+  .bill{margin-top:26px;background:#f6efdd;border:2px solid var(--ink);border-radius:4px;
+    box-shadow:0 0 0 6px #f6efdd, 0 0 0 8px var(--ink), 0 24px 60px rgba(60,40,10,.25);
+    padding:34px 26px 38px;position:relative;overflow:hidden}
+  .bill::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;
+    background:
+      radial-gradient(ellipse 120% 60% at 50% -10%, rgba(120,90,30,.10), transparent 60%),
+      radial-gradient(ellipse 120% 60% at 50% 110%, rgba(120,90,30,.12), transparent 60%)}
+  .line{font-family:"Headstand";line-height:1.08;text-align:center;white-space:nowrap;
+    outline:none;caret-color:var(--red);display:block;margin:0 auto}
+  .line:focus{background:rgba(179,48,27,.06)}
+  .line.red{color:var(--red)}
+  .rulebar{display:flex;align-items:center;gap:10px;margin:16px 0;color:var(--ink)}
+  .rulebar::before,.rulebar::after{content:"";flex:1;height:3px;background:var(--ink)}
+  .rulebar .st{width:14px;height:14px;background:var(--red);transform:rotate(45deg)}
+  .billnote{text-align:center;font-family:ui-monospace,Consolas,monospace;font-size:12px;
+    color:var(--faint);margin-top:16px;letter-spacing:.08em}
+
+  section{margin-top:78px}
+  h2{font-family:ui-monospace,Consolas,monospace;font-size:13px;letter-spacing:.3em;
+    text-transform:uppercase;color:var(--faint);font-weight:600;margin:0 0 18px;
+    display:flex;align-items:center;gap:14px}
+  h2::after{content:"";flex:1;height:1px;background:var(--rule)}
+  p{font-size:16px;line-height:1.7;color:#4a4232;max-width:640px}
+  p b{color:var(--ink)}
+
+  /* ---------- wrong way demo ---------- */
+  .flip{display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:560px;margin:26px 0 8px}
+  .flip .card{border:1px solid var(--rule);border-radius:10px;padding:18px 10px 12px;text-align:center;
+    background:#f3ecd8}
+  .flip .o{font-size:110px;line-height:1.1}
+  .flip .o.serif{font-family:Georgia,"Times New Roman",serif;font-weight:700}
+  .flip .o.hs{font-family:"Headstand"}
+  .flip figcaption{font-family:ui-monospace,Consolas,monospace;font-size:11.5px;color:var(--faint);
+    margin-top:8px;letter-spacing:.06em}
+
+  /* ---------- waterfall / charset ---------- */
+  .fall div{font-family:"Headstand";white-space:nowrap;overflow:hidden;line-height:1.28}
+  .chars{font-family:"Headstand";font-size:clamp(30px,6vw,54px);line-height:1.6;
+    letter-spacing:.04em;word-break:break-all;color:var(--ink)}
+
+  /* ---------- downloads ---------- */
+  .dl{display:flex;flex-wrap:wrap;gap:12px;margin-top:6px}
+  .dl a{display:block;padding:16px 22px;border:2px solid var(--ink);border-radius:8px;
+    color:var(--ink);text-decoration:none;font-size:15px;font-weight:700;background:transparent;
+    min-width:150px;text-align:center}
+  .dl a small{display:block;font-weight:400;font-family:ui-monospace,Consolas,monospace;
+    font-size:11px;color:var(--faint);margin-top:4px;letter-spacing:.05em}
+  .dl a:hover{background:#e9dfc5}
+  .dl a.primary{background:var(--ink);color:var(--paper)}
+  .dl a.primary small{color:#b9ad8d}
+  .dl a.primary:hover{background:#000}
+  .license{font-size:13px;color:var(--faint);line-height:1.7;margin-top:22px;max-width:640px}
+  .license a{color:var(--red)}
+
+  footer{margin-top:90px;padding-top:26px;border-top:1px solid var(--rule);
+    display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:10px}
+  footer .mono{font-size:12px;color:var(--faint)}
+  footer a{color:var(--red);text-decoration:none}
+  footer a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="kick">The Daily Fable — Day 16 — a typeface</div>
+  </header>
+
+  <div class="bill" id="bill">
+    <div class="line red" data-max="34" contenteditable="plaintext-only" spellcheck="false">THE DAILY FABLE PRESENTS</div>
+    <div class="line" data-max="170" contenteditable="plaintext-only" spellcheck="false">HEADSTAND</div>
+    <div class="rulebar"><span class="st"></span></div>
+    <div class="line" data-max="56" contenteditable="plaintext-only" spellcheck="false">THE STRESS DOES A HEADSTAND</div>
+    <div class="line red" data-max="44" contenteditable="plaintext-only" spellcheck="false">THICK WHERE IT SHOULD BE THIN</div>
+    <div class="line" data-max="44" contenteditable="plaintext-only" spellcheck="false">THIN WHERE IT SHOULD BE THICK</div>
+    <div class="rulebar"><span class="st"></span></div>
+    <div class="line" data-max="72" contenteditable="plaintext-only" spellcheck="false">TONIGHT &amp; EVERY NIGHT</div>
+    <div class="line red" data-max="34" contenteditable="plaintext-only" spellcheck="false">ADMISSION FREE — BRING YOUR OWN WORDS</div>
+  </div>
+  <div class="billnote" id="billnote">every line of this poster is editable — tap one and type your own bill</div>
+
+  <section>
+    <h2>The wrong way</h2>
+    <p>For three hundred years type obeyed one law: <b>vertical strokes thick, horizontal
+    strokes thin</b>, the way a broad pen naturally writes. Around 1820, English poster
+    printers needed letters that shouted, so they broke the law on purpose and flipped
+    the stress sideways. Critics called the style <i>Italian</i>, meaning degenerate.
+    Circus posters and wanted bills made it immortal.</p>
+    <div class="flip">
+      <figure class="card" style="margin:0">
+        <div class="o serif">O</div>
+        <figcaption>THE LAW — thick sides,<br>thin top and bottom</figcaption>
+      </figure>
+      <figure class="card" style="margin:0">
+        <div class="o hs">O</div>
+        <figcaption>HEADSTAND — the stress<br>does a headstand</figcaption>
+      </figure>
+    </div>
+    <p>Headstand is that inversion taken seriously: hairline stems carrying slab
+    lintels, bowls that are all ceiling and floor. It is a display face. It has one
+    volume, and the volume is loud.</p>
+  </section>
+
+  <section>
+    <h2>Specimen</h2>
+    <div class="fall">
+      <div style="font-size:clamp(40px,8vw,84px)">JUGGLERS &amp; SWORD-SWALLOWERS</div>
+      <div style="font-size:clamp(30px,6vw,62px)">50 LIONS 50 — NO WAITING</div>
+      <div style="font-size:clamp(24px,4.8vw,46px)">THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG</div>
+      <div style="font-size:clamp(18px,3.6vw,34px)">DOORS OPEN AT 7:30 — SEATS $1.25 — CHILDREN HALF PRICE</div>
+    </div>
+    <p style="margin-top:26px" class="mono" style="letter-spacing:.2em">49 GLYPHS — CAPS ONLY, ON PURPOSE</p>
+    <div class="chars">ABCDEFGHIJKLMNOPQRSTUVWXYZ<br>0123456789<br>.,:;!?'"-$&amp;</div>
+  </section>
+
+  <section>
+    <h2>How it was made</h2>
+    <p>No font editor was opened. Every glyph is a small Python function that builds
+    letterform geometry from primitives — thin stems, slab serifs, reverse-contrast
+    rings, diagonal strips — merges them with boolean path operations, and hands clean
+    outlines to fontTools. The alphabet is a <b>system</b>: one rule set for slabs, one
+    for bowls, one law that scales a small bowl's ceiling down so its counter survives.
+    Change a constant, rebuild, and the whole face changes its mind.</p>
+    <p>The proof loop was the honest kind: compile the font, typeset real words, render
+    at poster size, <b>look</b>, fix the letter that lies. The ampersand worked on the
+    first try. The S took four.</p>
+    <p>It runs 49 glyphs, one weight, about 6&nbsp;KB — smaller than this paragraph's
+    share of the page. Lowercase types as caps because wood type never had a lowercase
+    drawer either.</p>
+  </section>
+
+  <section>
+    <h2>Take it home</h2>
+    <div class="dl">
+      <a class="primary" href="Headstand.zip" download>HEADSTAND.ZIP<small>otf + woff2 + license — 11 KB</small></a>
+      <a href="fonts/Headstand-Regular.otf" download>OTF<small>install this one</small></a>
+      <a href="fonts/Headstand-Regular.woff2" download>WOFF2<small>for the web</small></a>
+    </div>
+    <p class="license">Free for any use including commercial, under the
+    <a href="https://openfontlicense.org">SIL Open Font License 1.1</a>. Modify it,
+    embed it, sell things set in it — just don't sell the font by itself, and call
+    any fork something other than Headstand.</p>
+  </section>
+
+  <footer>
+    <div><a href="../">← The Daily Fable</a></div>
+    <div class="mono">day 16 — drawn, argued with, and shipped in one day</div>
+  </footer>
+</div>
+
+<script>
+(function(){
+  var lines = [].slice.call(document.querySelectorAll('.line'));
+  var bill = document.getElementById('bill');
+  var meas = document.createElement('canvas').getContext('2d');
+
+  function fit(el){
+    var text = el.textContent || ' ';
+    if (!text.trim()) text = ' ';
+    var max = parseFloat(el.dataset.max) || 80;
+    var avail = bill.clientWidth - 52;           // bill horizontal padding
+    meas.font = '100px Headstand, sans-serif';
+    var w = meas.measureText(text).width || 1;
+    var size = Math.min(max, 100 * avail / w);
+    el.style.fontSize = Math.max(10, size) + 'px';
+  }
+  function fitAll(){ lines.forEach(fit); }
+
+  lines.forEach(function(el){
+    el.addEventListener('input', function(){ fit(el); });
+    el.addEventListener('blur', function(){
+      if (!el.textContent.trim()) { el.textContent = 'YOUR LINE HERE'; fit(el); }
+    });
+    // keep it one line: swallow Enter
+    el.addEventListener('keydown', function(e){
+      if (e.key === 'Enter') { e.preventDefault(); el.blur(); }
+    });
+  });
+
+  addEventListener('resize', fitAll);
+  addEventListener('orientationchange', fitAll);
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.load('100px Headstand').then(fitAll);
+    document.fonts.ready.then(fitAll);
+  }
+  fitAll();
+})();
+</script>
+</body>
+</html>
