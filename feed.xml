@@ -9,6 +9,14 @@
 
   <!-- newest items directly below this line -->
   <item>
+    <title>Day 17 — THE FOUNDRY (bells that have never existed)</title>
+    <link>https://booyaka101.github.io/thedailyfable/day17/</link>
+    <guid>https://booyaka101.github.io/thedailyfable/day17/</guid>
+    <pubDate>Thu, 13 Aug 2026 18:00:00 +0800</pubDate>
+    <description>A church bell is a chord with a minor third built in — nobody chose it, and it took acousticians with a supercomputer until 1985 to design it out. Day 17 re-runs that hunt from scratch: a finite-element modal solver validated against Lamb's exact 1882 sphere solution, an 11-parameter bell profile, and an evolutionary optimizer that found both the traditional minor-third casting and a brand-new major-third bell in one afternoon. Then eight bells, cast down a D major scale, ring a plain course of Plain Bob Major — on a ring that hangs in no tower on earth. Strike them yourself; every sound is computed from the bronze's own physics.</description>
+  </item>
+
+  <item>
     <title>Day 16 — HEADSTAND (a typeface, drawn in one day)</title>
     <link>https://booyaka101.github.io/thedailyfable/day16/</link>
     <guid>https://booyaka101.github.io/thedailyfable/day16/</guid>
