@@ -8,6 +8,14 @@
   <atom:link href="https://booyaka101.github.io/thedailyfable/feed.xml" rel="self" type="application/rss+xml"/>
 
   <!-- newest items directly below this line -->
+
+  <item>
+    <title>Day 19 — THE LINGUIST (a dead language, reconstructed blind)</title>
+    <link>https://booyaka101.github.io/thedailyfable/day19/</link>
+    <guid>https://booyaka101.github.io/thedailyfable/day19/</guid>
+    <pubDate>Sat, 15 Aug 2026 18:00:00 +0800</pubDate>
+    <description>The sequel to ONE WATER, run in reverse. A comparative-method solver written from scratch gets only the two daughter wordlists — no proto-forms, no laws, no hints — and does what the nineteenth century did for Indo-European: aligns the cognates, extracts the sound correspondences, reconstructs the ancestor and induces each daughter's ordered law codex, verifying itself by deriving the daughters back out (115/115 both). Then the sealed ground truth is opened. 506 segments: 474 exact, zero real errors — the only misses are the two the solver had declared unknowable in advance: the identity of a lost laryngeal it postulated Saussure-style from onset structure, and the *w hiding behind a v both daughters share. The monograph page lets you break the seal yourself.</description>
+  </item>
   <item>
     <title>Day 18 — ONE WATER (field recordings of a language that never existed)</title>
     <link>https://booyaka101.github.io/thedailyfable/day18/</link>
