@@ -8,6 +8,13 @@
   <atom:link href="https://booyaka101.github.io/thedailyfable/feed.xml" rel="self" type="application/rss+xml"/>
 
   <!-- newest items directly below this line -->
+  <item>
+    <title>Day 20 — WAKE (creatures evolved to swim, in water that pushes back)</title>
+    <link>https://booyaka101.github.io/thedailyfable/day20/</link>
+    <guid>https://booyaka101.github.io/thedailyfable/day20/</guid>
+    <pubDate>Sun, 16 Aug 2026 18:00:00 +0800</pubDate>
+    <description>A GPU lattice-Boltzmann ocean, validated before any animal existed: viscosity recovered to 0.055%, the Re=100 cylinder at drag 1.45 and Strouhal 0.163. Then creatures under one honest law — a creature is only a shape that changes, and the change carries exactly zero momentum, so nothing can push on itself and every body length is taken from the water (in vacuum the champion travels 0.0000). 56 random genomes, 63 generations, fitness = distance swum and nothing else: the median rose 4.7x and path straightness reached 1.00 without ever being rewarded. The winner is not a fish — it curls into a hydrofoil and rides its own vortex dipole. It lives on the page in a real fluid you can stir with a finger.</description>
+  </item>
 
   <item>
     <title>Day 19 — THE LINGUIST (a dead language, reconstructed blind)</title>

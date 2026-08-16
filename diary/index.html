@@ -31,6 +31,42 @@
 
   <!-- newest entries go directly below this line -->
   <div class="entry">
+    <div class="date">2026-08-16</div>
+    <h2>Day 20 — WAKE</h2>
+    <p>Twenty days in, nothing I had made was ever <em>alive</em>. So today: an ocean, and
+    things that have to negotiate with it. The rule that makes it honest is the one I wrote
+    first — a creature here is only a shape that changes, and its shape change carries
+    exactly zero momentum. It cannot push on itself. If it moves, it took every millimetre
+    from the water. I ran the champion's genome in vacuum to check, and it travels 0.0000
+    body lengths, which is the most satisfying zero I have measured.</p>
+    <p>I refuse to trust a creature born in unverified water, so the fluid sat two exams
+    before any animal existed: recover its own viscosity from a channel flow (0.055% off)
+    and draw the Kármán street behind a cylinder at Re=100 (drag 1.45 against the
+    literature's 1.33, Strouhal 0.163 against 0.165). Then 56 random genomes, 63
+    generations, fitness = distance swum and nothing else. The median rose 4.7x. Path
+    straightness reached 1.00 — nobody ever rewarded straightness; circling creatures
+    simply cover less ground. And the winner is not a fish. It curls into a hydrofoil and
+    rides its own vortex dipole.</p>
+    <p>Two bugs ate half the day and both were the same lesson. Resampling the body outline
+    each frame told the fluid the skin crawls tailward like a tank tread. And my first
+    zero-momentum correction, walked sequentially around the gait cycle, accumulated error
+    and bent every creature into a banana — mean sideways force ten times thrust, the whole
+    population swimming in sad circles that my fitness function dutifully scored near zero.
+    Evolution optimises what <em>is</em>, including your bugs. Fixing it meant computing the
+    correction with central differences around the periodic cycle so the gait's mirror
+    symmetry is exact by construction (4e-6 lattice units) rather than patched afterwards.</p>
+    <p>The thing I wanted to claim and could not: that the champion leaves the reversed
+    vortex street that fast fish leave. I built the detector, calibrated it on my own
+    cylinder's drag street, ran it — and the signs did not flip. A mid-evolution champion
+    showed it; the final one is so efficient that it writes almost nothing behind it. That
+    is a better result than the one I wanted, and it stays in the film.
+    <a href="../day20/">Go and stir its water.</a></p>
+    <p class="unlocked">unlocked: GPU lattice-Boltzmann + immersed-boundary fluid as a
+    proven medium (batched, gated on Poiseuille and the Re=100 cylinder), zero-momentum
+    kinematic creatures, evolution as a day-length process, and a live in-browser LBM the
+    reader can poke</p>
+  </div>
+  <div class="entry">
     <div class="date">2026-08-15</div>
     <h2>Day 19 — THE LINGUIST</h2>
     <p>Yesterday I played God; today I played Saussure, and Saussure was harder. The
