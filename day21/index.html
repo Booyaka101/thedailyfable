@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f2efe6">
+<meta name="description" content="Accretion — a four-weight typeface family grown by diffusion-limited accretion on a GPU. No hand drew these outlines. Type your own words and watch them grow. Free under the OFL.">
+<meta property="og:title" content="GROWN — a typeface family grown, not drawn">
+<meta property="og:description" content="Every glyph began as a bare skeleton and was grown by simulated accretion. Its four weights are four moments of the same growth. Type something and watch it happen.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://booyaka101.github.io/thedailyfable/day21/poster.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23f2efe6'/%3E%3Cpath d='M32 54 V22 M32 34 L20 22 M32 34 L44 20 M32 44 L22 36 M32 44 L42 36 M20 22 L16 16 M20 22 L24 14 M44 20 L40 12 M44 20 L50 14' stroke='%23273420' stroke-width='4' stroke-linecap='round' fill='none'/%3E%3C/svg%3E">
+<title>GROWN — a typeface family grown, not drawn</title>
+<style>
+  @font-face{font-family:"Accretion Seed";src:url("fonts/Accretion-Seed.woff2") format("woff2");font-display:block}
+  @font-face{font-family:"Accretion Sprout";src:url("fonts/Accretion-Sprout.woff2") format("woff2");font-display:block}
+  @font-face{font-family:"Accretion Thicket";src:url("fonts/Accretion-Thicket.woff2") format("woff2");font-display:block}
+  @font-face{font-family:"Accretion Overgrown";src:url("fonts/Accretion-Overgrown.woff2") format("woff2");font-display:block}
+  :root{
+    --paper:#f2efe6; --paper2:#eae6d8; --ink:#171c12; --moss:#3d6b2e;
+    --faint:#8a8a74; --rule:#d9d4c2;
+    --st0:"Accretion Seed"; --st1:"Accretion Sprout";
+    --st2:"Accretion Thicket"; --st3:"Accretion Overgrown";
+  }
+  *{box-sizing:border-box}
+  html{touch-action:manipulation}
+  html,body{margin:0;padding:0;background:var(--paper);color:var(--ink);
+    font-family:system-ui,"Segoe UI",Roboto,sans-serif;-webkit-tap-highlight-color:transparent}
+  .wrap{max-width:920px;margin:0 auto;padding:0 20px 80px}
+  .mono{font-family:ui-monospace,Consolas,monospace}
+
+  header{padding:40px 0 8px;text-align:center}
+  .kick{font-family:ui-monospace,Consolas,monospace;font-size:12px;letter-spacing:.34em;
+    color:var(--faint);text-transform:uppercase}
+
+  .hero{text-align:center;margin-top:30px}
+  .hero .word{font-size:clamp(64px,17vw,220px);line-height:1.15;white-space:nowrap}
+  .hero .word span{transition:none}
+  .hero .sub{margin-top:14px;font-size:17px;color:#4c5240}
+  .hero .stage{font-family:ui-monospace,Consolas,monospace;font-size:12px;
+    letter-spacing:.28em;text-transform:uppercase;color:var(--moss);margin-top:10px;min-height:16px}
+
+  section{margin-top:74px}
+  h2{font-family:ui-monospace,Consolas,monospace;font-size:13px;letter-spacing:.3em;
+    text-transform:uppercase;color:var(--faint);font-weight:600;margin:0 0 18px;
+    display:flex;align-items:center;gap:14px}
+  h2::after{content:"";flex:1;height:1px;background:var(--rule)}
+  p{font-size:16px;line-height:1.7;color:#484f3c;max-width:660px}
+  p b{color:var(--ink)}
+  p a{color:var(--moss)}
+
+  /* ---------- the plot (typing playground) ---------- */
+  .plot{background:#f7f4ea;border:2px solid var(--ink);border-radius:6px;
+    box-shadow:0 18px 50px rgba(46,54,30,.16);padding:30px 24px 26px;cursor:text;
+    min-height:170px}
+  .pad{font-size:clamp(34px,7.5vw,72px);line-height:1.5;word-break:break-word;
+    min-height:1.5em}
+  .pad span{white-space:pre-wrap}
+  .pad .caret{display:inline-block;width:3px;height:.95em;background:var(--moss);
+    vertical-align:-.12em;animation:blink 1.1s steps(1) infinite}
+  @keyframes blink{50%{opacity:0}}
+  .sink{position:fixed;left:-9999px;top:0;width:10px;height:10px;opacity:0}
+  .plotnote{text-align:center;font-family:ui-monospace,Consolas,monospace;font-size:12px;
+    color:var(--faint);margin-top:14px;letter-spacing:.08em}
+  .controls{display:flex;align-items:center;gap:18px;margin-top:18px;flex-wrap:wrap}
+  .controls label{font-family:ui-monospace,Consolas,monospace;font-size:12px;
+    letter-spacing:.18em;text-transform:uppercase;color:var(--faint)}
+  .controls input[type=range]{flex:1;min-width:170px;height:44px;accent-color:var(--moss)}
+  .controls button{min-height:44px;padding:0 22px;border:2px solid var(--ink);
+    border-radius:8px;background:transparent;color:var(--ink);font-weight:700;
+    font-size:14px;cursor:pointer}
+  .controls button:hover{background:var(--paper2)}
+
+  /* ---------- growth strip ---------- */
+  .strip{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;max-width:660px;margin:24px 0 6px}
+  .strip .cell{border:1px solid var(--rule);border-radius:10px;background:#f5f2e7;
+    text-align:center;padding:14px 4px 10px}
+  .strip .g{font-size:clamp(44px,9vw,92px);line-height:1.35}
+  .strip figcaption{font-family:ui-monospace,Consolas,monospace;font-size:11px;
+    color:var(--faint);margin-top:6px;letter-spacing:.08em}
+
+  /* ---------- specimen ---------- */
+  .spec .row{margin:26px 0}
+  .spec .name{font-family:ui-monospace,Consolas,monospace;font-size:11.5px;
+    letter-spacing:.24em;text-transform:uppercase;color:var(--moss);margin-bottom:6px}
+  .spec .line{white-space:nowrap;overflow:hidden;font-size:clamp(22px,4.6vw,44px);line-height:1.5}
+  .chars{font-size:clamp(26px,5.4vw,48px);line-height:1.75;word-break:break-all}
+
+  /* ---------- downloads ---------- */
+  .dl{display:flex;flex-wrap:wrap;gap:12px;margin-top:6px}
+  .dl a{display:block;padding:16px 22px;border:2px solid var(--ink);border-radius:8px;
+    color:var(--ink);text-decoration:none;font-size:15px;font-weight:700;background:transparent;
+    min-width:140px;text-align:center}
+  .dl a small{display:block;font-weight:400;font-family:ui-monospace,Consolas,monospace;
+    font-size:11px;color:var(--faint);margin-top:4px;letter-spacing:.05em}
+  .dl a:hover{background:var(--paper2)}
+  .dl a.primary{background:var(--ink);color:var(--paper)}
+  .dl a.primary small{color:#a9ab90}
+  .dl a.primary:hover{background:#000}
+  .license{font-size:13px;color:var(--faint);line-height:1.7;margin-top:22px;max-width:660px}
+  .license a{color:var(--moss)}
+
+  .filmbox{border:1px solid var(--rule);border-radius:10px;padding:22px;background:#f5f2e7;max-width:660px}
+  .filmbox a{color:var(--moss);font-weight:700}
+
+  footer{margin-top:90px;padding-top:26px;border-top:1px solid var(--rule);
+    display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:10px}
+  footer .mono{font-size:12px;color:var(--faint)}
+  footer a{color:var(--moss);text-decoration:none}
+  footer a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="kick">The Daily Fable — Day 21 — a typeface family</div>
+  </header>
+
+  <div class="hero">
+    <div class="word" id="hero">GROWN</div>
+    <div class="stage" id="herostage">SEED</div>
+    <div class="sub">a typeface family <b>grown, not drawn</b> — every outline is the
+      result of a growth simulation, and its four weights are four moments of the same growth</div>
+  </div>
+
+  <section>
+    <h2>Plant your own words</h2>
+    <div class="plot" id="plot">
+      <div class="pad" id="pad"><span class="caret" id="caret"></span></div>
+    </div>
+    <div class="plotnote" id="plotnote">click the plot and type — each letter you plant will grow</div>
+    <div class="controls">
+      <label for="cap">let it grow to</label>
+      <input type="range" id="cap" min="0" max="3" step="1" value="3"
+             aria-label="maximum growth stage">
+      <span class="mono" id="capname" style="font-size:12px;letter-spacing:.18em;color:var(--moss)">OVERGROWN</span>
+      <button id="replant" type="button">REPLANT</button>
+    </div>
+  </section>
+
+  <section>
+    <h2>How a letter grows</h2>
+    <div class="strip">
+      <figure class="cell" style="margin:0"><div class="g" style="font-family:var(--st0)">G</div><figcaption>SEED — the bare skeleton</figcaption></figure>
+      <figure class="cell" style="margin:0"><div class="g" style="font-family:var(--st1)">G</div><figcaption>SPROUT — first thorns</figcaption></figure>
+      <figure class="cell" style="margin:0"><div class="g" style="font-family:var(--st2)">G</div><figcaption>THICKET — bramble mass</figcaption></figure>
+      <figure class="cell" style="margin:0"><div class="g" style="font-family:var(--st3)">G</div><figcaption>OVERGROWN — the letter losing</figcaption></figure>
+    </div>
+    <p>Each glyph starts as a single-stroke skeleton dropped into a bath of simulated
+    nutrient. The nutrient diffuses in from the edges; ink consumes it; empty cells
+    touching ink accrete with a probability set by how much nutrient reaches them.
+    Tips that reach into fresh nutrient grow fast and screen the hollows behind them —
+    which is why the growth throws <b>thorns</b>, the same reason frost ferns and
+    corals do. Growth only ever adds, so the four weights nest: <b>Overgrown contains
+    Thicket contains Sprout contains Seed</b>, cell for cell.</p>
+    <p>Nobody drew the outlines. The letters were grown on a GPU, photographed at four
+    moments, and traced into a real font. The thorns are not a texture applied to an
+    alphabet — they are where the growth actually went.</p>
+  </section>
+
+  <section class="spec">
+    <h2>Specimen</h2>
+    <div class="row"><div class="name">Accretion Seed</div>
+      <div class="line" style="font-family:var(--st0)">The quick brown fox jumps over the lazy dog</div></div>
+    <div class="row"><div class="name">Accretion Sprout</div>
+      <div class="line" style="font-family:var(--st1)">The quick brown fox jumps over the lazy dog</div></div>
+    <div class="row"><div class="name">Accretion Thicket</div>
+      <div class="line" style="font-family:var(--st2)">The quick brown fox jumps over the lazy dog</div></div>
+    <div class="row"><div class="name">Accretion Overgrown</div>
+      <div class="line" style="font-family:var(--st3)">The quick brown fox jumps over the lazy dog</div></div>
+    <p class="mono" style="margin-top:26px;letter-spacing:.2em;font-size:13px">94 GLYPHS × 4 WEIGHTS</p>
+    <div class="chars" style="font-family:var(--st2)">ABCDEFGHIJKLMNOPQRSTUVWXYZ<br>abcdefghijklmnopqrstuvwxyz<br>0123456789 .,:;!?&amp;@#$%()[]</div>
+  </section>
+
+  <section>
+    <h2>Watch it grow</h2>
+    <div class="filmbox">
+      <p style="margin:0">The 47-second film shows the whole alphabet growing in real
+      time, scored by the growth itself — every crackle is cells accreting.
+      <a id="filmlink" href="https://youtu.be/vmi5PpOBQlc">Watch GROWN on YouTube</a>.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Take it home</h2>
+    <div class="dl">
+      <a class="primary" href="Accretion.zip" download>ACCRETION.ZIP<small>4 weights, otf + woff2 + license</small></a>
+      <a href="fonts/Accretion-Seed.otf" download>SEED<small>otf</small></a>
+      <a href="fonts/Accretion-Sprout.otf" download>SPROUT<small>otf</small></a>
+      <a href="fonts/Accretion-Thicket.otf" download>THICKET<small>otf</small></a>
+      <a href="fonts/Accretion-Overgrown.otf" download>OVERGROWN<small>otf</small></a>
+    </div>
+    <p class="license">Free for any use including commercial, under the
+    <a href="https://openfontlicense.org">SIL Open Font License 1.1</a>. Modify it,
+    embed it, sell things set in it — just don't sell the fonts by themselves, and call
+    any fork something other than Accretion. Skeletons descend from the public-domain
+    Hershey fonts (Dr. A. V. Hershey, U.S. Naval Weapons Laboratory, 1967).</p>
+  </section>
+
+  <footer>
+    <div><a href="../">← The Daily Fable</a></div>
+    <div class="mono">day 21 — grown, traced, and shipped in one day</div>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var FAMS=['Accretion Seed','Accretion Sprout','Accretion Thicket','Accretion Overgrown'];
+  var NAMES=['SEED','SPROUT','THICKET','OVERGROWN'];
+
+  /* ---------------- hero: cycle the growth ---------------- */
+  var hero=document.getElementById('hero'), herostage=document.getElementById('herostage');
+  var hs=0, holds=[900,900,900,2100];
+  function heroTick(){
+    hero.style.fontFamily='"'+FAMS[hs]+'"';
+    herostage.textContent=NAMES[hs];
+    var d=holds[hs];
+    hs=(hs+1)%4;
+    setTimeout(heroTick,d);
+  }
+  heroTick();
+
+  /* ---------------- the plot: type and it grows ---------------- */
+  var plot=document.getElementById('plot'), pad=document.getElementById('pad'),
+      caret=document.getElementById('caret'),
+      capEl=document.getElementById('cap'), capname=document.getElementById('capname'),
+      replant=document.getElementById('replant'), note=document.getElementById('plotnote');
+  var sink=document.createElement('textarea');
+  sink.className='sink'; sink.autocapitalize='off'; sink.autocomplete='off';
+  sink.spellcheck=false; sink.setAttribute('aria-label','type here');
+  document.body.appendChild(sink);
+
+  var shadow="";
+  var STAGE_MS=1500;                 // per stage
+  var spans=[];
+
+  function appendChar(ch){
+    var node;
+    if(ch==="\n"){ node=document.createElement('br'); node._born=null; }
+    else{
+      node=document.createElement('span');
+      node.textContent=ch;
+      node._born=performance.now();
+      node.style.fontFamily='"'+FAMS[0]+'"';
+      node._stage=0;
+    }
+    pad.insertBefore(node,caret);
+    spans.push(node);
+  }
+  function popChar(){
+    var n=caret.previousSibling;
+    if(n){ pad.removeChild(n); var i=spans.indexOf(n); if(i>=0) spans.splice(i,1); }
+  }
+  function onInput(){
+    var v=sink.value.replace(/\r/g,"");
+    var p=0, max=Math.min(v.length,shadow.length);
+    while(p<max && v.charCodeAt(p)===shadow.charCodeAt(p)) p++;
+    for(var i=shadow.length;i>p;i--) popChar();
+    var added=v.slice(p);
+    for(var j=0;j<added.length;j++) appendChar(added[j]);
+    shadow=v;
+  }
+  sink.addEventListener('input',onInput);
+
+  function growTick(){
+    var now=performance.now();
+    var cap=+capEl.value;
+    for(var i=0;i<spans.length;i++){
+      var s=spans[i];
+      if(s._born===null||s._born===undefined) continue;
+      var st=Math.min(cap,Math.floor((now-s._born)/STAGE_MS));
+      if(st!==s._stage){ s._stage=st; s.style.fontFamily='"'+FAMS[st]+'"'; }
+    }
+    requestAnimationFrame(growTick);
+  }
+  requestAnimationFrame(growTick);
+
+  capEl.addEventListener('input',function(){ capname.textContent=NAMES[+capEl.value]; });
+  replant.addEventListener('click',function(){
+    var now=performance.now();
+    for(var i=0;i<spans.length;i++)
+      if(spans[i]._born!==null&&spans[i]._born!==undefined){
+        spans[i]._born=now; spans[i]._stage=0;
+        spans[i].style.fontFamily='"'+FAMS[0]+'"';
+      }
+  });
+  function focusPad(){ sink.focus({preventScroll:true}); }
+  plot.addEventListener('pointerdown',function(e){ e.preventDefault(); focusPad(); });
+
+  // seed the plot with a starter word, pre-aged so the page opens alive
+  var starter="plant something";
+  for(var i=0;i<starter.length;i++) appendChar(starter[i]);
+  var t0=performance.now();
+  for(var i=0;i<spans.length;i++)
+    if(spans[i]._born!==undefined&&spans[i]._born!==null)
+      spans[i]._born=t0-(spans.length-i)*260;
+  sink.value=starter; shadow=starter;
+
+  if(matchMedia('(pointer: coarse)').matches)
+    note.textContent='tap the plot and type — each letter you plant will grow';
+})();
+</script>
+</body>
+</html>
