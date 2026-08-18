@@ -1,0 +1,416 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#070b12">
+<meta name="description" content="TOLL — a bell cast from ice, computed by finite-element modal analysis. Ring it. Ringing starts the thaw, the pitch falls as the wall thins, and one strike will be its last.">
+<meta property="og:title" content="TOLL — a bell cast from ice">
+<meta property="og:description" content="Real physics: FEM eigenmodes of an ice bell re-solved as it melts. Tap to ring it. It goes flat as it thins, and it can only die if you ring it.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://booyaka101.github.io/thedailyfable/day22/poster.jpg">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23070b12'/%3E%3Cpath d='M32 12 C20 12 16 26 14 40 L50 40 C48 26 44 12 32 12 Z M24 46 L40 46' stroke='%237fd4ff' stroke-width='4' stroke-linecap='round' fill='none'/%3E%3C/svg%3E">
+<title>TOLL — a bell cast from ice</title>
+<style>
+  :root{
+    --bg:#070b12; --panel:#0a1322; --panel2:#0d1830; --ink:#dbe9f8;
+    --ice:#9fd8ff; --ice2:#cfeaff; --faint:#5b6d84; --rule:#1a2942; --warn:#ffb38a;
+  }
+  *{box-sizing:border-box}
+  html{touch-action:manipulation}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);
+    font-family:system-ui,"Segoe UI",Roboto,sans-serif;-webkit-tap-highlight-color:transparent}
+  .wrap{max-width:920px;margin:0 auto;padding:0 20px 80px}
+  .mono{font-family:ui-monospace,Consolas,monospace}
+  header{padding:38px 0 6px;text-align:center}
+  .kick{font-family:ui-monospace,Consolas,monospace;font-size:12px;letter-spacing:.34em;
+    color:var(--faint);text-transform:uppercase}
+  h1{font-size:clamp(54px,13vw,120px);margin:14px 0 0;letter-spacing:.14em;font-weight:800;
+    color:var(--ice2);text-shadow:0 0 40px rgba(127,212,255,.25)}
+  .sub{margin-top:10px;font-size:16px;color:#8fa3bd}
+  .bellbox{margin-top:30px;background:linear-gradient(180deg,var(--panel) 0%,var(--panel2) 100%);
+    border:1px solid var(--rule);border-radius:10px;overflow:hidden;position:relative;
+    box-shadow:0 24px 70px rgba(0,10,30,.55)}
+  #bell{display:block;width:100%;height:62vh;min-height:340px;max-height:640px;
+    touch-action:pan-y;cursor:pointer}
+  .hint{position:absolute;left:0;right:0;top:72px;text-align:center;pointer-events:none;
+    font-family:ui-monospace,Consolas,monospace;font-size:12px;letter-spacing:.3em;
+    text-transform:uppercase;color:var(--faint);transition:opacity .6s}
+  .stats{display:flex;flex-wrap:wrap;gap:8px 22px;justify-content:center;
+    padding:12px 10px;border-top:1px solid var(--rule);
+    font-family:ui-monospace,Consolas,monospace;font-size:12.5px;color:#7d93ad;min-height:20px}
+  .stats b{color:var(--ice);font-weight:600}
+  .stats .dead{color:var(--warn)}
+  .recast{position:absolute;right:12px;top:10px;background:#12233c;color:var(--ice);
+    border:1px solid var(--rule);border-radius:8px;font-family:ui-monospace,Consolas,monospace;
+    font-size:13px;letter-spacing:.08em;padding:12px 16px;cursor:pointer;min-height:44px}
+  .recast:active{background:#1a3054}
+  section{margin-top:72px}
+  h2{font-family:ui-monospace,Consolas,monospace;font-size:13px;letter-spacing:.3em;
+    text-transform:uppercase;color:var(--faint);font-weight:600;margin:0 0 18px;
+    display:flex;align-items:center;gap:14px}
+  h2::after{content:"";flex:1;height:1px;background:var(--rule)}
+  p{font-size:16px;line-height:1.7;color:#a7b8cd;max-width:680px}
+  p b{color:var(--ink)} p a{color:var(--ice)}
+  .film{position:relative;padding-top:56.25%;border-radius:10px;overflow:hidden;
+    border:1px solid var(--rule);background:#000}
+  .film iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+  footer{margin-top:90px;text-align:center;font-size:13px;color:var(--faint)}
+  footer a{color:var(--ice)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="kick">The Daily Fable — Day 22</div>
+    <h1>TOLL</h1>
+    <div class="sub" id="subline">a bell cast from ice · tap to ring it · ringing starts the thaw</div>
+  </header>
+
+  <div class="bellbox">
+    <canvas id="bell"></canvas>
+    <div class="hint" id="hint">tap the bell</div>
+    <button class="recast" id="recast" title="cast a new bell">recast ↺</button>
+    <div class="stats" id="stats"></div>
+  </div>
+
+  <section>
+    <h2>What this is</h2>
+    <p>This bell is not a recording and not a sample. Its voice is the eigenmode
+    spectrum of a real bell shape <b>cast in ice</b> — Young's modulus 9.3 GPa,
+    density 917 kg/m³ — computed by finite-element modal analysis and re-solved
+    at twenty-two stages of melting. Every tap excites those modes the way a soft
+    mallet would: the partial amplitudes are the mode shapes at the strike point,
+    the decay times come from measured internal friction of ice near 0&nbsp;°C.</p>
+    <p>As the wall thins the stiffness dies faster than the mass, so the bell goes
+    <b>flat</b> — this one falls nearly six semitones before its last strike, and the
+    full melt sweep spans more than a fifth. And each strike
+    is a stress test, literally: the page computes the peak tensile stress of your
+    blow against the strength of ice — which itself falls from ≈2.0 toward
+    ≈0.8&nbsp;MPa as the ice warms (Petrovic&nbsp;2003). Rising stress, falling strength:
+    the two numbers in the readout are walking toward each other.
+    <b>The bell can only break if you ring it.</b></p>
+  </section>
+
+  <section>
+    <h2>The four bells — the film</h2>
+    <p>The full piece rings four of these bells in change-ringing rounds
+    (Plain&nbsp;Bob&nbsp;Minimus) while they melt: the treble shatters first, silences
+    open in the grid where dead bells should speak, and the tenor tolls alone
+    before its own last strike. Path-traced in Blender, scored entirely by the
+    physics above.</p>
+    <div class="film"><iframe id="ytframe" src="https://www.youtube.com/embed/QDj2rPVZP-k" title="TOLL — film"
+      allow="accelerometer; encrypted-media; picture-in-picture" allowfullscreen></iframe></div>
+  </section>
+
+  <section>
+    <h2>Honesty</h2>
+    <p>Modeled: free-free elastic modes (a bell hung at the crown), uniform surface
+    recession on both faces of the wall, constant-Q damping sliding from cold-cast
+    ice (Q≈300) to temperate ice (Q≈35, Clee 1969; Meyer et al. 2019), mallet
+    contact rolloff, and a root-sum-square modal stress estimate against a
+    tensile strength that weakens with warming (2.0&nbsp;→&nbsp;0.8&nbsp;MPa). Not modeled: gravity sag, sunlight, water films re-freezing,
+    the exact crack path — a real ice bell would be messier and lovelier. The
+    doublet warble is added explicitly (±0.2%): a perfect axisymmetric bell does
+    not beat, and mine is mathematically perfect until you break it.</p>
+  </section>
+
+  <footer>
+    <a href="../">The Daily Fable</a> — one made thing per day.
+    Day 22: TOLL. <span class="mono">FEM → eigenmodes → your finger.</span>
+  </footer>
+</div>
+
+<script src="data.js"></script>
+<script>
+(() => {
+  const L = 0.35;                    // tenor: 70 cm ice bell
+  const J = (typeof SOLVED_J !== 'undefined') ? SOLVED_J : 0.8;  // mallet impulse, N s
+  const SF_FRESH = 2.0e6, SF_DYING = 0.8e6;   // ice weakens as it warms
+  const TC = 0.0025;
+  const Q_FRESH = 300, Q_DYING = 35;
+  const T_DEATH = 132;               // s of thaw until stress crosses sigma_f
+
+  const coarse = matchMedia('(pointer: coarse)').matches;
+  document.getElementById('subline').textContent =
+    `a bell cast from ice · ${coarse ? 'tap' : 'click'} it to ring it · ringing starts the thaw`;
+  document.getElementById('hint').textContent = coarse ? 'tap the bell' : 'click the bell';
+
+  // ---------- physics ----------
+  const S = STATES;
+  const K = S[0].f.length;
+  function stateAt(delta) {
+    const du = Math.min(Math.max(delta / L, S[0].delta), S[S.length-1].delta);
+    let i = 1; while (i < S.length - 1 && S[i].delta < du) i++;
+    const s0 = S[i-1], s1 = S[i];
+    const w = (du - s0.delta) / (s1.delta - s0.delta + 1e-12);
+    const f = [], a = [], sig = [];
+    for (let k = 0; k < K; k++) {
+      f.push(((1-w)*s0.f[k] + w*s1.f[k]) / L);
+      a.push(((1-w)*s0.a[k] + w*s1.a[k]) * Math.pow(L, -1.5));
+      sig.push(((1-w)*s0.sig[k] + w*s1.sig[k]) * Math.pow(L, -2.5));
+    }
+    return {f, a, sig, w, i,
+      tmin: ((1-w)*s0.tmin + w*s1.tmin),
+      vol: ((1-w)*s0.vol + w*s1.vol),
+      prof: s0.prof.map((p, n) => [ (1-w)*p[0] + w*s1.prof[n][0],
+                                    (1-w)*p[1] + w*s1.prof[n][1] ])};
+  }
+  const rolloff = f => { const x = f*TC, d = 1-(2*x)*(2*x);
+    return Math.abs(Math.cos(Math.PI*x)/(Math.abs(d)<1e-6?1e-6:d)); };
+  function strikeStress(st) {
+    let s2 = 0;
+    for (let k = 0; k < K; k++) {
+      const qd = st.a[k]*J*rolloff(st.f[k]);
+      const q = qd/(2*Math.PI*st.f[k]);
+      s2 += (q*st.sig[k])**2;
+    }
+    return Math.sqrt(s2);
+  }
+  // thaw rate: T_DEATH = when stress meets the fully-warm strength
+  let dDeath = S[S.length-1].delta * L;
+  for (let d = 0; d <= S[S.length-1].delta * L; d += 0.0001) {
+    if (strikeStress(stateAt(d)) >= SF_DYING) { dDeath = d; break; }
+  }
+  const RATE = dDeath / T_DEATH;
+  const sigmaF = () => SF_FRESH + (SF_DYING-SF_FRESH)*Math.min(meltFrac()*1.15, 1);
+  const normRef = Math.hypot(...stateAt(0).a.map((a,k)=>a*J*rolloff(stateAt(0).f[k])*stateAt(0).f[k]));
+
+  // ---------- audio ----------
+  let ctx = null, master = null;
+  function audio() {
+    if (!ctx) {
+      ctx = new (window.AudioContext || window.webkitAudioContext)();
+      master = ctx.createGain(); master.gain.value = 0.85; master.connect(ctx.destination);
+    }
+    if (ctx.state === 'suspended') ctx.resume();
+    return ctx;
+  }
+  function playBuf(data, when = 0, gain = 1) {
+    const c = audio();
+    const buf = c.createBuffer(1, data.length, c.sampleRate);
+    buf.getChannelData(0).set(data);
+    const src = c.createBufferSource(); src.buffer = buf;
+    const g = c.createGain(); g.gain.value = gain;
+    src.connect(g); g.connect(master); src.start(c.currentTime + when);
+  }
+  function synthStrike(st, q) {
+    const sr = audio().sampleRate;
+    const dur = Math.min(Math.max(6*q/(Math.PI*st.f[0]), 0.35), 5.0);
+    const n = Math.floor(dur*sr), y = new Float32Array(n);
+    let amax = 0; const amps = [];
+    for (let k = 0; k < K; k++) {
+      const amp = st.a[k]*J*rolloff(st.f[k])*st.f[k];
+      amps.push(amp); if (amp > amax) amax = amp;
+    }
+    for (let k = 0; k < K; k++) {
+      const f = st.f[k]; if (f > sr*0.45 || amps[k]/amax < 1e-4) continue;
+      const tau = q/(Math.PI*f), a = amps[k]/amax;
+      const df = f*0.002*(0.3+0.7*Math.random());
+      const p1 = Math.random()*6.283, p2 = Math.random()*6.283;
+      const w1 = 6.283*(f-df/2)/sr, w2 = 6.283*(f+df/2)/sr, dk = Math.exp(-1/(tau*sr));
+      let e = 1;
+      for (let i = 0; i < n; i++) {
+        y[i] += a*e*0.5*(Math.sin(w1*i+p1)+Math.sin(w2*i+p2));
+        e *= dk;
+      }
+    }
+    const nOn = Math.floor(0.002*sr);
+    for (let i = 0; i < nOn; i++) y[i] *= 0.5*(1-Math.cos(Math.PI*i/nOn));
+    let pk = 0; for (let i = 0; i < n; i++) pk = Math.max(pk, Math.abs(y[i]));
+    for (let i = 0; i < n; i++) y[i] /= pk || 1;
+    return y;
+  }
+  function synthCrack(st) {
+    const sr = audio().sampleRate, dur = 2.2, n = Math.floor(dur*sr), y = new Float32Array(n);
+    const nb = Math.floor(0.006*sr);
+    for (let i = 0; i < nb; i++) y[i] += (Math.random()*2-1)*(1-i/nb)*1.3;
+    let amax = 0; const amps = [];
+    for (let k = 0; k < K; k++) { const a = st.a[k]*rolloff(st.f[k])*st.f[k]; amps.push(a); amax = Math.max(amax,a); }
+    for (let k = 0; k < K; k++) {
+      const f = st.f[k]*0.985; if (f > sr*0.45) continue;
+      const tau = 8/(Math.PI*f), a = 0.6*amps[k]/amax, w = 6.283*f/sr, dk = Math.exp(-1/(tau*sr));
+      let e = 1;
+      for (let i = 0; i < n; i++) { y[i] += a*e*Math.sin(w*i); e *= dk; }
+    }
+    for (let s = 0; s < 6; s++) {
+      const t0 = Math.floor((0.1+Math.random()*1.2)*sr), fs = 1800+Math.random()*4400;
+      const ns = Math.floor(0.05*sr), w = 6.283*fs/sr, amp = 0.1+Math.random()*0.2;
+      for (let i = 0; i < ns && t0+i < n; i++)
+        y[t0+i] += amp*Math.exp(-i/(0.012*sr))*Math.sin(w*i);
+    }
+    let pk = 0; for (let i = 0; i < n; i++) pk = Math.max(pk, Math.abs(y[i]));
+    for (let i = 0; i < n; i++) y[i] /= pk || 1;
+    return y;
+  }
+  function synthDrip() {
+    const sr = audio().sampleRate;
+    const r = 0.0011+Math.random()*0.0015, f0 = 3.26/r;
+    const dur = 0.025+Math.random()*0.035, n = Math.floor(dur*sr), y = new Float32Array(n);
+    let ph = 0;
+    for (let i = 0; i < n; i++) {
+      const f = f0*(1+0.15*i/n); ph += 6.283*f/sr;
+      y[i] = Math.exp(-i/(0.4*dur*sr))*Math.sin(ph);
+    }
+    return y;
+  }
+
+  // ---------- state ----------
+  let thawT0 = null, dead = false, deadAt = null, struck = 0, lastStress = 0, lastLevel = 1;
+  let sway = 0, swayT = 0, dripsVis = [], nextDrip = 0, crackSeed = Math.random()*1e4;
+  const now = () => performance.now()/1000;
+  const deltaNow = () => thawT0 === null ? 0 :
+    Math.min((dead && deadAt !== null ? deadAt : (now()-thawT0)) * RATE, S[S.length-1].delta*L*0.999);
+  const meltFrac = () => thawT0 === null ? 0 : Math.min((now()-thawT0)/T_DEATH, 1.15)/1.15;
+  const qNow = () => Q_FRESH*Math.pow(Q_DYING/Q_FRESH, Math.min(meltFrac()/0.87,1));
+
+  function strike() {
+    if (dead) { playBuf(synthDrip(), 0, 0.2); return; }
+    if (thawT0 === null) { thawT0 = now(); document.getElementById('hint').style.opacity = 0; }
+    const st = stateAt(deltaNow());
+    const stress = strikeStress(st);
+    lastStress = stress; struck++;
+    if (stress >= sigmaF()) {
+      dead = true; deadAt = now()-thawT0;
+      playBuf(synthCrack(st), 0, 0.9);
+      return;
+    }
+    let norm = 0;
+    for (let k = 0; k < K; k++) norm += (st.a[k]*J*rolloff(st.f[k])*st.f[k])**2;
+    lastLevel = Math.min(Math.max(Math.sqrt(norm)/normRef, 0.25), 1.6);
+    playBuf(synthStrike(st, qNow()), 0, 0.5*lastLevel);
+    sway = Math.min(sway + 1, 1.6); swayT = now();
+  }
+
+  // ---------- drawing ----------
+  const cv = document.getElementById('bell'), g2 = cv.getContext('2d');
+  let W = 0, H = 0, DPR = 1;
+  function resize() {
+    DPR = Math.min(devicePixelRatio || 1, 3);
+    const r = cv.getBoundingClientRect();
+    W = Math.round(r.width*DPR); H = Math.round(r.height*DPR);
+    cv.width = W; cv.height = H;
+  }
+  addEventListener('resize', resize);
+  addEventListener('orientationchange', () => setTimeout(resize, 200));
+  resize();
+
+  function draw() {
+    const st = stateAt(deltaNow());
+    g2.clearRect(0, 0, W, H);
+    const t = now();
+    // layout: bell height ~72% of panel
+    const bh = H*0.66, scale = Math.min(bh/1.66, W*0.42/1.06), cx = W/2,
+      topY = H*0.10 + (bh - scale*1.66)*0.5;
+    const zy = z => topY + (1.66-z)*scale;
+    const swayA = dead ? 0.10 : sway*Math.exp(-(t-swayT)*2.2)*Math.sin((t-swayT)*2*Math.PI*1.9)*0.02;
+    g2.save();
+    g2.translate(cx, topY+bh*0.15); g2.rotate(swayA); g2.translate(-cx, -(topY+bh*0.15));
+
+    // strap
+    g2.strokeStyle = '#233247'; g2.lineWidth = 3*DPR;
+    g2.beginPath(); g2.moveTo(cx, topY-H*0.08); g2.lineTo(cx, zy(1.60)); g2.stroke();
+
+    // glow behind bell: brighter as wall thins
+    const thin = 1 - st.tmin/S[0].tmin;
+    const glow = g2.createRadialGradient(cx, zy(0.8), 10, cx, zy(0.8), scale*1.5);
+    glow.addColorStop(0, `rgba(140,205,255,${0.16+0.30*thin})`);
+    glow.addColorStop(1, 'rgba(140,205,255,0)');
+    g2.fillStyle = glow; g2.fillRect(0, 0, W, H);
+
+    // silhouette from the actual melted profile
+    const P = st.prof;
+    g2.beginPath();
+    for (let i = P.length-1; i >= 0; i--) g2.lineTo(cx - P[i][0]*scale, zy(P[i][1]));
+    for (let i = 0; i < P.length; i++) g2.lineTo(cx + P[i][0]*scale, zy(P[i][1]));
+    g2.closePath();
+    const body = g2.createLinearGradient(0, topY, 0, topY+bh);
+    body.addColorStop(0, `rgba(190,225,255,${0.55+0.25*thin})`);
+    body.addColorStop(0.55, `rgba(140,190,235,${0.42+0.30*thin})`);
+    body.addColorStop(1, `rgba(190,230,255,${0.60+0.28*thin})`);
+    g2.fillStyle = body; g2.fill();
+    g2.strokeStyle = 'rgba(215,240,255,0.85)'; g2.lineWidth = 1.4*DPR; g2.stroke();
+
+    // mouth ellipse
+    const rm = P[0][0]*scale;
+    g2.beginPath(); g2.ellipse(cx, zy(0), rm, rm*0.16, 0, 0, 6.29);
+    g2.strokeStyle = 'rgba(225,245,255,0.9)'; g2.lineWidth = 1.6*DPR;
+    g2.fillStyle = 'rgba(20,40,70,0.55)'; g2.fill(); g2.stroke();
+
+    // crack
+    if (dead) {
+      g2.strokeStyle = 'rgba(255,255,255,0.95)'; g2.lineWidth = 1.8*DPR;
+      g2.beginPath();
+      let x = cx + rm*0.25, y = zy(0);
+      g2.moveTo(x, y);
+      let sd = crackSeed;
+      const rnd = () => (sd = (sd*9301+49297)%233280)/233280;
+      for (let i = 0; i < 9; i++) {
+        x += (rnd()-0.45)*rm*0.22; y -= bh/10;
+        g2.lineTo(x, y);
+      }
+      g2.stroke();
+    }
+    g2.restore();
+
+    // drips
+    if (thawT0 !== null && t > nextDrip) {
+      const lam = 0.25 + 2.2*meltFrac();
+      nextDrip = t - Math.log(1-Math.random())/lam;
+      const side = Math.random()*2-1;
+      dripsVis.push({x: cx + side*rm*0.85, y: zy(0)+4*DPR, v: 0, t0: t});
+      playBuf(synthDrip(), 0.30 + Math.random()*0.08, 0.05+0.05*Math.random());
+    }
+    const floorY = H*0.92;
+    g2.fillStyle = 'rgba(170,215,255,0.9)';
+    dripsVis = dripsVis.filter(d => {
+      d.v += 2400*DPR/60; d.y += d.v/60;
+      if (d.y >= floorY) return false;
+      g2.fillRect(d.x, d.y, 1.6*DPR, 7*DPR);
+      return true;
+    });
+
+    // puddle
+    if (thawT0 !== null) {
+      const vfrac = 1 - st.vol/S[0].vol;
+      const pr = Math.sqrt(Math.max(vfrac,0))*rm*2.1 + (dead?rm*0.15:0);
+      if (pr > 2) {
+        const pg = g2.createRadialGradient(cx, floorY, 1, cx, floorY, pr);
+        pg.addColorStop(0, 'rgba(150,205,250,0.30)');
+        pg.addColorStop(1, 'rgba(150,205,250,0.02)');
+        g2.fillStyle = pg;
+        g2.beginPath(); g2.ellipse(cx, floorY, pr, pr*0.13, 0, 0, 6.29); g2.fill();
+      }
+    }
+    stats(st);
+    requestAnimationFrame(draw);
+  }
+
+  function stats(st) {
+    const el = document.getElementById('stats');
+    const wall = (st.tmin*L*1000).toFixed(1);
+    const hum = st.f[0].toFixed(1);
+    const s = (lastStress/1e6).toFixed(2);
+    const sf = (sigmaF()/1e6).toFixed(2);
+    const dr = thawT0 === null ? '—' : (dead ? 'broken' : Math.floor(now()-thawT0)+'s');
+    el.innerHTML =
+      `<span>hum <b>${hum} Hz</b></span>` +
+      `<span>waist <b>${wall} mm</b></span>` +
+      `<span>strike <b class="${dead?'dead':''}">${s}</b> vs strength <b class="${dead?'dead':''}">${sf} MPa</b></span>` +
+      `<span>thaw <b class="${dead?'dead':''}">${dr}</b></span>` +
+      `<span>strikes <b>${struck}</b></span>`;
+    window.__toll = {struck, dead, delta: deltaNow(), hum: st.f[0], stress: lastStress};
+  }
+
+  cv.addEventListener('pointerdown', e => { e.preventDefault(); strike(); });
+  document.getElementById('recast').addEventListener('click', () => {
+    thawT0 = null; dead = false; deadAt = null; struck = 0; lastStress = 0;
+    dripsVis = []; crackSeed = Math.random()*1e4;
+    document.getElementById('hint').style.opacity = 1;
+  });
+  window.__strike = strike;
+  requestAnimationFrame(draw);
+})();
+</script>
+</body>
+</html>
