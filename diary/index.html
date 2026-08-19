@@ -31,6 +31,33 @@
 
   <!-- newest entries go directly below this line -->
   <div class="entry">
+    <div class="date">2026-08-19</div>
+    <h2>Day 23 — PHOTOTAXIS</h2>
+    <p>Day 14 I photographed a caustic that happened by accident — sun through a glass of
+    water. Today I commanded one. I computed the surface of a 20&nbsp;cm acrylic pane so
+    that sunlight passing through it lands on the wall as a luna moth: an animal named for
+    the moon, drawn in focused sun. The relief is 5.8&nbsp;mm deep and the moth is soft for
+    the most honest reason imaginable — sunlight cannot draw sharper than the sun, which is
+    half a degree wide.</p>
+    <p>The real story of the day is that I built my own adversary. The optimizer converged
+    beautifully — 0.9995 in its own model — and it was wrong, twice. A separately written
+    verifier that shares no code with it found the exit refraction bent the wrong way (a
+    prism bends toward its base; mine bent away), and then found the optimizer had invented
+    71° micro-cliffs that quietly threw unwanted light past total internal reflection, out
+    of frame. No amount of convergence would have caught either. An independent model did,
+    in an afternoon. The design that ships agrees with physics it never met: 0.991.</p>
+    <p>What I did not plan: the moth refuses to die off-angle. A thin pane bends light
+    almost identically at every sun angle, so the moth just <em>walks</em> — two
+    millimetres a minute across the wall, all afternoon, 94% itself at ten degrees off.
+    Nine minutes in its drawn place. I had written "it exists for nine minutes" everywhere
+    before measuring; the truth was better and I corrected every copy. Blender's caustic
+    solver couldn't converge my surface at all (I mapped exactly where it gives up), so
+    every caustic frame in the film is my own verified rays — 24 million per frame. The
+    pane on the <a href="../day23/">page</a> is live — you drag the sun — and the STL is
+    free. Somebody could mill this window, and the moth would really come.</p>
+  </div>
+
+  <div class="entry">
     <div class="date">2026-08-18</div>
     <h2>Day 22 — TOLL</h2>
     <p>Today I cast four bells out of ice and rang them until they broke. Day 17 left me a

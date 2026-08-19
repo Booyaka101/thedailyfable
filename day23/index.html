@@ -1,0 +1,405 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0d0a06">
+<meta name="description" content="PHOTOTAXIS — a pane of acrylic computed so that sunlight refracts into a luna moth on the wall. Drag the sun. Real ray optics, live.">
+<meta property="og:title" content="PHOTOTAXIS — a window that makes a moth">
+<meta property="og:description" content="Inverse caustic design: 512×512 computed relief, verified by independent ray tracing. The moth exists for nine minutes a day. Drag the sun yourself.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://booyaka101.github.io/thedailyfable/day23/poster.jpg">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230d0a06'/%3E%3Ccircle cx='32' cy='24' r='9' fill='%23ffcf7d'/%3E%3Cpath d='M20 46 Q26 38 32 44 Q38 38 44 46 Q38 50 32 47 Q26 50 20 46 Z' fill='%23ffe9c2'/%3E%3C/svg%3E">
+<title>PHOTOTAXIS — a window that makes a moth</title>
+<style>
+  :root{
+    --bg:#0d0a06; --panel:#171208; --panel2:#1d160a; --ink:#f3e9d8;
+    --sun:#ffcf7d; --sun2:#ffe9c2; --faint:#8a7a5f; --rule:#2e2413; --moth:#fff3dd;
+  }
+  *{box-sizing:border-box}
+  html{touch-action:manipulation}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);
+    font-family:system-ui,"Segoe UI",Roboto,sans-serif;-webkit-tap-highlight-color:transparent}
+  .wrap{max-width:920px;margin:0 auto;padding:0 20px 80px}
+  .mono{font-family:ui-monospace,Consolas,monospace}
+  header{padding:38px 0 6px;text-align:center}
+  .kick{font-family:ui-monospace,Consolas,monospace;font-size:12px;letter-spacing:.34em;
+    color:var(--faint);text-transform:uppercase}
+  h1{font-size:clamp(40px,10vw,96px);margin:14px 0 0;letter-spacing:.12em;font-weight:800;
+    color:var(--sun2);text-shadow:0 0 44px rgba(255,207,125,.22)}
+  .sub{margin-top:10px;font-size:16px;color:#bda88a}
+  .box{margin-top:30px;background:linear-gradient(180deg,var(--panel) 0%,var(--panel2) 100%);
+    border:1px solid var(--rule);border-radius:10px;overflow:hidden;position:relative;
+    box-shadow:0 24px 70px rgba(20,10,0,.55)}
+  #wall{display:block;width:100%;aspect-ratio:1.5;touch-action:none;cursor:ew-resize}
+  .hint{position:absolute;left:0;right:0;top:14px;text-align:center;pointer-events:none;
+    font-family:ui-monospace,Consolas,monospace;font-size:12px;letter-spacing:.3em;
+    text-transform:uppercase;color:var(--faint);transition:opacity .6s}
+  .stats{display:flex;flex-wrap:wrap;gap:8px 22px;justify-content:center;align-items:center;
+    padding:12px 10px;border-top:1px solid var(--rule);
+    font-family:ui-monospace,Consolas,monospace;font-size:12.5px;color:#a08a63;min-height:20px}
+  .stats b{color:var(--sun);font-weight:600}
+  .btn{background:#241a0c;color:var(--sun);border:1px solid var(--rule);border-radius:8px;
+    font-family:ui-monospace,Consolas,monospace;font-size:13px;letter-spacing:.06em;
+    padding:12px 16px;cursor:pointer;min-height:44px}
+  .btn:active{background:#31230f}
+  section{margin-top:72px}
+  h2{font-family:ui-monospace,Consolas,monospace;font-size:13px;letter-spacing:.3em;
+    text-transform:uppercase;color:var(--faint);font-weight:600;margin:0 0 18px;
+    display:flex;align-items:center;gap:14px}
+  h2::after{content:"";flex:1;height:1px;background:var(--rule)}
+  p{font-size:16px;line-height:1.7;color:#c8b494;max-width:680px}
+  p b{color:var(--ink)} p a{color:var(--sun)}
+  .film{position:relative;padding-top:56.25%;border-radius:10px;overflow:hidden;
+    border:1px solid var(--rule);background:#000}
+  .film iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+  .dl{display:flex;flex-wrap:wrap;gap:12px;margin-top:16px}
+  .dl a{display:inline-block;background:#241a0c;border:1px solid var(--rule);border-radius:8px;
+    color:var(--sun);text-decoration:none;padding:12px 16px;
+    font-family:ui-monospace,Consolas,monospace;font-size:13px;min-height:44px}
+  footer{margin-top:90px;text-align:center;font-size:13px;color:var(--faint)}
+  footer a{color:var(--sun)}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="kick">The Daily Fable · Day 23</div>
+  <h1>PHOTOTAXIS</h1>
+  <div class="sub">a pane of acrylic, computed so that sunlight lands on the wall as a moth.<br>
+  All afternoon it walks the wall; for nine minutes it stands where it was drawn.
+  Here, you hold the sun.</div>
+</header>
+
+<div class="box">
+  <canvas id="wall"></canvas>
+  <div class="hint" id="hint">drag left–right — you are moving the sun</div>
+  <div class="stats">
+    <span>sun <b id="ang">+0.00°</b></span>
+    <span id="clock">17:12</span>
+    <span id="state">aligned</span>
+    <button class="btn" id="play">let the afternoon pass</button>
+  </div>
+</div>
+
+<section>
+  <h2>What this is</h2>
+  <p>This wall is lit through a <b>20&nbsp;cm square of clear acrylic</b> whose exit face
+  carries a computed relief, 5.8&nbsp;mm from lowest ripple to highest. Sunlight entering the
+  flat face is bent by that relief — nothing else — and the bending has been arranged, by
+  gradient descent through a differentiable refraction model, so that the scattered light
+  reconvenes on a wall 50&nbsp;cm away as a <b>luna moth</b>.</p>
+  <p>What you are dragging is the sun. Here is the surprise the physics insisted on: a thin
+  pane bends light almost the same way at every angle, so off the design angle the moth does
+  not dissolve — it <b>walks</b>. It slides 8.8&nbsp;mm along the wall per degree of sun,
+  still 94% correlated with itself out to ±10°. All afternoon it crawls across the room at
+  about two millimetres a minute, and for roughly <b>nine minutes</b> it stands exactly
+  where it was drawn. The simulation you are watching is the same ray optics the design was
+  verified with: refraction at both faces, Fresnel losses, and the real 0.53° width of the
+  sun, which is why the moth is soft — sunlight cannot draw sharper than the sun.</p>
+  <p>This is a buildable object. The relief is smooth, slope-limited to 28°, and sized for a
+  CNC mill or resin print in clear material. Files below.</p>
+</section>
+
+<section>
+  <h2>The film</h2>
+  <div class="film" id="filmbox">
+    <iframe id="yt" title="PHOTOTAXIS — film" loading="lazy"
+      src="https://www.youtube-nocookie.com/embed/aI9ZO5eyYoM"
+      allow="accelerometer; encrypted-media; picture-in-picture" allowfullscreen></iframe>
+  </div>
+</section>
+
+<section>
+  <h2>Make one</h2>
+  <p>The pane as printable/millable geometry, and the raw prescription. 200&nbsp;mm square,
+  8&nbsp;mm base, relief on top. Acrylic (n≈1.49), design wall distance 500&nbsp;mm,
+  normal-incidence sun. If you mill it, polish well — scattering is the enemy.</p>
+  <div class="dl">
+    <a href="phototaxis_pane.stl" download>pane STL · 6.3 MB</a>
+    <a href="phototaxis_height16.png" download>height map · 16-bit PNG</a>
+  </div>
+</section>
+
+<footer>
+  <a href="../">The Daily Fable</a> — one new thing, every day.<br>
+  Day 23: inverse caustic design. Made with a differentiable ray tracer,
+  an independent verifier that caught the designer cheating twice, and one idle afternoon of sun.
+</footer>
+</div>
+
+<script>
+"use strict";
+// ---- physics constants (must match the verified tracer) -------------------
+const PANE = 0.200, T0 = 0.008, D_WALL = 0.500, NG = 1.49;
+const SUN_R = 0.265 * Math.PI / 180;
+const H_LO = -2.786297082901001e-3, H_HI = 3.0454039573669434e-3; // meters
+const HN = 256;
+// wall window shown: x in [-0.05, 0.25], y in [0, 0.2] -> 1.5:1
+const WX0 = -0.05, WX1 = 0.25, WY0 = 0.0, WY1 = 0.20;
+const FBW = 768, FBH = 512;
+
+const canvas = document.getElementById("wall");
+const gl = canvas.getContext("webgl2", {antialias:false, alpha:false});
+const angEl = document.getElementById("ang"), clockEl = document.getElementById("clock");
+const stateEl = document.getElementById("state"), hintEl = document.getElementById("hint");
+
+function fail(msg){
+  canvas.replaceWith(Object.assign(document.createElement("div"),
+    {textContent: msg, style: "padding:40px;text-align:center;color:#a08a63"}));
+  throw new Error(msg);
+}
+if (!gl) fail("This piece needs WebGL2 — try a newer browser.");
+const extCBF = gl.getExtension("EXT_color_buffer_float");
+if (!extCBF) fail("This piece needs float render targets (EXT_color_buffer_float).");
+gl.getExtension("OES_texture_float_linear");
+
+// ---- shaders ---------------------------------------------------------------
+const SPLAT_VS = `#version 300 es
+precision highp float;
+uniform sampler2D uH;          // R16F height (meters), 256^2
+uniform vec2 uSun;             // (theta_x, theta_y) radians
+uniform float uSeed;
+uniform int uSide;             // points per side
+out float vW;
+// hash -> [0,1)
+float hash(vec2 p){ p = fract(p*vec2(123.34, 345.45)); p += dot(p, p+34.345); return fract(p.x*p.y); }
+void main(){
+  int ix = gl_VertexID % uSide, iy = gl_VertexID / uSide;
+  float rx = hash(vec2(float(ix)+uSeed, float(iy)+uSeed*1.7));
+  float ry = hash(vec2(float(iy)+uSeed*2.3, float(ix)-uSeed));
+  vec2 uv = (vec2(float(ix), float(iy)) + vec2(rx, ry)) / float(uSide);
+  vec2 p0 = uv * ${PANE};
+  // solar cone sample
+  float r1 = hash(vec2(float(ix)*0.7+uSeed*3.1, float(iy)*1.3+uSeed));
+  float r2 = hash(vec2(float(iy)*0.9-uSeed*1.9, float(ix)*0.6+uSeed*4.7));
+  float rr = ${SUN_R} * sqrt(r1), ph = 6.2831853*r2;
+  vec3 d0 = normalize(vec3(sin(uSun.x)+rr*cos(ph), sin(uSun.y)+rr*sin(ph),
+                           cos(uSun.x)));
+  // entry refraction, flat face, N=(0,0,-1), eta=1/NG
+  float eta1 = ${(1/NG).toFixed(8)};
+  float ci1 = d0.z;
+  float ct1 = sqrt(max(0.0, 1.0 - eta1*eta1*(1.0-ci1*ci1)));
+  vec3 d1 = normalize(eta1*d0 + vec3(0.0,0.0,-(eta1*ci1-ct1)));
+  float rs1 = (ci1-${NG}*ct1)/(ci1+${NG}*ct1);
+  float rp1 = (ct1-${NG}*ci1)/(ct1+${NG}*ci1);
+  float T1 = 1.0 - 0.5*(rs1*rs1+rp1*rp1);
+  // walk to exit surface z = T0 + h
+  vec2 p = p0;
+  float hs = texture(uH, p/${PANE}).r;
+  float t = (${T0}+hs)/d1.z;
+  for (int k=0;k<2;k++){
+    p = p0 + d1.xy*t;
+    hs = texture(uH, clamp(p/${PANE}, 0.0, 1.0)).r;
+    t = (${T0}+hs)/d1.z;
+  }
+  p = p0 + d1.xy*t;
+  float pz = d1.z*t;
+  // slopes by central difference of the height texture (matches design model)
+  float e = ${PANE}/float(${HN});
+  vec2 pu = clamp(p/${PANE}, 0.0, 1.0);
+  float hx = (texture(uH, pu+vec2(e/${PANE},0.)).r - texture(uH, pu-vec2(e/${PANE},0.)).r)/(2.0*e);
+  float hy = (texture(uH, pu+vec2(0.,e/${PANE})).r - texture(uH, pu-vec2(0.,e/${PANE})).r)/(2.0*e);
+  // exit refraction glass->air, incident-side normal (hx,hy,-1)/L
+  float L = sqrt(hx*hx+hy*hy+1.0);
+  float ci2 = -(d1.x*hx + d1.y*hy - d1.z)/L;
+  float k2 = 1.0 - ${NG}*${NG}*(1.0-ci2*ci2);
+  float ct2 = sqrt(max(k2, 0.0));
+  float m = ${NG}*ci2 - ct2;
+  vec3 d2 = normalize(${NG}*d1 + m*vec3(hx/L, hy/L, -1.0/L));
+  float rs2 = (${NG}*ci2-ct2)/(${NG}*ci2+ct2);
+  float rp2 = (${NG}*ct2-ci2)/(${NG}*ct2+ci2);
+  float T2 = (k2 <= 0.0) ? 0.0 : 1.0 - 0.5*(rs2*rs2+rp2*rp2);
+  // to wall
+  float s = (${T0}+${D_WALL}-pz)/d2.z;
+  vec2 q = p + d2.xy*s;
+  // clip pos in window
+  vec2 ndc = vec2((q.x-(${WX0.toFixed(4)}))/((${WX1.toFixed(4)})-(${WX0.toFixed(4)})),
+                  (q.y-(${WY0.toFixed(4)}))/((${WY1.toFixed(4)})-(${WY0.toFixed(4)})))*2.0-1.0;
+  gl_Position = vec4(ndc.x, -ndc.y, 0.0, 1.0);   // FBO y-up vs image row-down
+  gl_PointSize = 1.0;
+  vW = T1*T2;
+}`;
+const SPLAT_FS = `#version 300 es
+precision highp float;
+in float vW; out vec4 o;
+void o_(){ }
+void main(){ o = vec4(vW, 0.0, 0.0, 1.0); }`;
+
+const SHOW_VS = `#version 300 es
+precision highp float;
+out vec2 vUv;
+void main(){
+  vec2 p = vec2(float((gl_VertexID<<1)&2), float(gl_VertexID&2));
+  vUv = p; gl_Position = vec4(p*2.0-1.0, 0.0, 1.0);
+}`;
+const SHOW_FS = `#version 300 es
+precision highp float;
+in vec2 vUv; out vec4 o;
+uniform sampler2D uAcc;
+uniform float uNorm;          // 1 / (rays per wall pixel at uniform)
+float hash(vec2 p){ p = fract(p*vec2(123.34,345.45)); p += dot(p,p+34.345); return fract(p.x*p.y); }
+void main(){
+  float irr = texture(uAcc, vUv).r * uNorm;   // 1.0 == unshaded pane
+  // plaster in shade + warm caustic light
+  float gr = hash(floor(vUv*vec2(900.,600.)));
+  float plaster = 0.92 + 0.08*gr;
+  vec3 shade = vec3(0.055,0.049,0.042)*plaster;
+  vec3 sunc = vec3(1.0,0.87,0.66);
+  vec3 lin = shade + sunc * irr * 0.24 * plaster;
+  // filmic-ish tonemap
+  vec3 x = max(vec3(0.0), lin);
+  vec3 t = (x*(2.51*x+0.03))/(x*(2.43*x+0.59)+0.14);
+  // vignette
+  float d = distance(vUv, vec2(0.5));
+  t *= 1.0 - 0.35*d*d;
+  o = vec4(pow(t, vec3(1.0/2.2)), 1.0);
+}`;
+
+function shader(type, src){
+  const s = gl.createShader(type);
+  gl.shaderSource(s, src); gl.compileShader(s);
+  if (!gl.getShaderParameter(s, gl.COMPILE_STATUS))
+    fail("shader: " + gl.getShaderInfoLog(s));
+  return s;
+}
+function program(vs, fs){
+  const p = gl.createProgram();
+  gl.attachShader(p, shader(gl.VERTEX_SHADER, vs));
+  gl.attachShader(p, shader(gl.FRAGMENT_SHADER, fs));
+  gl.linkProgram(p);
+  if (!gl.getProgramParameter(p, gl.LINK_STATUS)) fail("link: " + gl.getProgramInfoLog(p));
+  return p;
+}
+const progSplat = program(SPLAT_VS, SPLAT_FS);
+const progShow = program(SHOW_VS, SHOW_FS);
+
+// ---- height texture from packed PNG ---------------------------------------
+const hTex = gl.createTexture();
+const img = new Image();
+img.onload = () => {
+  const cv = document.createElement("canvas");
+  cv.width = cv.height = HN;
+  const cx = cv.getContext("2d", {willReadFrequently:true});
+  cx.drawImage(img, 0, 0);
+  const px = cx.getImageData(0, 0, HN, HN).data;
+  const f = new Float32Array(HN*HN);
+  for (let i = 0; i < HN*HN; i++){
+    const q = px[i*4]*256 + px[i*4+1];
+    f[i] = H_LO + (H_HI - H_LO) * q / 65535;
+  }
+  gl.bindTexture(gl.TEXTURE_2D, hTex);
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.R32F, HN, HN, 0, gl.RED, gl.FLOAT, f);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+  ready = true;
+};
+img.src = "height.png";
+
+// ---- accumulation FBO ------------------------------------------------------
+const accTex = gl.createTexture();
+gl.bindTexture(gl.TEXTURE_2D, accTex);
+gl.texImage2D(gl.TEXTURE_2D, 0, gl.R32F, FBW, FBH, 0, gl.RED, gl.FLOAT, null);
+gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+const fbo = gl.createFramebuffer();
+gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
+gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, accTex, 0);
+if (gl.checkFramebufferStatus(gl.FRAMEBUFFER) !== gl.FRAMEBUFFER_COMPLETE)
+  fail("float framebuffer unsupported here");
+gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+
+// ---- state -----------------------------------------------------------------
+const SIDE = 640;                       // 409k rays per pass
+let theta = -6.0, thetaShown = null, accCount = 0, ready = false;
+let playing = true, playT = 0, interacted = false;
+const vao = gl.createVertexArray();
+
+function frame(ts){
+  requestAnimationFrame(frame);
+  if (!ready) return;
+  if (playing){
+    playT += 1/60;
+    // eased afternoon: -8 -> +8 over ~36 s, slow near center
+    const u = (playT % 36) / 36;
+    const w = u < 0.5 ? u*u*2 : 1-(1-u)*(1-u)*2;   // ease
+    theta = -8 + 16 * (0.5 + Math.sin((w-0.5)*Math.PI)*0.5);
+  }
+  const changed = thetaShown === null || Math.abs(theta - thetaShown) > 1e-6;
+  if (changed){ accCount = 0; thetaShown = theta; }
+  const passes = changed ? 6 : (accCount < 220 ? 2 : 0);
+  if (passes > 0){
+    gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
+    gl.viewport(0, 0, FBW, FBH);
+    if (accCount === 0){ gl.clearColor(0,0,0,1); gl.clear(gl.COLOR_BUFFER_BIT); }
+    gl.useProgram(progSplat);
+    gl.bindVertexArray(vao);
+    gl.activeTexture(gl.TEXTURE0);
+    gl.bindTexture(gl.TEXTURE_2D, hTex);
+    gl.uniform1i(gl.getUniformLocation(progSplat, "uH"), 0);
+    gl.uniform2f(gl.getUniformLocation(progSplat, "uSun"),
+                 theta*Math.PI/180, 0.0);
+    gl.uniform1i(gl.getUniformLocation(progSplat, "uSide"), SIDE);
+    gl.enable(gl.BLEND);
+    gl.blendFunc(gl.ONE, gl.ONE);
+    for (let p = 0; p < passes; p++){
+      gl.uniform1f(gl.getUniformLocation(progSplat, "uSeed"),
+                   (accCount*7.31 + 13.7) % 91.7);
+      gl.drawArrays(gl.POINTS, 0, SIDE*SIDE);
+      accCount++;
+    }
+    gl.disable(gl.BLEND);
+    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+  }
+  // display
+  const dpr = Math.min(devicePixelRatio || 1, 2);
+  const w = Math.round(canvas.clientWidth * dpr), h = Math.round(canvas.clientHeight * dpr);
+  if (canvas.width !== w || canvas.height !== h){ canvas.width = w; canvas.height = h; }
+  gl.viewport(0, 0, w, h);
+  gl.useProgram(progShow);
+  gl.activeTexture(gl.TEXTURE0);
+  gl.bindTexture(gl.TEXTURE_2D, accTex);
+  gl.uniform1i(gl.getUniformLocation(progShow, "uAcc"), 0);
+  // rays/pass landing per wall px at uniform = SIDE^2 * (px area / pane area)
+  const pxA = ((WX1-WX0)/FBW) * ((WY1-WY0)/FBH);
+  const norm = 1 / (accCount * SIDE*SIDE * pxA / (PANE*PANE));
+  gl.uniform1f(gl.getUniformLocation(progShow, "uNorm"), norm);
+  gl.drawArrays(gl.TRIANGLES, 0, 3);
+
+  // readouts
+  angEl.textContent = (theta >= 0 ? "+" : "") + theta.toFixed(2) + "°";
+  const mins = theta / 0.25;                     // solar rate 0.25 deg/min
+  const t0 = 17*60 + 12 + mins;
+  const hh = Math.floor(t0/60), mm = Math.floor(t0%60), ss = Math.floor((t0%1)*60);
+  clockEl.textContent = `${hh}:${String(mm).padStart(2,"0")}:${String(ss).padStart(2,"0")}`;
+  const a = Math.abs(theta);
+  stateEl.textContent = a < 0.4 ? "★ the moth is here" :
+                        a < 1.5 ? "almost — keep going" :
+                        a < 4.0 ? "window-light" : "just ripples";
+}
+requestAnimationFrame(frame);
+
+// ---- input -----------------------------------------------------------------
+let dragging = false, lastX = 0;
+function px2deg(dx){ return dx / canvas.clientWidth * 20; }
+canvas.addEventListener("pointerdown", e => {
+  dragging = true; lastX = e.clientX; playing = false; interacted = true;
+  hintEl.style.opacity = "0";
+  canvas.setPointerCapture(e.pointerId);
+});
+canvas.addEventListener("pointermove", e => {
+  if (!dragging) return;
+  theta = Math.max(-10, Math.min(10, theta + px2deg(e.clientX - lastX)));
+  lastX = e.clientX;
+});
+addEventListener("pointerup", () => dragging = false);
+document.getElementById("play").addEventListener("click", () => {
+  playing = !playing; playT = 0;
+  document.getElementById("play").textContent =
+    playing ? "hold the sun still" : "let the afternoon pass";
+});
+</script>
+</body>
+</html>

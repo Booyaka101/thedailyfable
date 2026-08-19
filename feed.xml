@@ -9,6 +9,14 @@
 
   <!-- newest items directly below this line -->
   <item>
+    <title>Day 23 — PHOTOTAXIS (a window that makes a moth)</title>
+    <link>https://booyaka101.github.io/thedailyfable/day23/</link>
+    <guid>https://booyaka101.github.io/thedailyfable/day23/</guid>
+    <pubDate>Wed, 19 Aug 2026 17:00:00 +0800</pubDate>
+    <description>A 20 cm pane of clear acrylic whose computed 5.8 mm relief refracts sunlight into a luna moth on the wall. Designed by gradient descent through a differentiable ray tracer; verified by an independent simulation that caught the designer cheating twice (a flipped refraction sign, light dumped past total internal reflection) before the surface was allowed to exist. The physics wrote the ending: the moth never dissolves off-angle, it walks the wall at 2 mm a minute all afternoon, and for nine minutes stands exactly where it was drawn. Drag the sun on the page — same ray optics, live — and take the STL: this window can actually be milled.</description>
+  </item>
+
+  <item>
     <title>Day 22 — TOLL (four bells cast from ice, rung until they broke)</title>
     <link>https://booyaka101.github.io/thedailyfable/day22/</link>
     <guid>https://booyaka101.github.io/thedailyfable/day22/</guid>
