@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MUSICA UNIVERSALIS — day 24 — the daily fable</title>
+<style>
+  :root { --ink:#cfd8e3; --dim:#6b7687; --amber:#ffc46b; --teal:#7fd4c1; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body { height:100%; overflow:hidden; background:#05070c; }
+  html { touch-action:manipulation; }
+  body { font-family:Consolas, ui-monospace, monospace; color:var(--ink); }
+  #wrap { position:fixed; inset:0; }
+  canvas { display:block; touch-action:none; }
+  #ui { position:fixed; top:0; left:0; right:0; display:flex; gap:8px;
+        padding:calc(env(safe-area-inset-top, 0px) + 10px) 10px 6px 10px;
+        align-items:flex-start; pointer-events:none; z-index:5; }
+  #title { pointer-events:auto; font-size:12px; line-height:1.35; color:var(--dim); }
+  #title b { color:var(--amber); font-weight:normal; letter-spacing:.12em; }
+  #btns { margin-left:auto; display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end; }
+  button { pointer-events:auto; min-width:52px; min-height:44px; padding:4px 10px;
+           background:#0d1320cc; color:var(--ink); border:1px solid #232c3d;
+           border-radius:9px; font:inherit; font-size:13px; cursor:pointer; }
+  button:active { background:#1a2438; }
+  #presets { position:fixed; right:10px; top:calc(env(safe-area-inset-top,0px) + 64px);
+             display:none; flex-direction:column; gap:8px; z-index:6; }
+  #presets button { min-width:150px; text-align:right; }
+  #cap { position:fixed; left:0; right:0; bottom:calc(env(safe-area-inset-bottom,0px) + 8px);
+         text-align:center; font-size:12px; color:var(--dim); pointer-events:none; z-index:5;
+         text-shadow:0 1px 4px #000; padding:0 12px; }
+  #cap .ev { color:var(--amber); }
+  #stats { position:fixed; left:10px; bottom:calc(env(safe-area-inset-bottom,0px) + 28px);
+           font-size:11px; color:#4d5768; z-index:5; pointer-events:none; }
+  #intro { position:fixed; inset:0; display:flex; align-items:center; justify-content:center;
+           background:#05070cd9; z-index:10; }
+  #intro > div { max-width:520px; padding:28px; font-size:14px; line-height:1.7; }
+  #intro h1 { font-size:16px; color:var(--amber); letter-spacing:.14em; margin-bottom:14px; font-weight:normal; }
+  #intro p { margin-bottom:12px; color:var(--ink); }
+  #intro .k { color:var(--teal); }
+  #intro button { margin-top:6px; min-width:120px; }
+  a { color:var(--teal); text-decoration:none; }
+</style>
+</head>
+<body>
+<div id="wrap"><canvas id="cv"></canvas></div>
+<div id="ui">
+  <div id="title"><b>MUSICA UNIVERSALIS</b><br>day 24 · <a href="../" style="pointer-events:auto">the daily fable</a></div>
+  <div id="btns">
+    <button id="bSize">mf</button>
+    <button id="bSpeed">1×</button>
+    <button id="bPre">tunes</button>
+    <button id="bClear">clear</button>
+  </div>
+</div>
+<div id="presets">
+  <button data-p="fifth">perfect fifth 3:2</button>
+  <button data-p="octave">octave 2:1</button>
+  <button data-p="semitone">minor second 16:15</button>
+  <button data-p="tritone">tritone √2</button>
+  <button data-p="trappist">TRAPPIST-1 (real)</button>
+  <button data-p="cluster">dense cluster ff</button>
+</div>
+<div id="stats"></div>
+<div id="cap"></div>
+<div id="intro"><div>
+  <h1>MUSICA UNIVERSALIS</h1>
+  <p>An instrument where <span class="k">gravity is the music theory</span>.</p>
+  <p><span class="k" id="howto">Drag outward from the star</span> to place a planet.
+     Distance sets the pitch — each planet chimes as it crosses the bright ray.
+     Planet size is loudness, and loudness is <em>mass</em>: play too loud and the
+     song tears itself apart.</p>
+  <p>Intervals that share small whole numbers with an orbit — the fifth, the octave —
+     lock into resonance and groove forever. Dissonant ones drift out of tune and die.
+     Raise the speed to hear a melody's fate.</p>
+  <p style="color:#6b7687">Tap a planet to remove it. Nothing is quantized: gravity judges.</p>
+  <button id="bGo">begin</button>
+</div></div>
+<script>
+"use strict";
+/* MUSICA UNIVERSALIS - day 24. Full planar n-body; pitch = orbital frequency.
+   Units: G=1, M*=1, a=1 has period 2*pi (mapped to A440). */
+
+const Q = new URLSearchParams(location.search);
+const REC = Q.get("rec") === "1";
+const PORTRAIT = Q.get("portrait") === "1";
+const TICK = Q.get("tick") === "1";          // fixed-step loop for occluded-window gating
+
+const TWO_PI = Math.PI * 2;
+const DT = TWO_PI / 256;
+const SIZES = [
+  { tag:"pp", m:1e-5, vol:0.14, r:3.2 },
+  { tag:"mf", m:1e-4, vol:0.30, r:4.6 },
+  { tag:"ff", m:1e-3, vol:0.55, r:6.6 },
+  { tag:"ppp", m:4e-6, vol:0.12, r:2.6 },   // preset-only: real TRAPPIST-mass scale
+];
+const SPEEDS = [1, 8, 64, 512];              // × (base: 2 s per inner orbit)
+const NOTE_NAMES = ["A","A#","B","C","C#","D","D#","E","F","F#","G","G#"];
+
+// ---------- state ----------
+let sizeIdx = 1, speedIdx = 0;
+let star = { x:0, y:0, vx:0, vy:0, m:1 };
+let planets = [];   // {x,y,vx,vy,m,vol,r, alive, lost, hue, prevSin, lastChime, born}
+let simT = 0;       // sim time (rad of inner reference)
+let lostCount = 0;
+let capMsg = "", capT = 0, capEv = false;
+let ghost = null;   // {r, phase} while dragging
+let running = true;
+
+function oscul(p) { // osculating elements rel star
+  const rx = p.x - star.x, ry = p.y - star.y;
+  const vx = p.vx - star.vx, vy = p.vy - star.vy;
+  const r = Math.hypot(rx, ry), v2 = vx*vx + vy*vy;
+  const mu = 1 + p.m;
+  const a = 1 / (2/r - v2/mu);
+  const h = rx*vy - ry*vx;
+  const ex = (vy*h)/mu - rx/r, ey = (-vx*h)/mu - ry/r;
+  return { a, e:Math.hypot(ex, ey), w:Math.atan2(ey, ex), r };
+}
+const pitchOf = a => 440 * Math.pow(Math.max(a, 1e-6), -1.5);
+function noteName(f) {
+  const s = Math.round(12 * Math.log2(f/440));
+  const cents = Math.round(1200 * Math.log2(f/440) - 100*s);
+  const oct = 4 + Math.floor((s + 9) / 12);
+  const nm = NOTE_NAMES[((s % 12) + 12) % 12];
+  return nm + oct + (cents ? (cents>0?" +":" −") + Math.abs(cents) + "¢" : "");
+}
+function ratioName(rat) { // best small fraction for a period ratio
+  let best = null;
+  for (let q=1; q<=12; q++) for (let p=q; p<=Math.min(24, q*2.6); p++) {
+    if (gcd(p,q) !== 1) continue;
+    const cents = Math.abs(1200 * Math.log2(rat * q / p));
+    if (!best || cents < best.c) best = { p, q, c:cents };
+  }
+  if (!best || best.c > 45) return null;
+  const off = Math.round(1200 * Math.log2(rat * best.q / best.p));
+  return best.p + ":" + best.q + (off ? (off>0?" +":" −")+Math.abs(off)+"¢" : " exact");
+}
+function gcd(a,b){ return b ? gcd(b, a%b) : a; }
+
+function shareHash() { // composition as URL: a,size,angle triplets
+  const parts = [];
+  for (const p of planets) {
+    if (!p.alive) continue;
+    const el = oscul(p);
+    if (el.a <= 0 || el.e >= 1) continue;
+    const th = (Math.atan2(p.y - star.y, p.x - star.x) + TWO_PI) % TWO_PI;
+    const sz = SIZES.findIndex(s => s.m === p.m);
+    parts.push(Math.round(el.a*1000) + "-" + sz + "-" + Math.round(th*100));
+  }
+  history.replaceState(null, "", parts.length ? "#s=" + parts.join("_") : location.pathname + location.search);
+}
+function loadHash() {
+  const m = location.hash.match(/#s=([\d_-]+)/);
+  if (!m) return false;
+  let n = 0;
+  for (const part of m[1].split("_").slice(0, 8)) {
+    const f = part.split("-").map(Number);
+    if (f.length !== 3 || !f.every(isFinite)) continue;
+    const a = f[0]/1000;
+    if (a > 0.1 && a < 3.4) { addPlanet(a, Math.min(3, Math.max(0, f[1]|0)), f[2]/100); n++; }
+  }
+  return n > 0;
+}
+function addPlanet(a, szIdx, phase, e=0) {
+  const sz = SIZES[szIdx];
+  const mu = 1 + sz.m;
+  const rp = a * (1 - e);                     // start at pericenter
+  const vp = Math.sqrt(mu * (1+e) / (a*(1-e)));
+  const c = Math.cos(phase), s = Math.sin(phase);
+  const p = { x: star.x + rp*c, y: star.y + rp*s,
+              vx: star.vx - vp*s, vy: star.vy + vp*c,
+              m: sz.m, vol: sz.vol, r: sz.r, alive:true, lost:false,
+              hue: (Math.log2(pitchOf(a)/27.5) % 1) * 360,
+              prevSin: Math.sin(phase), lastChime: -1, born: simT };
+  planets.push(p);
+  balance();
+  return p;
+}
+function balance() { // zero total momentum so the frame doesn't drift
+  let px = 0, py = 0;
+  for (const p of planets) if (p.alive) { px += p.m*p.vx; py += p.m*p.vy; }
+  star.vx = -px / star.m; star.vy = -py / star.m;
+}
+
+// ---------- physics ----------
+function accel(bodies, ax, ay) {
+  const n = bodies.length;
+  for (let i=0;i<n;i++){ ax[i]=0; ay[i]=0; }
+  for (let i=0;i<n;i++) {
+    const bi = bodies[i];
+    for (let j=i+1;j<n;j++) {
+      const bj = bodies[j];
+      const dx = bj.x-bi.x, dy = bj.y-bi.y;
+      const r2 = dx*dx + dy*dy;
+      const ir3 = 1 / (r2 * Math.sqrt(r2));
+      ax[i] += bj.m*dx*ir3; ay[i] += bj.m*dy*ir3;
+      ax[j] -= bi.m*dx*ir3; ay[j] -= bi.m*dy*ir3;
+    }
+  }
+}
+const AX = new Float64Array(16), AY = new Float64Array(16);
+let accFresh = false;
+function step(dt) {
+  const bodies = [star, ...planets.filter(p => p.alive)];
+  const n = bodies.length;
+  if (n === 1) { simT += dt; return; }
+  // adaptive: subdivide when any pair is tight
+  let minR2 = 1e9;
+  for (let i=1;i<n;i++) for (let j=i+1;j<n;j++) {
+    const dx = bodies[j].x-bodies[i].x, dy = bodies[j].y-bodies[i].y;
+    minR2 = Math.min(minR2, dx*dx+dy*dy);
+  }
+  const sub = minR2 < 0.0004 ? 8 : (minR2 < 0.01 ? 4 : 1);
+  const h = dt / sub;
+  for (let s=0; s<sub; s++) {
+    accel(bodies, AX, AY);
+    for (let i=0;i<n;i++){ bodies[i].vx += AX[i]*h*0.5; bodies[i].vy += AY[i]*h*0.5; }
+    for (let i=0;i<n;i++){ bodies[i].x  += bodies[i].vx*h; bodies[i].y += bodies[i].vy*h; }
+    accel(bodies, AX, AY);
+    for (let i=0;i<n;i++){ bodies[i].vx += AX[i]*h*0.5; bodies[i].vy += AY[i]*h*0.5; }
+  }
+  simT += dt;
+  // chimes + deaths
+  for (const p of planets) {
+    if (!p.alive) continue;
+    const rx = p.x-star.x, ry = p.y-star.y;
+    const rr = Math.hypot(rx, ry);
+    if (!isFinite(rr) || rr > 30) { kill(p, "lost to interstellar space"); continue; }
+    if (rr < 0.025) { kill(p, "swallowed by the star"); continue; }
+    const sn = ry / rr;
+    if (p.prevSin < 0 && sn >= 0 && rx > 0) chime(p);
+    p.prevSin = sn;
+  }
+}
+function kill(p, why) {
+  p.alive = false; p.lost = true; lostCount++;
+  caption("a planet was " + why, true);
+  balance();
+  shareHash();
+  if (audio) { // falling debris sound: short dark noise swoosh
+    const t = actx.currentTime;
+    const o = actx.createOscillator(), g = actx.createGain();
+    o.type = "sine"; o.frequency.setValueAtTime(220, t);
+    o.frequency.exponentialRampToValueAtTime(30, t+1.2);
+    g.gain.setValueAtTime(0.25, t); g.gain.exponentialRampToValueAtTime(1e-4, t+1.3);
+    o.connect(g); g.connect(master); o.start(t); o.stop(t+1.4);
+  }
+}
+
+// ---------- audio (struck-tine language, day 3 lineage) ----------
+let actx = null, master = null, audio = false, recDest = null;
+const chimeTimes = []; // for rate limiting + gate hooks
+function initAudio() {
+  if (actx) return;
+  actx = new (window.AudioContext || window.webkitAudioContext)();
+  const comp = actx.createDynamicsCompressor();
+  comp.threshold.value = -18; comp.knee.value = 12; comp.ratio.value = 5;
+  master = actx.createGain(); master.gain.value = 0.9;
+  // cross-fed stereo delay room
+  const dl = actx.createDelay(1), dr = actx.createDelay(1);
+  dl.delayTime.value = 0.211; dr.delayTime.value = 0.293;
+  const fl = actx.createGain(), fr = actx.createGain();
+  fl.gain.value = 0.22; fr.gain.value = 0.22;
+  const pl = actx.createStereoPanner(), pr = actx.createStereoPanner();
+  pl.pan.value = -0.6; pr.pan.value = 0.6;
+  master.connect(dl); dl.connect(fl); fl.connect(dr);
+  master.connect(dr); dr.connect(fr); fr.connect(dl);
+  dl.connect(pl); dr.connect(pr);
+  master.connect(comp); pl.connect(comp); pr.connect(comp);
+  comp.connect(actx.destination);
+  if (REC) { recDest = actx.createMediaStreamDestination(); comp.connect(recDest); }
+  audio = true;
+}
+function chime(p) {
+  const el = oscul(p);
+  if (el.a <= 0 || el.e >= 1) return;
+  const f = Math.min(3520, Math.max(28, pitchOf(el.a)));
+  const now = performance.now();
+  // rate limit: at deep time-lapse the music condenses; keep <= 15 chimes/s/planet
+  if (p.lastChime > 0 && now - p.lastChime < 66) return;
+  p.lastChime = now;
+  p.pulse = 1;
+  chimeTimes.push(now);
+  if (chimeTimes.length > 400) chimeTimes.splice(0, 200);
+  if (!audio) return;
+  const t = actx.currentTime;
+  const pan = actx.createStereoPanner();
+  pan.pan.value = Math.max(-0.75, Math.min(0.75, (Math.log2(f/440)) * 0.28));
+  pan.connect(master);
+  const dur = Math.min(2.6, Math.max(0.7, 600/f));
+  const o = actx.createOscillator(), g = actx.createGain();
+  o.type = "sine"; o.frequency.value = f;
+  g.gain.setValueAtTime(0, t);
+  g.gain.linearRampToValueAtTime(p.vol, t + 0.004);
+  g.gain.exponentialRampToValueAtTime(1e-4, t + dur);
+  o.connect(g); g.connect(pan); o.start(t); o.stop(t + dur + 0.05);
+  const o2 = actx.createOscillator(), g2 = actx.createGain();
+  o2.type = "sine"; o2.frequency.value = Math.min(9000, f * 6.27);
+  g2.gain.setValueAtTime(0, t);
+  g2.gain.linearRampToValueAtTime(p.vol * 0.10, t + 0.002);
+  g2.gain.exponentialRampToValueAtTime(1e-4, t + 0.12);
+  o2.connect(g2); g2.connect(pan); o2.start(t); o2.stop(t + 0.2);
+  // strike noise tick
+  const nb = actx.createBuffer(1, 1200, actx.sampleRate);
+  const d = nb.getChannelData(0);
+  for (let i=0;i<1200;i++) d[i] = (Math.random()*2-1) * Math.exp(-i/220);
+  const ns = actx.createBufferSource(); ns.buffer = nb;
+  const bp = actx.createBiquadFilter(); bp.type = "bandpass";
+  bp.frequency.value = Math.min(12000, f*3); bp.Q.value = 1.2;
+  const ng = actx.createGain(); ng.gain.value = p.vol * 0.5;
+  ns.connect(bp); bp.connect(ng); ng.connect(pan); ns.start(t);
+}
+
+// ---------- canvas ----------
+const cv = document.getElementById("cv");
+const ctx2d = cv.getContext("2d");
+let W, H, S, scalePx, cx, cy;
+let stars = [];
+function layout() {
+  S = Math.min(devicePixelRatio || 1, 2.5);
+  if (REC) {
+    const lw = PORTRAIT ? 540 : 1280, lh = PORTRAIT ? 960 : 720;
+    W = lw; H = lh; S = 2;
+  } else {
+    W = window.innerWidth; H = window.innerHeight;
+  }
+  cv.width = Math.round(W*S); cv.height = Math.round(H*S);
+  cv.style.width = W + "px"; cv.style.height = H + "px";
+  scalePx = Math.min(W, H) * 0.5 / 3.4;      // r=3.4 units to half-min-dim
+  cx = W/2; cy = H/2;
+  stars = [];
+  const rng = mulberry(24);
+  for (let i=0;i<140;i++) stars.push([rng()*W, rng()*H, rng()*1.1+0.3, rng()*0.5+0.15]);
+}
+function mulberry(seed){ let a=seed; return function(){ a|=0; a=a+0x6D2B79F5|0;
+  let t=Math.imul(a^a>>>15,1|a); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
+window.addEventListener("resize", layout);
+window.addEventListener("orientationchange", layout);
+
+function draw() {
+  ctx2d.setTransform(S,0,0,S,0,0);
+  ctx2d.fillStyle = "#05070c";
+  ctx2d.fillRect(0,0,W,H);
+  for (const s of stars) {
+    ctx2d.globalAlpha = s[3];
+    ctx2d.fillStyle = "#9fb4cc";
+    ctx2d.fillRect(s[0], s[1], s[2], s[2]);
+  }
+  ctx2d.globalAlpha = 1;
+  const px = u => cx + u * scalePx;   // star-centred view
+  const py = u => cy + u * scalePx;
+
+  // chime ray
+  ctx2d.strokeStyle = "rgba(255,196,107,0.14)";
+  ctx2d.lineWidth = 1;
+  ctx2d.beginPath(); ctx2d.moveTo(px(0.06), py(0)); ctx2d.lineTo(px(3.35), py(0)); ctx2d.stroke();
+
+  // star glow
+  const g = ctx2d.createRadialGradient(px(0), py(0), 0, px(0), py(0), 26);
+  g.addColorStop(0, "#fff2d8"); g.addColorStop(0.35, "#ffce8a"); g.addColorStop(1, "rgba(255,180,90,0)");
+  ctx2d.fillStyle = g;
+  ctx2d.beginPath(); ctx2d.arc(px(0), py(0), 26, 0, TWO_PI); ctx2d.fill();
+
+  for (const p of planets) {
+    if (!p.alive) continue;
+    const el = oscul(p);
+    // osculating ellipse (the living orbit)
+    if (el.a > 0 && el.e < 1) {
+      ctx2d.strokeStyle = `hsla(${p.hue|0},60%,70%,0.20)`;
+      ctx2d.lineWidth = 1;
+      ctx2d.beginPath();
+      const l = el.a * (1 - el.e*el.e);
+      for (let k=0;k<=96;k++) {
+        const th = k/96 * TWO_PI;
+        const rr = l / (1 + el.e * Math.cos(th - el.w));
+        const X = px(rr * Math.cos(th)), Y = py(rr * Math.sin(th));
+        k ? ctx2d.lineTo(X,Y) : ctx2d.moveTo(X,Y);
+      }
+      ctx2d.stroke();
+    }
+    const X = px(p.x - star.x), Y = py(p.y - star.y);
+    if (p.pulse && p.pulse > 0.02) {
+      ctx2d.strokeStyle = `hsla(${p.hue|0},80%,75%,${(p.pulse*0.7).toFixed(3)})`;
+      ctx2d.lineWidth = 1.5;
+      ctx2d.beginPath(); ctx2d.arc(X, Y, p.r + (1-p.pulse)*26, 0, TWO_PI); ctx2d.stroke();
+      p.pulse *= 0.90;
+    }
+    const pg = ctx2d.createRadialGradient(X, Y, 0, X, Y, p.r*2.6);
+    pg.addColorStop(0, `hsla(${p.hue|0},75%,80%,0.95)`);
+    pg.addColorStop(0.5, `hsla(${p.hue|0},75%,60%,0.5)`);
+    pg.addColorStop(1, `hsla(${p.hue|0},75%,50%,0)`);
+    ctx2d.fillStyle = pg;
+    ctx2d.beginPath(); ctx2d.arc(X, Y, p.r*2.6, 0, TWO_PI); ctx2d.fill();
+  }
+
+  // ghost during placement
+  if (ghost) {
+    ctx2d.strokeStyle = "rgba(207,216,227,0.35)";
+    ctx2d.setLineDash([4,5]);
+    ctx2d.beginPath(); ctx2d.arc(px(0), py(0), ghost.r * scalePx, 0, TWO_PI); ctx2d.stroke();
+    ctx2d.setLineDash([]);
+    const gx = px(ghost.r * Math.cos(ghost.phase)), gy = py(ghost.r * Math.sin(ghost.phase));
+    ctx2d.fillStyle = "rgba(207,216,227,0.8)";
+    ctx2d.beginPath(); ctx2d.arc(gx, gy, SIZES[sizeIdx].r, 0, TWO_PI); ctx2d.fill();
+    const f = pitchOf(ghost.r);
+    let label = noteName(f) + "  ·  " + Math.round(f) + " Hz";
+    let bestDa = 1e9, ref = null;
+    for (const q of planets) if (q.alive) {
+      const el = oscul(q);
+      if (Math.abs(el.a - ghost.r) < bestDa) { bestDa = Math.abs(el.a - ghost.r); ref = el.a; }
+    }
+    if (ref) {
+      const rat = Math.pow(ghost.r / ref, 1.5);
+      const rn = ratioName(rat > 1 ? rat : 1/rat);
+      if (rn) label += "  ·  " + rn;
+    }
+    ctx2d.font = "13px Consolas, monospace";
+    ctx2d.fillStyle = "#cfd8e3";
+    ctx2d.textAlign = "center";
+    ctx2d.fillText(label, cx, Math.max(58, gy - 24));
+  }
+
+  // caption + stats onto canvas in rec mode (DOM invisible to captureStream)
+  if (REC) {
+    ctx2d.font = "600 15px Consolas, monospace";
+    ctx2d.textAlign = "center";
+    ctx2d.fillStyle = "#ffc46b";
+    ctx2d.fillText("MUSICA UNIVERSALIS", cx, 34);
+    ctx2d.font = "12px Consolas, monospace";
+    ctx2d.fillStyle = "#6b7687";
+    ctx2d.fillText("day 24 · the daily fable", cx, 52);
+    if (capMsg && capT > 0) {
+      ctx2d.font = "14px Consolas, monospace";
+      ctx2d.fillStyle = capEv ? "#ffc46b" : "#cfd8e3";
+      ctx2d.fillText(capMsg, cx, H - 40);
+    }
+    ctx2d.font = "12px Consolas, monospace";
+    ctx2d.fillStyle = "#4d5768";
+    ctx2d.fillText(statLine(), cx, H - 20);
+  }
+}
+
+function statLine() {
+  const n = planets.filter(p=>p.alive).length;
+  return `${n} planet${n===1?"":"s"} · ${Math.floor(simT/TWO_PI)} orbits · ${lostCount} lost · ${SPEEDS[speedIdx]}×`;
+}
+function caption(msg, ev) {
+  capMsg = msg; capT = 5; capEv = !!ev;
+  const el = document.getElementById("cap");
+  el.innerHTML = ev ? `<span class="ev">${msg}</span>` : msg;
+}
+
+// ---------- main loop ----------
+let lastT = 0;
+function frame(t) {
+  if (!TICK) requestAnimationFrame(frame);
+  let dtReal = Math.max(0, Math.min(0.05, (t - lastT)/1000));
+  lastT = t;
+  if (TICK) dtReal = 1/60;
+  if (running) {
+    const simPerSec = 0.5 * SPEEDS[speedIdx] * TWO_PI;  // base 2 s per inner orbit
+    let simDt = simPerSec * dtReal;
+    const steps = Math.min(2200, Math.ceil(simDt / DT));
+    const h = simDt / steps;
+    for (let i=0;i<steps;i++) step(h);
+  }
+  if (capT > 0) { capT -= dtReal; if (capT <= 0) { capMsg=""; document.getElementById("cap").textContent=""; } }
+  draw();
+  document.getElementById("stats").textContent = statLine();
+}
+if (TICK) setInterval(() => frame((lastT||0) + 16.67), 16);
+else requestAnimationFrame(frame);
+
+// ---------- input ----------
+const coarse = matchMedia("(pointer: coarse)").matches;
+document.getElementById("howto").textContent =
+  coarse ? "Touch and drag outward from the star" : "Click and drag outward from the star";
+let dragPid = null, dragMoved = false, downAt = null;
+cv.addEventListener("pointerdown", e => {
+  initAudio(); if (actx && actx.state === "suspended") actx.resume();
+  dragPid = e.pointerId; dragMoved = false;
+  downAt = [e.clientX, e.clientY];
+  try { cv.setPointerCapture(e.pointerId); } catch(_) {}
+  updateGhost(e);
+});
+cv.addEventListener("pointermove", e => {
+  if (e.pointerId !== dragPid) return;
+  if (downAt && Math.hypot(e.clientX-downAt[0], e.clientY-downAt[1]) > 8) dragMoved = true;
+  if (dragMoved) updateGhost(e);
+});
+cv.addEventListener("pointerup", e => {
+  if (e.pointerId !== dragPid) return;
+  dragPid = null;
+  if (!dragMoved) { // tap: remove planet under finger?
+    const hit = planetAt(e.clientX, e.clientY);
+    if (hit) { hit.alive = false; balance(); caption("planet removed"); shareHash(); }
+    ghost = null; return;
+  }
+  if (ghost && ghost.r > 0.12 && ghost.r < 3.3) {
+    const p = addPlanet(ghost.r, sizeIdx, ghost.phase);
+    const f = pitchOf(ghost.r);
+    caption("planet placed · " + noteName(f));
+    hideIntro();
+    shareHash();
+  }
+  ghost = null;
+});
+cv.addEventListener("pointercancel", () => { dragPid = null; ghost = null; });
+function updateGhost(e) {
+  const ux = (e.clientX - cx) / scalePx, uy = (e.clientY - cy) / scalePx;
+  const r = Math.hypot(ux, uy);
+  if (r < 0.05) { ghost = null; return; }
+  ghost = { r: Math.min(3.3, r), phase: Math.atan2(uy, ux) };
+}
+function planetAt(mx, my) {
+  for (const p of planets) {
+    if (!p.alive) continue;
+    const X = cx + (p.x-star.x)*scalePx, Y = cy + (p.y-star.y)*scalePx;
+    if (Math.hypot(mx-X, my-Y) < Math.max(22, p.r*3)) return p;
+  }
+  return null;
+}
+
+// ---------- UI ----------
+const bSize = document.getElementById("bSize");
+const bSpeed = document.getElementById("bSpeed");
+const bPre = document.getElementById("bPre");
+const preBox = document.getElementById("presets");
+bSize.onclick = () => { sizeIdx = (sizeIdx+1)%3; bSize.textContent = SIZES[sizeIdx].tag; };
+bSpeed.onclick = () => { speedIdx = (speedIdx+1)%SPEEDS.length; bSpeed.textContent = SPEEDS[speedIdx]+"×"; };
+bPre.onclick = () => { preBox.style.display = preBox.style.display === "flex" ? "none" : "flex"; };
+document.getElementById("bClear").onclick = () => {
+  planets = []; lostCount = 0; simT = 0; balance(); caption("cleared"); shareHash();
+};
+function hideIntro(){ document.getElementById("intro").style.display = "none"; }
+document.getElementById("bGo").onclick = () => { initAudio(); hideIntro(); };
+
+const PRESETS = {
+  fifth:    { sz:1, sys:[[1,0],[Math.pow(1.5,2/3),Math.PI]], cap:"the perfect fifth 3:2 — resonance protects it" },
+  octave:   { sz:1, sys:[[1,0],[Math.pow(2,2/3),Math.PI]], cap:"the octave 2:1 — the widest resonance of all" },
+  semitone: { sz:1, sys:[[1,0],[Math.pow(16/15,2/3),Math.PI]], cap:"the minor second 16:15 — too close; gravity abhors a semitone" },
+  tritone:  { sz:2, sys:[[1,0],[Math.pow(Math.SQRT2,2/3),Math.PI]], cap:"the tritone √2 — the irrational interval, played ff" },
+  trappist: { sz:3, sys:[0.375,0.6,1,1.5,2.25,3,4.5].map((p,i)=>[Math.pow(p,2/3), i*2.4]),
+              cap:"TRAPPIST-1's seven period ratios — the real chain spent an eon tuning its phases; these start untuned" },
+  cluster:  { sz:2, sys:[[1,0],[1.08,2.1],[1.21,4.2],[1.35,0.9],[1.62,3.3]], cap:"five giants, packed — this cannot last" },
+};
+preBox.querySelectorAll("button").forEach(b => b.onclick = () => {
+  initAudio(); if (actx && actx.state === "suspended") actx.resume();
+  const pre = PRESETS[b.dataset.p];
+  planets = []; lostCount = 0; simT = 0;
+  for (const [a, ph] of pre.sys) addPlanet(a, pre.sz, ph);
+  caption(pre.cap);
+  preBox.style.display = "none";
+  hideIntro();
+  shareHash();
+});
+
+// ---------- recording (day 3 lineage) ----------
+let recorder = null, recChunks = [], recBlob = null;
+window.__recStart = () => {
+  initAudio();
+  const stream = cv.captureStream(60);
+  if (recDest) for (const tr of recDest.stream.getAudioTracks()) stream.addTrack(tr);
+  recChunks = []; recBlob = null;
+  recorder = new MediaRecorder(stream, { mimeType:"video/webm;codecs=vp9,opus",
+                                         videoBitsPerSecond: 24_000_000 });
+  recorder.ondataavailable = e => { if (e.data.size) recChunks.push(e.data); };
+  recorder.onstop = () => { recBlob = new Blob(recChunks, {type:"video/webm"}); };
+  recorder.start(1000);
+  return true;
+};
+window.__recStop = () => { if (recorder) recorder.stop(); return true; };
+window.__recSize = () => recBlob ? recBlob.size : -1;
+window.__read = async (off, len) => {
+  const buf = await recBlob.slice(off, off+len).arrayBuffer();
+  const u8 = new Uint8Array(buf);
+  let s = "";
+  for (let i=0;i<u8.length;i+=32768) s += String.fromCharCode(...u8.subarray(i, i+32768));
+  return btoa(s);
+};
+
+// ---------- gate / film hooks ----------
+window.__place = (a, sz, ph) => { addPlanet(a, sz, ph||0); return planets.length; };
+window.__preset = k => { document.querySelector(`#presets button[data-p="${k}"]`).click(); return k; };
+window.__setSpeed = i => { speedIdx = i; bSpeed.textContent = SPEEDS[i]+"×"; return SPEEDS[i]; };
+window.__clear = () => { planets = []; lostCount = 0; simT = 0; balance(); return true; };
+window.__state = () => ({
+  orbits: simT/TWO_PI, lost: lostCount, speed: SPEEDS[speedIdx],
+  chimes: chimeTimes.length,
+  planets: planets.filter(p=>p.alive).map(p => { const el = oscul(p);
+    return { a: el.a, e: el.e, f: pitchOf(el.a) }; }),
+});
+window.__mute = () => { if (master) master.gain.value = 0; return true; };
+
+layout();
+caption("");
+if (loadHash()) caption("a shared composition, restored — gravity resumes judging it");
+if (REC) { document.getElementById("intro").style.display = "none";
+           document.getElementById("ui").style.display = "none";
+           document.getElementById("cap").style.display = "none";
+           document.getElementById("stats").style.display = "none"; }
+</script>
+</body>
+</html>
