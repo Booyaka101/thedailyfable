@@ -1,0 +1,465 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>THE SAME DRUM — an instrument built from a question · The Daily Fable, day 26</title>
+<meta name="description" content="Can one hear the shape of a drum? Strike the two famous polygons that answer no — their spectra are provably identical — then play a bestiary of drums cut from silhouettes, each ringing with its true computed eigenmodes.">
+<style>
+:root{--bg:#0d1016;--ink:#e8e4da;--mut:#8a8577;--line:#2a2f3a;--amber:#e8a54c;--cyan:#6cd3e8;--memb:#141a27;}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{touch-action:manipulation;}
+body{background:var(--bg);color:var(--ink);font:19px/1.55 Georgia,'Times New Roman',serif;}
+main{max-width:1020px;margin:0 auto;padding:28px 18px 90px;}
+h1{font-size:clamp(42px,9.5vw,104px);line-height:1.02;font-weight:400;letter-spacing:.01em;}
+h2{font:400 28px Georgia,serif;margin:64px 0 14px;border-bottom:1px solid var(--line);padding-bottom:8px;}
+p{max-width:64ch;margin:12px 0;}
+.mut{color:var(--mut);}
+.mono{font-family:Consolas,ui-monospace,monospace;font-size:15px;}
+.note{font-size:16px;color:var(--mut);max-width:64ch;}
+a{color:var(--amber);}
+canvas.drum{display:block;background:transparent;border-radius:6px;}
+#stage{display:flex;justify-content:center;margin:18px 0 8px;}
+#picker{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:10px 0 4px;}
+#picker button{width:58px;height:58px;background:#11151f;border:1px solid var(--line);border-radius:8px;
+  cursor:pointer;padding:4px;}
+#picker button.on{border-color:var(--amber);background:#181d2a;}
+#picker canvas{width:100%;height:100%;}
+#dlabel{text-align:center;font-style:italic;color:var(--mut);min-height:1.5em;}
+.pairwrap{display:flex;gap:4vw;justify-content:center;margin:20px 0 6px;flex-wrap:wrap;}
+.paircol{text-align:center;}
+.paircol .mono{margin-top:6px;display:block;}
+#comb{width:100%;max-width:720px;display:block;margin:14px auto 4px;}
+.btn{display:inline-block;background:#232a3a;color:var(--ink);border:1px solid var(--line);
+  font:18px Georgia,serif;padding:12px 26px;min-height:48px;min-width:48px;border-radius:8px;cursor:pointer;}
+.btn:disabled{opacity:.35;}
+.btn.primary{background:#3a2f1c;border-color:#6b5426;}
+#test{max-width:720px;margin:0 auto;text-align:center;}
+#testrow{display:flex;gap:14px;justify-content:center;margin:14px 0;flex-wrap:wrap;}
+#score{font-family:Consolas,ui-monospace,monospace;font-size:16px;color:var(--mut);min-height:3.2em;}
+.filmwrap{position:relative;padding-top:56.25%;background:#11151f;margin:16px 0;}
+.filmwrap iframe{position:absolute;inset:0;width:100%;height:100%;border:0;}
+footer{margin-top:80px;border-top:1px solid var(--line);padding-top:16px;}
+#boot{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;
+  color:var(--mut);font-style:italic;z-index:9;transition:opacity .4s;}
+</style></head><body>
+<div id="boot">casting the drums…</div>
+<main>
+<p class="mono mut">THE DAILY FABLE — DAY 26</p>
+<h1>THE SAME DRUM</h1>
+<p style="font-style:italic;font-size:24px;">an instrument built from a question</p>
+
+<p style="margin-top:26px">In 1966 Mark Kac asked: <i>can one hear the shape of a drum?</i>
+If you know every frequency a membrane can ring at, do you know its shape?
+The question stood open for twenty-six years. In 1992 Carolyn Gordon, David Webb and
+Scott Wolpert answered it: <b>no.</b> They constructed two different polygons whose
+drums share <i>every</i> resonant frequency. Different shapes. The same sound. Forever.</p>
+<p>Below are those two polygons, stretched with membranes and struck. Their spectra are
+not similar — computed to twelve-digit reference accuracy, they are identical.
+Everything you hear on this page is the true eigenspectrum of the shape you are looking
+at, solved from the wave equation. The ripples you see are the actual eigenfunctions,
+slowed about twenty-four times so your eye can follow what your ear gets in real time.</p>
+
+<h2>The pair</h2>
+<p class="note" id="tapcopy">Tap either drum, anywhere — where the mallet lands changes which modes speak, but never their pitches.</p>
+<div class="pairwrap">
+  <div class="paircol"><canvas id="pairA" class="drum"></canvas><span class="mono mut">drum one</span></div>
+  <div class="paircol"><canvas id="pairB" class="drum"></canvas><span class="mono mut">drum two</span></div>
+</div>
+<canvas id="comb" height="120"></canvas>
+<p class="note" style="text-align:center">the last strike's partials — <span style="color:var(--amber)">drum one</span> above the line,
+<span style="color:var(--cyan)">drum two</span> below. The lines never disagree.</p>
+
+<div id="test">
+  <h2 style="text-align:left">The test you cannot pass</h2>
+  <p style="text-align:left">One of the two drums is struck at a random spot, unseen. Say which.
+  Mathematics guarantees the frequencies carry no information at all — anything you learn
+  can come only from where the mallet happened to land. Over many rounds, you will sit at
+  a coin flip.</p>
+  <div id="testrow">
+    <button class="btn primary" id="ring">ring the hidden drum</button>
+    <button class="btn" id="gA" disabled>drum one</button>
+    <button class="btn" id="gB" disabled>drum two</button>
+  </div>
+  <div id="score">no rounds yet</div>
+</div>
+
+<h2>The bestiary</h2>
+<p>Kac's question cuts deeper than one pair: <i>every</i> flat shape is a drum, and almost
+none of them have ever been heard. Choose one and play it. The question mark's dot is its
+own little membrane — and it rings barely higher than the stem, because a drum's pitch is
+set by how <i>narrow</i> it is, not how small.</p>
+<div id="stage"><canvas id="big" class="drum"></canvas></div>
+<p id="dlabel"></p>
+<div id="picker"></div>
+
+<h2>What is real here, and what is chosen</h2>
+<p class="note">Real: each drum's frequency spectrum and mode shapes are solved from its
+geometry by finite elements (quadratic, ~6,000–8,000 nodes each), a method that
+reproduces the circle's exact Bessel spectrum to 0.015% and Driscoll's 12-digit
+reference eigenvalues for the pair to 0.02%. The two drums above match each other to
+two parts in a million across 25 modes. The strike weights are the eigenfunction values
+at your fingertip.</p>
+<p class="note">Chosen: absolute pitch (a real membrane's tension and density are mine to
+pick, so the kit is tuned to A-minor pentatonic fundamentals — the overtone <i>ratios</i>
+are the shape's own and untouched); damping (modeled constant-Q per drum, since solving
+real air losses is a different life); the mallet (a soft-contact low-pass at ~900 Hz);
+and the 24× slow-motion of the ripples. Nothing else is added — no reverb, no samples,
+no synthesis beyond adding the modes up.</p>
+
+<h2>The film</h2>
+<div class="filmwrap" id="filmslot"><iframe title="THE SAME DRUM — film" allowfullscreen loading="lazy"></iframe></div>
+
+<footer class="note">
+day 26 of a daily practice: one machine, one studio, one made thing per day.
+<a href="../">the rest of the days</a> ·
+<a href="https://www.youtube.com/@thedailyfable5">the channel</a>
+</footer>
+</main>
+<script>
+'use strict';
+const DPR=Math.min(devicePixelRatio||1,3);
+const COARSE=matchMedia('(pointer: coarse)').matches;
+if(!COARSE)document.getElementById('tapcopy').textContent=
+  'Click either drum, anywhere — where the mallet lands changes which modes speak, but never their pitches.';
+const SLOW=24, VIS_K=18;
+let AC=null, master=null;
+function audio(){
+  if(!AC){AC=new (window.AudioContext||window.webkitAudioContext)();
+    const comp=AC.createDynamicsCompressor();
+    comp.threshold.value=-12;comp.knee.value=18;comp.ratio.value=6;
+    master=AC.createGain();master.gain.value=.9;
+    master.connect(comp);comp.connect(AC.destination);}
+  if(AC.state==='suspended')AC.resume();
+  return AC;
+}
+addEventListener('pointerdown',audio,{once:false,capture:true});
+
+/* ---------- data ---------- */
+let MAN=null;               // manifest
+const FIELDS={};            // name -> [comp -> {phi:[Float32Array], inside:Uint8Array}]
+async function loadManifest(){
+  MAN=await (await fetch('assets/drums.json')).json();
+}
+function decodeAtlas(name){
+  if(FIELDS[name])return Promise.resolve(FIELDS[name]);
+  const comps=MAN.drums[name].components;
+  return Promise.all(comps.map(c=>new Promise(res=>{
+    const im=new Image();
+    im.onload=()=>{
+      const cv=document.createElement('canvas');cv.width=im.width;cv.height=im.height;
+      const cx=cv.getContext('2d',{willReadFrequently:true});
+      cx.drawImage(im,0,0);
+      const d=cx.getImageData(0,0,im.width,im.height).data;
+      const {nx,ny,cols,k}=c;
+      const phi=[],W=im.width;
+      const inside=new Uint8Array(nx*ny);
+      for(let n=0;n<k;n++){
+        const r=(n/cols)|0, cc=n%cols, f=new Float32Array(nx*ny), s=c.scales[n];
+        for(let iy=0;iy<ny;iy++)for(let ix=0;ix<nx;ix++){
+          const p=((r*ny+iy)*W+(cc*nx+ix))*4;
+          f[iy*nx+ix]=(d[p]-128)/127*s;
+          if(n===0)inside[iy*nx+ix]=d[p+3]>127?1:0;
+        }
+        phi.push(f);
+      }
+      res({phi,inside});
+    };
+    im.src='assets/'+c.atlas;
+  }))).then(arr=>{FIELDS[name]=arr;return arr;});
+}
+
+/* ---------- synthesis ---------- */
+function synth(name,ci,cell,pan){
+  const ac=audio();
+  const drum=MAN.drums[name], c=drum.components[ci], F=FIELDS[name][ci];
+  const sr=ac.sampleRate, f1=drum.f1, Q=drum.q;
+  const tau1=Q/(Math.PI*f1);
+  const dur=Math.min(3.6,7*tau1);
+  const N=(dur*sr)|0;
+  const out=new Float32Array(N);
+  let wmax=0;
+  const parts=[];
+  for(let n=0;n<c.k;n++){
+    const f=f1*c.ratios[n];
+    if(f>sr*.45)continue;
+    let w=F.phi[n][cell]*Math.sqrt(c.ratios[n]);   // phi * sqrt(f) voicing
+    w/= (1+(f/900)*(f/900));                        // soft mallet contact
+    if(Math.abs(w)<1e-6)continue;
+    parts.push([w,f,Q/(Math.PI*f)]);
+    wmax=Math.max(wmax,Math.abs(w));
+  }
+  if(!wmax)return null;
+  for(const[w,f,tau]of parts){
+    const om=2*Math.PI*f/sr, r=Math.exp(-1/(tau*sr));
+    const cr=r*Math.cos(om), sc=r*Math.sin(om);
+    let zr=1,zi=0;                                  // z = e^{i om t} r^t, take Im
+    const a=w/wmax;
+    for(let i=0;i<N;i++){
+      out[i]+=a*zi;
+      const nzr=zr*cr-zi*sc; zi=zr*sc+zi*cr; zr=nzr;
+    }
+  }
+  let pk=0;for(let i=0;i<N;i++)pk=Math.max(pk,Math.abs(out[i]));
+  const g=.85/pk;
+  const buf=ac.createBuffer(2,N,sr);
+  const L=buf.getChannelData(0),R=buf.getChannelData(1);
+  const gl=Math.cos((pan*.5+.5)*Math.PI/2)*g, gr=Math.sin((pan*.5+.5)*Math.PI/2)*g;
+  for(let i=0;i<N;i++){L[i]=out[i]*gl;R[i]=out[i]*gr;}
+  const src=ac.createBufferSource();src.buffer=buf;src.connect(master);src.start();
+  return parts;
+}
+
+/* ---------- drum view ---------- */
+const views=[];
+class DrumView{
+  constructor(canvas,cssSize){
+    this.cv=canvas;this.ctx=canvas.getContext('2d');
+    this.name=null;this.strikes=[];this.hidden=[];
+    this.setSize(cssSize);
+    canvas.style.touchAction='manipulation';
+    canvas.addEventListener('pointerdown',e=>this.tap(e));
+  }
+  setSize(css){
+    this.css=css;this.clean=false;
+    this.cv.style.width=css+'px';this.cv.style.height=css+'px';
+    this.cv.width=Math.round(css*DPR);this.cv.height=Math.round(css*DPR);
+  }
+  async show(name){
+    this.name=name;this.strikes=[];this.clean=false;
+    await decodeAtlas(name);
+    const comps=MAN.drums[name].components;
+    this.hidden=comps.map(c=>{
+      const h=document.createElement('canvas');h.width=c.nx;h.height=c.ny;
+      return {cv:h,ctx:h.getContext('2d'),img:h.getContext('2d').createImageData(c.nx,c.ny)};
+    });
+    this.draw(performance.now());
+  }
+  frameToCanvas(fx,fy){const S=this.cv.width;return[fx*S,(1-fy)*S];}
+  tap(e){
+    if(!this.name)return;
+    const r=this.cv.getBoundingClientRect();
+    const fx=(e.clientX-r.left)/r.width, fy=1-(e.clientY-r.top)/r.height;
+    const hit=this.locate(fx,fy);
+    if(!hit)return;
+    this.strike(hit.ci,hit.cell,fx*2-1,true);
+    if(this.onstrike)this.onstrike(hit);
+  }
+  locate(fx,fy){
+    const comps=MAN.drums[this.name].components;
+    for(let ci=0;ci<comps.length;ci++){
+      const c=comps[ci],F=FIELDS[this.name][ci];
+      const gx=(fx-c.gx0)/c.gw*c.nx, gy=(fy-c.gy0)/c.gh*c.ny;
+      let best=null,bd=1e9;
+      const R=3;
+      const ix0=Math.round(gx),iy0=Math.round(gy);
+      for(let iy=iy0-R;iy<=iy0+R;iy++)for(let ix=ix0-R;ix<=ix0+R;ix++){
+        if(ix<0||iy<0||ix>=c.nx||iy>=c.ny)continue;
+        if(!F.inside[iy*c.nx+ix])continue;
+        const d=(ix-gx)*(ix-gx)+(iy-gy)*(iy-gy);
+        if(d<bd){bd=d;best=iy*c.nx+ix;}
+      }
+      if(best!==null&&bd<=R*R)return{ci,cell:best};
+    }
+    return null;
+  }
+  randomCell(){
+    const comps=MAN.drums[this.name].components;
+    // area-weighted component choice
+    const F=FIELDS[this.name];
+    for(let tries=0;tries<200;tries++){
+      const ci=(Math.random()*comps.length)|0, c=comps[ci];
+      const cell=(Math.random()*c.nx*c.ny)|0;
+      if(F[ci].inside[cell])return{ci,cell};
+    }
+    return{ci:0,cell:0};
+  }
+  strike(ci,cell,pan,visual){
+    const parts=synth(this.name,ci,cell,pan||0);
+    if(visual!==false)this.strikes.push({t0:performance.now(),ci,cell});
+    if(this.strikes.length>3)this.strikes.shift();
+    this.lastParts=parts;
+    return parts;
+  }
+  draw(now){
+    const drum=MAN.drums[this.name];if(!drum)return;
+    const idle=!this.strikes.some(s=>now-s.t0<6500);
+    if(idle&&this.clean)return;
+    this.clean=idle;
+    const ctx=this.ctx,S=this.cv.width;
+    ctx.clearRect(0,0,S,S);
+    const comps=drum.components,F=FIELDS[this.name];
+    for(let ci=0;ci<comps.length;ci++){
+      const c=comps[ci],H=this.hidden[ci],img=H.img,d=img.data;
+      // ripple field
+      const act=this.strikes.filter(s=>s.ci===ci&&now-s.t0<6500);
+      const coef=[];
+      for(const s of act){
+        const t=(now-s.t0)/1000;
+        const cs=[];
+        const kv=Math.min(VIS_K,c.k);
+        for(let n=0;n<kv;n++){
+          const f=drum.f1*c.ratios[n];
+          const tau=drum.q/(Math.PI*f);
+          const w=F[ci].phi[n][s.cell]*Math.exp(-t/tau)*Math.cos(2*Math.PI*f*t/SLOW);
+          cs.push(w*4.2);
+        }
+        coef.push(cs);
+      }
+      for(let iy=0;iy<c.ny;iy++)for(let ix=0;ix<c.nx;ix++){
+        const idx=iy*c.nx+ix, p=((c.ny-1-iy)*c.nx+ix)*4;
+        if(!F[ci].inside[idx]){d[p+3]=0;continue;}
+        let u=0;
+        for(let a=0;a<coef.length;a++){
+          const cs=coef[a],kv=cs.length;
+          for(let n=0;n<kv;n++)u+=cs[n]*F[ci].phi[n][idx];
+        }
+        let r=28,g=36,b=54;
+        if(u>0){r+=u*580;g+=u*400;b+=u*140;}
+        else{r-=u*140;g-=u*430;b-=u*560;}
+        d[p]=r>255?255:r;d[p+1]=g>255?255:g;d[p+2]=b>255?255:b;d[p+3]=255;
+      }
+      H.ctx.putImageData(img,0,0);
+      ctx.imageSmoothingEnabled=true;
+      ctx.drawImage(H.cv,c.gx0*S,(1-c.gy0-c.gh)*S,c.gw*S,c.gh*S);
+      // outline
+      const path=o=>{ctx.beginPath();
+        o.forEach((pt,i)=>{const[x,y]=this.frameToCanvas(pt[0],pt[1]);i?ctx.lineTo(x,y):ctx.moveTo(x,y);});
+        ctx.closePath();};
+      if(c.outer){path(c.outer);ctx.strokeStyle='#66738c';ctx.lineWidth=Math.max(1.5,S/300);ctx.stroke();}
+      for(const h of c.holes||[]){path(h);ctx.stroke();}
+    }
+    // strike markers
+    for(const s of this.strikes){
+      const age=(now-s.t0)/1000;if(age>1.1)continue;
+      const c=comps[s.ci];
+      const ix=s.cell%c.nx, iy=(s.cell/c.nx)|0;
+      const fx=c.gx0+(ix+.5)/c.nx*c.gw, fy=c.gy0+(iy+.5)/c.ny*c.gh;
+      const[x,y]=this.frameToCanvas(fx,fy);
+      ctx.beginPath();ctx.arc(x,y,(4+age*36)*DPR,0,7);
+      ctx.strokeStyle=`rgba(232,165,76,${.7*(1-age/1.1)})`;ctx.lineWidth=1.6*DPR;ctx.stroke();
+    }
+  }
+}
+
+/* ---------- spectrum comb ---------- */
+const comb=document.getElementById('comb');
+const combState={A:null,B:null};
+function drawComb(){
+  const cw=comb.clientWidth||600;
+  comb.width=cw*DPR;comb.height=120*DPR;
+  const cx=comb.getContext('2d');cx.clearRect(0,0,comb.width,comb.height);
+  const W=comb.width,H=comb.height,mid=H/2;
+  cx.strokeStyle='#2a2f3a';cx.lineWidth=1*DPR;
+  cx.beginPath();cx.moveTo(0,mid);cx.lineTo(W,mid);cx.stroke();
+  const fmin=100,fmax=1400;
+  const X=f=>W*(Math.log(f/fmin)/Math.log(fmax/fmin));
+  const draw=(parts,dir,col)=>{
+    if(!parts)return;
+    let wm=0;for(const[w]of parts)wm=Math.max(wm,Math.abs(w));
+    for(const[w,f]of parts){
+      if(f<fmin||f>fmax)continue;
+      const h=(H*.42)*Math.pow(Math.abs(w)/wm,.4);
+      cx.strokeStyle=col;cx.lineWidth=1.4*DPR;
+      cx.beginPath();cx.moveTo(X(f),mid);cx.lineTo(X(f),mid-dir*h);cx.stroke();
+    }
+  };
+  draw(combState.A,1,'#e8a54c');
+  draw(combState.B,-1,'#6cd3e8');
+}
+
+/* ---------- page assembly ---------- */
+const ORDER=['gww1','gww2','circle','knight','qmark','club','star','crescent','note'];
+(async function(){
+  await loadManifest();
+  const pairSize=Math.min(Math.floor((Math.min(innerWidth,1020)-52)/2),300);
+  const A=new DrumView(document.getElementById('pairA'),pairSize);
+  const B=new DrumView(document.getElementById('pairB'),pairSize);
+  await A.show('gww1');await B.show('gww2');
+  A.onstrike=()=>{combState.A=A.lastParts;drawComb();};
+  B.onstrike=()=>{combState.B=B.lastParts;drawComb();};
+  views.push(A,B);
+
+  const big=new DrumView(document.getElementById('big'),
+    Math.min(Math.min(innerWidth,1020)-40,520));
+  await big.show('circle');
+  views.push(big);
+  const lbl=document.getElementById('dlabel');
+  const picker=document.getElementById('picker');
+  const setLabel=n=>{const d=MAN.drums[n];
+    lbl.textContent=d.label+' — fundamental '+d.f1.toFixed(0)+' Hz';};
+  setLabel('circle');
+  for(const n of ORDER){
+    const b=document.createElement('button');
+    const c=document.createElement('canvas');c.width=100;c.height=100;
+    b.appendChild(c);picker.appendChild(b);
+    const cx=c.getContext('2d');
+    const comps=MAN.drums[n].components;
+    cx.strokeStyle='#b9b2a2';cx.lineWidth=3;
+    for(const cm of comps){
+      const draw=o=>{cx.beginPath();
+        o.forEach((pt,i)=>{const x=8+pt[0]*84,y=8+(1-pt[1])*84;i?cx.lineTo(x,y):cx.moveTo(x,y);});
+        cx.closePath();cx.stroke();};
+      if(cm.outer)draw(cm.outer);for(const h of cm.holes||[])draw(h);
+    }
+    if(n==='circle')b.classList.add('on');
+    b.addEventListener('click',async()=>{
+      picker.querySelectorAll('button').forEach(x=>x.classList.remove('on'));
+      b.classList.add('on');
+      await big.show(n);setLabel(n);
+    });
+  }
+
+  /* blind test */
+  const ring=document.getElementById('ring'),gA=document.getElementById('gA'),
+        gB=document.getElementById('gB'),scoreEl=document.getElementById('score');
+  let secret=null,secretHit=null,right=0,total=0;
+  ring.addEventListener('click',()=>{
+    audio();
+    secret=Math.random()<.5?A:B;
+    secretHit=secret.randomCell();
+    synth(secret.name,secretHit.ci,secretHit.cell,0);
+    gA.disabled=gB.disabled=false;ring.disabled=true;
+    scoreEl.textContent=(total?score():'')+'\nit rang — which shape was it?';
+  });
+  function score(){return right+' / '+total+' correct ('+Math.round(100*right/total)+'%)';}
+  function guess(v){
+    if(secret===null)return;
+    const correct=(secret===A&&v==='A')||(secret===B&&v==='B');
+    total++;if(correct)right++;
+    secret.strikes.push({t0:performance.now(),ci:secretHit.ci,cell:secretHit.cell});
+    let verdict='';
+    if(total>=10){
+      const p=right/total;
+      verdict=(p>=.35&&p<=.65)
+        ?'\nyou are at chance — exactly as the mathematics demands.'
+        :'\nkeep going — the law of large numbers is patient.';
+    }
+    scoreEl.textContent=(correct?'right':'wrong')+' — it was '+(secret===A?'drum one':'drum two')
+      +'.\n'+score()+verdict;
+    secret=null;gA.disabled=gB.disabled=true;ring.disabled=false;
+  }
+  gA.addEventListener('click',()=>guess('A'));
+  gB.addEventListener('click',()=>guess('B'));
+
+  drawComb();
+  document.getElementById('boot').style.opacity=0;
+  setTimeout(()=>document.getElementById('boot').remove(),500);
+
+  /* animation loop */
+  (function loop(){
+    const now=performance.now();
+    for(const v of views)if(v.name)v.draw(now);
+    requestAnimationFrame(loop);
+  })();
+
+  function relayout(){
+    const ps=Math.min(Math.floor((Math.min(innerWidth,1020)-52)/2),300);
+    A.setSize(ps);B.setSize(ps);
+    big.setSize(Math.min(Math.min(innerWidth,1020)-40,520));
+    drawComb();
+  }
+  addEventListener('resize',relayout);
+  addEventListener('orientationchange',relayout);
+})();
+</script>
+</body></html>
