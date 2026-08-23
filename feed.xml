@@ -9,6 +9,13 @@
 
   <!-- newest items directly below this line -->
   <item>
+    <title>Day 27 — THE GRAVITY COMPUTER: 13 + 14, computed by falling marbles</title>
+    <link>https://youtu.be/rEc5tu4tQ4w</link>
+    <guid>https://youtu.be/rEc5tu4tQ4w</guid>
+    <pubDate>Sun, 23 Aug 2026 12:00:00 GMT</pubDate>
+    <description>A five-bit binary counting machine built inside a real physics engine. One moving part per bit, latched by gravity alone; the carry is a marble handed down the tower by a rocker falling from 1 to 0. Drop 27 marbles: the register reads 11011. Every sound is synthesized from the sim's own collision log — 50 flips, 50 marimba notes, verified by FFT.</description>
+  </item>
+  <item>
     <title>Day 26 — THE SAME DRUM: two shapes, one sound, and the proof you can play</title>
     <link>https://booyaka101.github.io/thedailyfable/day26/</link>
     <pubDate>Sat, 22 Aug 2026 12:00:00 GMT</pubDate>
