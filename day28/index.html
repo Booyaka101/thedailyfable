@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>THUNDER — strike your own lightning · The Daily Fable day 28</title>
+<meta name="description" content="Grow a lightning bolt, stand where you like, and hear the thunder its shape makes — N-wave acoustics computed live in your browser.">
+<style>
+  :root { color-scheme: dark; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; background: #05060c; overflow: hidden;
+    font-family: Georgia, 'Times New Roman', serif; color: #d8dae4;
+    -webkit-user-select: none; user-select: none; }
+  #wrap { position: fixed; inset: 0; }
+  canvas { position: absolute; inset: 0; width: 100%; height: 100%;
+    touch-action: pan-y; }
+  #ui { position: absolute; left: 0; right: 0; bottom: 0; padding: 10px 14px
+    calc(10px + env(safe-area-inset-bottom)); display: flex; gap: 10px;
+    align-items: center; justify-content: center; pointer-events: none; }
+  button { pointer-events: auto; min-height: 48px; min-width: 110px;
+    padding: 10px 22px; font-size: 17px; font-family: inherit;
+    background: #14182b; color: #e8eaf2; border: 1px solid #3a4066;
+    border-radius: 10px; cursor: pointer; }
+  button:active { background: #232a4a; }
+  button:disabled { opacity: .45; }
+  #strike { background: #2a1f4d; border-color: #6a5acd; font-weight: bold; }
+  #hint { position: absolute; top: calc(96px + env(safe-area-inset-top));
+    left: 0; right: 0; text-align: center; font-size: 14px; color: #8d93a8;
+    pointer-events: none; line-height: 1.5; padding: 0 12px; }
+  #stats { position: absolute; left: 0; right: 0; text-align: center;
+    bottom: 84px; font-family: ui-monospace, Consolas, monospace;
+    font-size: 13px; color: #b8a98a; pointer-events: none; }
+  #title { position: absolute; top: calc(12px + env(safe-area-inset-top));
+    left: 0; right: 0; text-align: center; pointer-events: none; }
+  #title b { font-size: 22px; letter-spacing: .28em; color: #cfd3e6; }
+  #title span { display: block; font-size: 13px; color: #767c92; margin-top: 3px; }
+</style>
+</head>
+<body>
+<div id="wrap">
+  <canvas id="cv"></canvas>
+  <div id="title"><b>THUNDER</b><span>the shape of a bolt, read out at 343 m/s</span></div>
+  <div id="hint"></div>
+  <div id="stats"></div>
+  <div id="ui">
+    <button id="newbolt">new bolt</button>
+    <button id="strike">⚡ strike</button>
+  </div>
+</div>
+<script>
+"use strict";
+/* ---------- world ---------- */
+const C = 343, WORLD_W = 7000, CLOUD = 4200;   // metres
+const cv = document.getElementById('cv'), ctx = cv.getContext('2d');
+let S = 1, cw = 0, ch = 0, pxm = 1, groundY = 0;
+const coarse = matchMedia('(pointer: coarse)').matches;
+document.getElementById('hint').innerHTML =
+  (coarse ? 'drag on the ground to move yourself · headphones on' :
+            'drag the figure along the ground · headphones on') +
+  '<br>then strike, and count the seconds';
+
+function layout() {
+  S = Math.min(devicePixelRatio || 1, 3);
+  cw = wrap.clientWidth; ch = wrap.clientHeight;
+  cv.width = Math.round(cw * S); cv.height = Math.round(ch * S);
+  pxm = ch * 0.82 / CLOUD;                  // px per metre (CSS px)
+  groundY = ch * 0.86;
+}
+const wrap = document.getElementById('wrap');
+addEventListener('resize', layout);
+addEventListener('orientationchange', () => setTimeout(layout, 250));
+layout();
+
+/* world x=0 at bolt start; listener on ground */
+let listener = { x: 1500 };
+let bolt = null;          // {polys:[{pts:[[x,z]..], level}], srcs:Float32Array [x,z,ds,level]*n, attach}
+let audio = null;         // {buf, arrT:Float32Array, arrX, arrZ, t0:ctxTime, dur, peakPa, nearest}
+let leaderAnim = null, flashT = -1, struckAt = -1;
+let acx = null;
+
+/* ---------- bolt generation (stochastic mimic of the day's DBM; the film's
+   bolt is true dielectric breakdown — this one is a tortuosity-matched sketch) */
+function rnd(a, b) { return a + Math.random() * (b - a); }
+function gauss() { let u = 0, v = 0; while (!u) u = Math.random(); while (!v) v = Math.random();
+  return Math.sqrt(-2 * Math.log(u)) * Math.cos(6.2832 * v); }
+
+function subdivide(pts, k, minSeg) {
+  while (true) {
+    let out = [pts[0]], split = false;
+    for (let i = 1; i < pts.length; i++) {
+      const a = pts[i - 1], b = pts[i];
+      const dx = b[0] - a[0], dz = b[1] - a[1], L = Math.hypot(dx, dz);
+      if (L > minSeg * 2) {
+        split = true;
+        const mx = (a[0] + b[0]) / 2, mz = (a[1] + b[1]) / 2;
+        const off = gauss() * k * L;
+        out.push([mx - dz / L * off, mz + dx / L * off]);
+      }
+      out.push(b);
+    }
+    pts = out;
+    if (!split) return pts;
+  }
+}
+
+function genBolt() {
+  const polys = [];
+  // trunk: biased walk cloud -> ground
+  let x = rnd(-600, 600), z = CLOUD, drift = rnd(-0.25, 0.25);
+  const trunk = [[x, z]];
+  while (z > 0) {
+    const step = rnd(120, 320);
+    drift += rnd(-0.16, 0.16); drift *= 0.92;
+    x += drift * step + gauss() * step * 0.22;
+    z -= step * rnd(0.75, 1.0);
+    if (z < 0) z = 0;
+    trunk.push([x, z]);
+  }
+  polys.push({ pts: subdivide(trunk, 0.11, 4), level: 0 });
+  // branches
+  const nb = 5 + (Math.random() * 4 | 0);
+  for (let b = 0; b < nb; b++) {
+    const i = 1 + (Math.random() * (trunk.length - 3) | 0);
+    let [bx, bz] = trunk[i];
+    const dir = Math.random() < 0.5 ? -1 : 1, br = [[bx, bz]];
+    let bd = dir * rnd(0.5, 1.3);
+    const len = rnd(0.2, 0.55) * bz;
+    let travelled = 0;
+    while (travelled < len && bz > 60) {
+      const st = rnd(90, 200);
+      bd += rnd(-0.2, 0.2);
+      bx += bd * st * 0.5 + gauss() * st * 0.2;
+      bz -= st * rnd(0.7, 1.0);
+      travelled += st;
+      br.push([bx, bz]);
+      if (Math.random() < 0.22 && br.length > 2) {   // sub-branch
+        let [sx, sz] = br[br.length - 1], sd = bd + rnd(-0.8, 0.8);
+        const sub = [[sx, sz]]; let tr2 = 0;
+        while (tr2 < len * 0.4 && sz > 50) {
+          const s2 = rnd(80, 160);
+          sx += sd * s2 * 0.7 + gauss() * s2 * 0.25; sz -= s2 * rnd(0.5, 0.8); tr2 += s2;
+          sub.push([sx, sz]);
+        }
+        if (sub.length > 1) polys.push({ pts: subdivide(sub, 0.11, 4), level: 2 });
+      }
+    }
+    if (br.length > 1) polys.push({ pts: subdivide(br, 0.11, 4), level: 1 });
+  }
+  // acoustic sources every ~3.5 m
+  const srcs = [];
+  for (const p of polys) {
+    let acc = 0;
+    for (let i = 1; i < p.pts.length; i++) {
+      const a = p.pts[i - 1], b = p.pts[i];
+      const L = Math.hypot(b[0] - a[0], b[1] - a[1]);
+      acc += L;
+      if (acc >= 3.5) {
+        srcs.push((a[0] + b[0]) / 2, (a[1] + b[1]) / 2, acc, p.level);
+        acc = 0;
+      }
+    }
+  }
+  bolt = { polys, srcs: new Float32Array(srcs), attach: polys[0].pts[polys[0].pts.length - 1] };
+  audio = null; flashT = -1; struckAt = -1; leaderAnim = null;
+  statline();
+}
+
+/* ---------- acoustics (the day's model, 2D world embedded at y=0) ---------- */
+const SR = 48000, P0 = 101325, GAMMA = 1.4, RHOC = 413, ETA_AC = 0.0015;
+const EL = [3e5, 3.5e4, 1.2e4];
+function fewF(E) { return 0.63 * C * Math.sqrt(P0 / E); }
+function isoAlpha(f) {  // dB/m at 20C 70%RH
+  const T = 293.15, T0 = 293.15;
+  const psat = Math.pow(10, -6.8346 * Math.pow(273.16 / T, 1.261) + 4.6151);
+  const h = 70 * psat;
+  const frO = 24 + 4.04e4 * h * (0.02 + h) / (0.391 + h);
+  const frN = Math.pow(T / T0, -0.5) * (9 + 280 * h * Math.exp(-4.170 * (Math.pow(T / T0, -1 / 3) - 1)));
+  return 8.686 * f * f * (1.84e-11 * Math.sqrt(T / T0) + Math.pow(T / T0, -2.5) *
+    (0.01275 * Math.exp(-2239.1 / T) / (frO + f * f / frO)
+     + 0.1068 * Math.exp(-3352 / T) / (frN + f * f / frN)));
+}
+
+function synthesize() {
+  const s = bolt.srcs, n = s.length / 4;
+  const ears = [[listener.x, -0.09], [listener.x, 0.09]];  // y offsets (out of plane)
+  // arrivals + buffer length
+  let rmin = 1e9, rmax = 0;
+  const STROKES = [[0, 1], [0.062, 0.4], [0.131, 0.28]];
+  for (let i = 0; i < n; i++) {
+    const dx = s[4 * i] - listener.x, dz = s[4 * i + 1] - 1.7;
+    const r = Math.hypot(dx, dz);
+    if (r < rmin) rmin = r; if (r > rmax) rmax = r;
+  }
+  const dur = 0.131 + rmax / C + 2.0, N = Math.ceil(dur * SR);
+  const chans = [new Float32Array(N), new Float32Array(N)];
+  const NB = 10;  // distance bands for absorption
+  const edges = []; for (let b = 0; b <= NB; b++) edges.push(rmin * Math.pow((rmax + 1) / rmin, b / NB));
+  const bands = [0, 1].map(() => Array.from({ length: NB }, () => new Float32Array(N)));
+  const arrT = new Float32Array(n), arrX = new Float32Array(n), arrZ = new Float32Array(n);
+  for (let e = 0; e < 2; e++) {
+    for (let gr = 0; gr < 2; gr++) {          // direct + ground image
+      const ez = gr ? -1.7 : 1.7, refl = gr ? 0.9 : 1.0;
+      for (let i = 0; i < n; i++) {
+        const lev = Math.min(s[4 * i + 3], 2), ds = s[4 * i + 2];
+        const dx = s[4 * i] - listener.x, dzz = s[4 * i + 1] - ez, dy = ears[e][1];
+        const r = Math.sqrt(dx * dx + dzz * dzz + dy * dy);
+        let b = 0; while (b < NB - 1 && edges[b + 1] < r) b++;
+        for (const [st, sc] of STROKES) {
+          if (st > 0 && lev > 0) continue;    // restrikes relight the trunk only
+          const E = EL[lev] * sc;
+          const Rc = Math.sqrt(E / (Math.PI * P0));
+          const Tn = 0.659 / fewF(E) * Math.sqrt(1 + 0.5 * Math.log(Math.max(r / Rc, 1)));
+          const A = Math.sqrt(3 * ETA_AC * E * ds * RHOC / (4 * Math.PI * Tn)) / r * refl;
+          const t = st + r / C, s0 = Math.round(t * SR), m = Math.max(8, Math.round(Tn * SR));
+          if (e === 0 && gr === 0 && st === 0) { arrT[i] = t; arrX[i] = s[4 * i]; arrZ[i] = s[4 * i + 1]; }
+          if (s0 + m >= N) continue;
+          const buf = bands[e][b];
+          for (let j = 0; j < m; j++) {
+            let w = 1 - 2 * j / m;
+            if (j === 0 || j === m - 1) w *= 0.5;
+            buf[s0 + j] += A * w;
+          }
+        }
+      }
+    }
+    // absorption per band: cascade of 2 one-pole LPs at fc where alpha*d = 6 dB
+    for (let b = 0; b < NB; b++) {
+      const d = Math.sqrt(edges[b] * edges[b + 1]);
+      let lo = 30, hi = 20000;
+      for (let it = 0; it < 30; it++) {
+        const mid = Math.sqrt(lo * hi);
+        (isoAlpha(mid) * d > 6 ? hi = mid : lo = mid);
+      }
+      const fc = Math.min(Math.max(Math.sqrt(lo * hi), 40), 20000);
+      const a = Math.exp(-2 * Math.PI * fc / SR), buf = bands[e][b];
+      let y1 = 0, y2 = 0;
+      for (let i2 = 0; i2 < N; i2++) {
+        y1 = (1 - a) * buf[i2] + a * y1;
+        y2 = (1 - a) * y1 + a * y2;
+        chans[e][i2] += y2;
+      }
+    }
+  }
+  let peak = 0;
+  for (let i = 0; i < N; i++) {
+    const m2 = Math.max(Math.abs(chans[0][i]), Math.abs(chans[1][i]));
+    if (m2 > peak) peak = m2;
+  }
+  const g = 0.85 / (peak || 1);
+  for (const c2 of chans) for (let i = 0; i < N; i++) c2[i] *= g;
+  return { chans, N, arrT, arrX, arrZ, peakPa: peak, nearest: rmin, dur };
+}
+
+/* ---------- strike sequence ---------- */
+const btnStrike = document.getElementById('strike');
+const btnNew = document.getElementById('newbolt');
+btnNew.addEventListener('click', () => { genBolt(); });
+btnStrike.addEventListener('click', () => {
+  if (!bolt || leaderAnim) return;
+  if (!acx) acx = new (window.AudioContext || window.webkitAudioContext)({ sampleRate: 48000 });
+  acx.resume();
+  btnStrike.disabled = true;
+  leaderAnim = { start: performance.now() / 1000, dur: 1.1 };
+});
+
+function fireAudio() {
+  const r = synthesize();
+  const buf = acx.createBuffer(2, r.N, SR);
+  buf.getChannelData(0).set(r.chans[0]);
+  buf.getChannelData(1).set(r.chans[1]);
+  const src = acx.createBufferSource();
+  src.buffer = buf; src.connect(acx.destination);
+  const t0 = acx.currentTime + 0.05;
+  src.start(t0);
+  audio = { ...r, t0, wall0: performance.now() / 1000 + 0.05 };
+  window.__thunder = { peakPa: r.peakPa, nearest: r.nearest, dur: r.dur,
+    rms: Math.sqrt(r.chans[0].reduce((a2, v) => a2 + v * v, 0) / r.N) };
+  statline();
+}
+
+function statline() {
+  const el = document.getElementById('stats');
+  if (!bolt) { el.textContent = ''; return; }
+  let len = 0;
+  for (const p of bolt.polys)
+    for (let i = 1; i < p.pts.length; i++)
+      len += Math.hypot(p.pts[i][0] - p.pts[i - 1][0], p.pts[i][1] - p.pts[i - 1][1]);
+  const d = audio ? audio.nearest : Math.hypot(bolt.attach[0] - listener.x, 1.7);
+  el.textContent = `channel ${(len / 1000).toFixed(1)} km · you ${(Math.abs(listener.x - bolt.attach[0]) / 1000).toFixed(2)} km from the strike` +
+    (audio ? ` · flash→bang ${(audio.nearest / C).toFixed(1)} s · thunder ${(audio.dur - audio.nearest / C).toFixed(0)} s` : '');
+}
+
+/* ---------- input: drag listener ---------- */
+let dragging = false, dragCam = 0;
+cv.addEventListener('pointerdown', ev => {
+  const wx = (ev.clientX - cw / 2) / pxm + camX();
+  if (ev.clientY > groundY - 90) {
+    dragging = true; dragCam = camX();
+    try { cv.setPointerCapture(ev.pointerId); } catch (e) {}
+    cv.style.touchAction = 'none';
+    listener.x = wx; audio = null; statline();
+    ev.preventDefault();
+  }
+}, { passive: false });
+cv.addEventListener('pointermove', ev => {
+  if (!dragging) return;
+  listener.x = (ev.clientX - cw / 2) / pxm + dragCam;
+  audio = null; statline();
+});
+addEventListener('pointerup', () => { dragging = false; cv.style.touchAction = 'pan-y'; });
+
+function camX() {   // keep bolt attach and listener both in view
+  const a = bolt ? bolt.attach[0] : 0;
+  return (a + listener.x) / 2;
+}
+
+/* ---------- render loop ---------- */
+function drawPoly(pts, w, alpha, cx0) {
+  ctx.lineWidth = w * S;
+  ctx.strokeStyle = `rgba(235,233,255,${alpha})`;
+  ctx.beginPath();
+  for (let i = 0; i < pts.length; i++) {
+    const x = (pts[i][0] - cx0) * pxm + cw / 2, y = groundY - pts[i][1] * pxm;
+    i ? ctx.lineTo(x * S, y * S) : ctx.moveTo(x * S, y * S);
+  }
+  ctx.stroke();
+}
+
+let lastHeard = 0;
+function frame() {
+  requestAnimationFrame(frame);
+  const now = performance.now() / 1000;
+  ctx.clearRect(0, 0, cv.width, cv.height);
+  // sky
+  const g = ctx.createLinearGradient(0, 0, 0, groundY * S);
+  let flash = 0;
+  if (flashT > 0) {
+    const ft = now - flashT;
+    flash = Math.max(0, Math.exp(-ft / 0.09) + (ft > 0.062 ? 0.45 * Math.exp(-(ft - 0.062) / 0.07) : 0)
+      + (ft > 0.131 ? 0.3 * Math.exp(-(ft - 0.131) / 0.07) : 0));
+  }
+  const lift = Math.min(flash * 40, 26);
+  g.addColorStop(0, `rgb(${4 + lift},${5 + lift},${12 + lift})`);
+  g.addColorStop(1, `rgb(${16 + lift},${18 + lift},${34 + lift})`);
+  ctx.fillStyle = g;
+  ctx.fillRect(0, 0, cv.width, groundY * S);
+  ctx.fillStyle = `rgb(${7 + lift * 0.5},${8 + lift * 0.5},${13 + lift * 0.5})`;
+  ctx.fillRect(0, groundY * S, cv.width, cv.height - groundY * S);
+  const cx0 = camX();
+
+  if (bolt) {
+    ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    let visFrac = 1, glow = 0.16, branchGlow = 0.10, coreW = 1.4;
+    if (leaderAnim) {
+      const u = (now - leaderAnim.start) / leaderAnim.dur;
+      if (u >= 1) { leaderAnim = null; flashT = now; struckAt = now; fireAudio(); }
+      else visFrac = u;
+    }
+    const boltAlpha = flash > 0 ? Math.min(0.25 + flash * 1.1, 1) : (audio ? 0.30 : 0.30);
+    const bw = flash > 0 ? 2.6 : 1.6;
+    for (const p of bolt.polys) {
+      let pts = p.pts;
+      if (visFrac < 1) {
+        const keep = Math.max(2, Math.floor(pts.length * visFrac));
+        pts = pts.slice(0, keep);
+        if (p.level > 0 && visFrac < 0.5) continue;
+      }
+      const lvA = p.level === 0 ? boltAlpha : boltAlpha * 0.45;
+      ctx.shadowColor = 'rgba(150,140,255,0.9)';
+      ctx.shadowBlur = (flash > 0 ? 26 : 9) * S;
+      drawPoly(pts, p.level === 0 ? bw : bw * 0.6, lvA, cx0);
+    }
+    ctx.shadowBlur = 0;
+  }
+
+  // readout circle + heard-now glow while playing
+  if (audio) {
+    const t = now - audio.wall0;
+    if (t > 0 && t < audio.dur) {
+      const R = C * t;
+      ctx.strokeStyle = 'rgba(200,205,230,0.35)';
+      ctx.lineWidth = 1.5 * S;
+      ctx.beginPath();
+      ctx.arc((listener.x - cx0) * pxm * S + cw / 2 * S, groundY * S, R * pxm * S, Math.PI, 2 * Math.PI);
+      ctx.stroke();
+      // heard-now
+      ctx.fillStyle = 'rgba(255,158,56,0.95)';
+      ctx.shadowColor = 'rgba(255,158,56,0.9)'; ctx.shadowBlur = 14 * S;
+      let count = 0;
+      for (let i = 0; i < audio.arrT.length; i++) {
+        if (Math.abs(audio.arrT[i] - t) < 0.03) {
+          const x = (audio.arrX[i] - cx0) * pxm + cw / 2, y = groundY - audio.arrZ[i] * pxm;
+          ctx.fillRect((x - 1.6) * S, (y - 1.6) * S, 3.2 * S, 3.2 * S);
+          count++;
+        }
+      }
+      lastHeard = count;
+      ctx.shadowBlur = 0;
+      if (t < audio.nearest / C) {
+        const el = document.getElementById('stats');
+        el.textContent = `sound on its way — ${(audio.nearest / C - t).toFixed(1)} s`;
+      } else statline();
+    } else if (t >= audio.dur) { btnStrike.disabled = false; }
+  } else if (!leaderAnim) btnStrike.disabled = false;
+
+  // listener figure
+  const lx = (listener.x - cx0) * pxm + cw / 2;
+  ctx.strokeStyle = 'rgba(230,232,245,0.95)';
+  ctx.lineWidth = 2 * S;
+  const hpx = Math.max(10, 1.9 * pxm * 8);   // exaggerated so you can see yourself
+  ctx.beginPath();
+  ctx.moveTo(lx * S, groundY * S); ctx.lineTo(lx * S, (groundY - hpx) * S);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.arc(lx * S, (groundY - hpx) * S - 4 * S, 3.2 * S, 0, 6.2832);
+  ctx.fillStyle = 'rgba(230,232,245,0.95)'; ctx.fill();
+  window.__heard = lastHeard;
+  window.__lx = listener.x;
+  window.__playing = !!(audio && (now - audio.wall0) > 0 && (now - audio.wall0) < audio.dur);
+}
+genBolt();
+frame();
+</script>
+</body>
+</html>
