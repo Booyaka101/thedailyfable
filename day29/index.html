@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>FILM — hold a soap bubble · The Daily Fable day 29</title>
+<style>
+  html,body{margin:0;height:100%;background:#05070c;color:#dfe3ea;font:16px/1.45 Georgia,serif;overflow:hidden}
+  #c{position:fixed;inset:0;width:100%;height:100%;touch-action:none;display:block}
+  .hud{position:fixed;left:18px;top:calc(14px + env(safe-area-inset-top));pointer-events:none;
+       text-shadow:0 1px 8px #000c;max-width:78vw}
+  .hud h1{font-size:20px;margin:0 0 2px;font-weight:600;letter-spacing:.14em}
+  .hud p{font-size:13.5px;margin:0;color:#aab1bf}
+  #snd{position:fixed;right:14px;top:calc(12px + env(safe-area-inset-top));width:52px;height:48px;
+       border-radius:12px;border:1px solid #39404e;background:#10141cdd;color:#cfd5e0;
+       font:14px Georgia;cursor:pointer}
+  #foot{position:fixed;left:0;right:0;bottom:calc(10px + env(safe-area-inset-bottom));text-align:center;
+        font-size:12.5px;color:#7b8291;pointer-events:none;text-shadow:0 1px 6px #000}
+  #foot a{color:#9aa3b5;pointer-events:auto}
+  #cap{position:fixed;left:0;right:0;bottom:calc(44px + env(safe-area-inset-bottom));text-align:center;
+       font-size:14.5px;color:#c8cedb;pointer-events:none;opacity:0;transition:opacity .8s;text-shadow:0 1px 8px #000c}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div class="hud"><h1>FILM</h1><p id="hint"></p></div>
+<button id="snd" aria-label="sound">♪ off</button>
+<div id="cap"></div>
+<div id="foot"><a href="../">The Daily Fable</a> · day 29 · every color here is a thickness — no pigment in this page</div>
+<script>
+"use strict";
+const canvas = document.getElementById("c");
+const gl = canvas.getContext("webgl2", {antialias:false, preserveDrawingBuffer:true});
+const coarse = matchMedia("(pointer: coarse)").matches;
+document.getElementById("hint").textContent = coarse
+  ? "drag to stir the film · tap to pop it"
+  : "drag to stir the film · click to pop it";
+
+const VS = `#version 300 es
+in vec2 p; void main(){ gl_Position = vec4(p,0.,1.); }`;
+
+const FS = `#version 300 es
+precision highp float;
+out vec4 O;
+uniform vec2 uRes; uniform float uT, uMeanH, uPop, uSpin;
+uniform vec4 uSw;           // swirl impulse: center uv, strength, age
+uniform sampler2D uLUT;
+const float R = 0.05, CY = 0.016, CLIP = 0.001;
+const vec3 SUN = normalize(vec3(0.25, 0.80, 0.55));
+const vec3 WARM = vec3(1.00, 0.70, 0.44), BLUE = vec3(0.10, 0.14, 0.26);
+
+float h21(vec2 p){ return fract(sin(dot(p, vec2(127.1,311.7)))*43758.5453); }
+float vnoise(vec2 p){
+  vec2 i = floor(p), f = fract(p); f = f*f*(3.-2.*f);
+  return mix(mix(h21(i), h21(i+vec2(1,0)), f.x),
+             mix(h21(i+vec2(0,1)), h21(i+vec2(1,1)), f.x), f.y);
+}
+float fbm(vec2 p){ return vnoise(p)*0.6 + vnoise(p*2.3+7.7)*0.28 + vnoise(p*5.1+3.1)*0.12; }
+
+vec3 sky(vec3 d){
+  float mie = exp(8.0*(dot(d, SUN)-1.0));
+  float horiz = pow(clamp(1.0-abs(d.y),0.0,1.0), 3.0);
+  vec3 L = BLUE*(0.30+0.70*max(d.y,0.0))*0.055
+         + WARM*(1.75*mie + 0.022*horiz);
+  if (d.y < 0.0) L = WARM*(0.40*mie + 0.050*horiz);
+  return L;
+}
+
+float thick(vec3 n){                     // n = unit sphere normal at the point
+  float pol = acos(clamp(n.y,-1.0,1.0)) / 1.87;   // 0 apex .. ~1 base
+  float az  = atan(n.z, n.x);
+  vec2 uv = vec2(az*1.2 + uSpin, pol*3.0);
+  float sw = fbm(uv*2.0 + vec2(uT*0.05, -uT*0.11)) - 0.5;
+  // touch swirl: local thickness push that advects around
+  float dsw = 0.0;
+  if (uSw.z > 0.001) {
+    float dd = distance(vec2(az*0.5, pol), uSw.xy);
+    dsw = uSw.z * exp(-dd*dd*30.0) * sin(uT*3.0 + dd*20.0);
+  }
+  float base = uMeanH*(0.42 + 0.98*pow(pol, 1.4));
+  float d = base + sw*(45.0 + 0.16*uMeanH) + dsw*120.0;
+  if (d < 30.0) d = mix(12.0, 30.0, smoothstep(11.0, 30.0, d));  // Newton black plateau
+  return clamp(d, 11.0, 1590.0);
+}
+
+vec3 filmRGB(float d, float c){
+  vec3 v = texture(uLUT, vec2(d/1600.0, clamp(c,0.07,1.0))).rgb;
+  return v*v*0.45;
+}
+
+bool hitSphere(vec3 o, vec3 dir, out float t, out vec3 n, bool far){
+  vec3 oc = o - vec3(0.0, CY, 0.0);
+  float b = dot(oc,dir), cc = dot(oc,oc)-R*R, disc = b*b-cc;
+  if (disc < 0.0) return false;
+  float s = sqrt(disc);
+  float t0 = -b-s, t1 = -b+s;
+  t = far ? t1 : t0;
+  if (t < 1e-4) { t = t1; if (t < 1e-4) return false; }
+  vec3 p = o+dir*t;
+  if (p.y < CLIP) { if (far) return false; t = t1; p = o+dir*t; if (p.y < CLIP || t < 1e-4) return false; }
+  n = normalize(p - vec3(0.0, CY, 0.0));
+  return true;
+}
+
+vec3 slate(vec3 ro, vec3 rd){
+  float tt = -ro.y / min(rd.y, -1e-5);
+  float c = clamp(-rd.y, 0.02, 1.0);
+  float f = 0.03 + 0.97*pow(1.0-c, 5.0);
+  f = clamp(f + 0.10*(1.0-f), 0.0, 1.0);
+  return f * sky(reflect(rd, vec3(0,1,0))) + (1.0-f)*vec3(0.010,0.011,0.014)*2.2;
+}
+
+vec3 membrane(vec3 o, vec3 dir, float alive){
+  // front + back membrane, one internal bounce approximation
+  vec3 col = vec3(0.0);
+  float t; vec3 n;
+  float through = 1.0;
+  vec3 ro = o; vec3 rd = dir;
+  for (int k = 0; k < 2; k++){
+    if (alive < 0.5 || !hitSphere(ro, rd, t, n, false)) break;
+    vec3 p = ro + rd*t;
+    vec3 nf = dot(rd,n) < 0.0 ? n : -n;
+    float c = clamp(-dot(rd,nf), 0.05, 1.0);
+    float d = thick(n);
+    vec3 Rr = filmRGB(d, c);
+    vec3 rdir = reflect(rd, nf);
+    col += through * sky(rdir) * Rr;
+    float Tl = 1.0 - dot(Rr, vec3(0.35,0.5,0.15));
+    through *= Tl;
+    ro = p + rd*1e-5; // continue straight through the nm-thin film
+  }
+  // what lies beyond the last crossing: dark slate below the horizon line
+  col += through * (rd.y < -1e-4 ? slate(ro, rd) : sky(rd));
+  return col;
+}
+
+void main(){
+  vec2 q = (gl_FragCoord.xy*2.0 - uRes) / uRes.y;
+  // camera: gentle orbit, slight rise over life
+  float ang = 0.15*sin(uT*0.06);
+  float el = 0.085 + 0.02*sin(uT*0.043);
+  vec3 cp = vec3(sin(ang)*0.20, el, cos(ang)*0.20);
+  vec3 look = vec3(0.0, 0.040, 0.0);
+  vec3 fwd = normalize(look-cp);
+  vec3 rt = normalize(cross(fwd, vec3(0,1,0)));
+  vec3 up = cross(rt, fwd);
+  vec3 rd = normalize(fwd + 0.55*(q.x*rt + q.y*up));
+  float alive = uPop < 0.5 ? 1.0 : 0.0;
+
+  vec3 col;
+  float tp = -cp.y / min(rd.y, -1e-5);
+  float ts; vec3 ns;
+  bool sph = alive > 0.5 && hitSphere(cp, rd, ts, ns, false);
+  bool gnd = rd.y < 0.0 && (!sph || tp < ts);
+  if (gnd){
+    vec3 p = cp + rd*tp;
+    float c = clamp(-rd.y, 0.02, 1.0);
+    float f = 0.03 + 0.97*pow(1.0-c, 5.0);
+    f = clamp(f + 0.10*(1.0-f), 0.0, 1.0);
+    vec3 rr = reflect(rd, vec3(0,1,0));
+    vec3 refl = membrane(p + rr*1e-4, rr, alive);
+    col = f*refl + (1.0-f)*vec3(0.010,0.011,0.014)*2.2;
+  } else {
+    col = membrane(cp, rd, alive);
+  }
+  // exposure opens as the film dies (same move as the film's act 3)
+  float mh = uPop > 0.5 ? 300.0 : uMeanH;
+  float ramp = clamp((115.0-mh)/85.0, 0.0, 1.0);
+  float ex = 3.4*(1.0+1.7*ramp*ramp);
+  col = 1.0 - exp(-col*ex);
+  col = pow(clamp(col,0.0,1.0), vec3(1.0/2.2));
+  O = vec4(col, 1.0);
+}`;
+
+function sh(type, src){ const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s);
+  if(!gl.getShaderParameter(s, gl.COMPILE_STATUS)) throw gl.getShaderInfoLog(s); return s; }
+const prog = gl.createProgram();
+gl.attachShader(prog, sh(gl.VERTEX_SHADER, VS));
+gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, FS));
+gl.linkProgram(prog);
+if(!gl.getProgramParameter(prog, gl.LINK_STATUS)) throw gl.getProgramInfoLog(prog);
+gl.useProgram(prog);
+const buf = gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 3,-1, -1,3]), gl.STATIC_DRAW);
+const locP = gl.getAttribLocation(prog, "p");
+gl.enableVertexAttribArray(locP);
+gl.vertexAttribPointer(locP, 2, gl.FLOAT, false, 0, 0);
+const U = {};
+for (const n of ["uRes","uT","uMeanH","uPop","uSpin","uSw","uLUT"]) U[n] = gl.getUniformLocation(prog, n);
+
+const lutTex = gl.createTexture();
+const lutImg = new Image();
+lutImg.onload = () => {
+  gl.bindTexture(gl.TEXTURE_2D, lutTex);
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, lutImg);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+};
+lutImg.src = "lut.png";
+
+function resize(){
+  const dpr = Math.min(devicePixelRatio || 1, 2.5);
+  canvas.width = Math.round(innerWidth*dpr);
+  canvas.height = Math.round(innerHeight*dpr);
+  gl.viewport(0,0,canvas.width,canvas.height);
+}
+addEventListener("resize", resize);
+addEventListener("orientationchange", resize);
+resize();
+
+// ---------- bubble life ----------
+let born = performance.now()/1000, popT = -1, respawnAt = 0;
+let sw = {x:0, y:0, s:0};
+const LIFE = 72;
+function meanH(now){
+  const age = now - born;
+  const t = Math.min(age/LIFE, 1);
+  return 720*Math.pow(1-t, 1.6) + 12;
+}
+const cap = document.getElementById("cap");
+let capShown = 0;
+function caption(text){ cap.textContent = text; cap.style.opacity = 1;
+  setTimeout(()=>cap.style.opacity=0, 5200); }
+
+// ---------- sound: the 40-octave rule ----------
+let AC = null, oscs = [], master = null, soundOn = false, spec = null;
+fetch("spectrum.json").then(r=>r.json()).then(j=>spec=j);
+const sndBtn = document.getElementById("snd");
+function startAudio(){
+  if (AC || !spec) return;
+  AC = new (window.AudioContext||window.webkitAudioContext)();
+  master = AC.createGain(); master.gain.value = 0.0;
+  const comp = AC.createDynamicsCompressor();
+  master.connect(comp); comp.connect(AC.destination);
+  const C = 2.99792458e8, OCT = Math.pow(2,40);
+  for (let k = 0; k < spec.lam.length; k++){
+    const o = AC.createOscillator(), g = AC.createGain();
+    o.frequency.value = C/(spec.lam[k]*1e-9)/OCT * (1 + (Math.random()-0.5)*6e-4);
+    g.gain.value = 0;
+    const pan = AC.createStereoPanner ? AC.createStereoPanner() : null;
+    if (pan){ pan.pan.value = Math.sin(k*0.77)*0.55; o.connect(g); g.connect(pan); pan.connect(master); }
+    else { o.connect(g); g.connect(master); }
+    o.start();
+    oscs.push(g);
+  }
+}
+function setSound(on){
+  soundOn = on;
+  sndBtn.textContent = on ? "♪ on" : "♪ off";
+  if (on){ startAudio(); if (AC) AC.resume(); if (master) master.gain.linearRampToValueAtTime(0.16, AC.currentTime+0.6); }
+  else if (master) master.gain.linearRampToValueAtTime(0.0, AC.currentTime+0.3);
+}
+sndBtn.addEventListener("click", ()=>setSound(!soundOn));
+function updateAudio(mh, popped){
+  if (!AC || !soundOn || !spec) return;
+  const th = spec.thickness;
+  let i = 0;
+  while (i < th.length-2 && th[i+1] < mh) i++;
+  const a = (mh-th[i])/(th[i+1]-th[i]);
+  for (let k = 0; k < oscs.length; k++){
+    let v = spec.spec[i][k]*(1-a) + spec.spec[i+1][k]*a;
+    v = popped ? 0 : Math.pow(v/0.09, 0.6)*0.09;
+    oscs[k].gain.setTargetAtTime(v*2.4, AC.currentTime, 0.12);
+  }
+}
+function popSound(){
+  if (!AC || !soundOn) return;
+  const n = AC.createBufferSource(), b = AC.createBuffer(1, 4800, AC.sampleRate);
+  const d = b.getChannelData(0);
+  for (let i = 0; i < 4800; i++) d[i] = (Math.random()*2-1)*Math.exp(-i/500);
+  n.buffer = b;
+  const g = AC.createGain(); g.gain.value = 0.5;
+  n.connect(g); g.connect(master); n.start();
+}
+
+// ---------- input ----------
+let dragging = false, moved = 0, last = null;
+canvas.addEventListener("pointerdown", e => {
+  dragging = true; moved = 0; last = [e.clientX, e.clientY];
+  canvas.setPointerCapture(e.pointerId);
+  if (!AC && !soundOn) setSound(true);   // first gesture: sound on by default
+});
+canvas.addEventListener("pointermove", e => {
+  if (!dragging) return;
+  const dx = e.clientX-last[0], dy = e.clientY-last[1];
+  moved += Math.abs(dx)+Math.abs(dy);
+  last = [e.clientX, e.clientY];
+  sw.x = (e.clientX/innerWidth - 0.5) * 2.4;
+  sw.y = (e.clientY/innerHeight) * 1.0;
+  sw.s = Math.min(sw.s + (Math.abs(dx)+Math.abs(dy))*0.004, 1.2);
+});
+canvas.addEventListener("pointerup", e => {
+  dragging = false;
+  if (moved < 12 && popT < 0){       // a tap: pop
+    popT = performance.now()/1000;
+    respawnAt = popT + 2.4;
+    popSound();
+    caption("gone. (a real pop takes under a millisecond)");
+  }
+});
+
+// ---------- loop ----------
+let lastCapStage = -1;
+function frame(){
+  const now = performance.now()/1000;
+  let mh = meanH(now);
+  let popped = popT > 0;
+  if (!popped && mh <= 13.5){ popT = now; respawnAt = now+2.4; popped = true; popSound();
+    caption("below 25 nanometers the film went black — then it failed."); }
+  if (popped && now > respawnAt){ popT = -1; born = now; sw.s = 0; lastCapStage = -1; }
+  const stage = mh > 500 ? 0 : mh > 150 ? 1 : mh > 40 ? 2 : 3;
+  if (stage !== lastCapStage && !popped){
+    lastCapStage = stage;
+    caption(["a soap film, one micron thin — the colors are interference",
+             "draining: each band is 200 nanometers of thickness",
+             "the silver stage: too thin for even one full wave",
+             "Newton's black film — thinner than anything it could reflect"][stage]);
+  }
+  sw.s *= 0.985;
+  gl.uniform2f(U.uRes, canvas.width, canvas.height);
+  gl.uniform1f(U.uT, now);
+  gl.uniform1f(U.uMeanH, mh);
+  gl.uniform1f(U.uPop, popped ? 1 : 0);
+  gl.uniform1f(U.uSpin, now*0.02);
+  gl.uniform4f(U.uSw, sw.x, sw.y, sw.s, 0);
+  gl.activeTexture(gl.TEXTURE0);
+  gl.bindTexture(gl.TEXTURE_2D, lutTex);
+  gl.uniform1i(U.uLUT, 0);
+  gl.drawArrays(gl.TRIANGLES, 0, 3);
+  updateAudio(mh, popped);
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>

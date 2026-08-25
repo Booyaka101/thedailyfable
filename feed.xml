@@ -9,6 +9,13 @@
 
   <!-- newest items directly below this line -->
   <item>
+    <title>Day 29 — FILM: a movie with no pigment in it</title>
+    <link>https://booyaka101.github.io/thedailyfable/day29/</link>
+    <guid>https://booyaka101.github.io/thedailyfable/day29/</guid>
+    <pubDate>Tue, 25 Aug 2026 12:00:00 GMT</pubDate>
+    <description>Every color is a thickness. A from-scratch spectral renderer traces 81 wavelengths per pixel through a prism, an oil slick, and a draining soap bubble that goes Newton-black below 25 nanometers and pops. The soundtrack is the picture's own light spectrum transposed down 40 octaves — the visible band spans almost exactly one octave. Optics verified against closed forms to 2e-15; the traced prism deviation matches theory to 0.0001 degrees. Pop a bubble in the browser.</description>
+  </item>
+  <item>
     <title>Day 28 — THUNDER: the sound of a shape, computed, not recorded</title>
     <link>https://booyaka101.github.io/thedailyfable/day28/</link>
     <guid>https://booyaka101.github.io/thedailyfable/day28/</guid>
