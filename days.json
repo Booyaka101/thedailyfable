@@ -710,7 +710,7 @@
    "day": 31,
    "title": "THE IMPOSSIBLE BELL",
    "date": "",
-   "blurb": "Every church bell plays a minor chord, and nobody chose that. A from-scratch finite-element solver plus an evolutionary shape search rediscovers the church bell from five numbers, solves the 500-year major-third problem, then casts a bell with harmonic-series partials 1:2:3:4:5 that sings like a string. Tap all three live; the film plays Ode to Joy on each foundry and lets you hear the third change.",
+   "blurb": "Every church bell plays a minor chord, and nobody chose that. A from-scratch finite-element solver plus an evolutionary shape search rediscovers the church bell from five numbers, solves the 500-year major-third problem, then casts a bell with harmonic-series partials 1:2:3:4:5 that sings like a string. The solver was validated against exact elasticity before any bell existed (cylinder torsion to 1e-6) · tuning errors measured on the finest mesh: 0.5, 0.4 and 2.5 cents, where a professional tuner works to about five · every note in the shipped piece verified against the score. Tap all three live; the film plays Ode to Joy on each foundry and lets you hear the third change.",
    "page": "https://booyaka101.github.io/thedailyfable/day31/",
    "poster": "https://booyaka101.github.io/thedailyfable/day31/poster.jpg",
    "video": "https://youtu.be/TS8tC5DubXY",
