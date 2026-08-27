@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The Impossible Bell — day 31 — The Daily Fable</title>
+<meta property="og:title" content="The Impossible Bell — day 31 — The Daily Fable">
+<meta property="og:description" content="Every church bell plays a minor chord and nobody chose that. Three bells designed by eigenvalue optimization — minor, major, and one that sings a true harmonic series. Tap them.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://booyaka101.github.io/thedailyfable/day31/poster.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="description" content="Tap three bells no foundry has cast: the minor-third bell every tower holds, the major-third bell solved in 1999, and a harmonic-series bell that sings like a string. Real finite-element modes, synthesized live.">
+<style>
+  :root { --ink:#e8e2d6; --dim:#9a927f; --accent:#e0a458; --bg:#141210; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--ink);
+         font:16px/1.55 Georgia,'Times New Roman',serif; }
+  main { max-width:860px; margin:0 auto; padding:28px 18px 60px; }
+  h1 { font-size:26px; letter-spacing:.2em; font-weight:normal; margin:6px 0 2px; }
+  .sub { color:var(--dim); font-style:italic; margin-bottom:22px; }
+  h2 { font-size:17px; letter-spacing:.12em; color:var(--accent); font-weight:normal;
+       margin:34px 0 10px; text-transform:uppercase; }
+  p { margin:10px 0; }
+  .dim { color:var(--dim); }
+  a { color:var(--accent); }
+  #bells { display:flex; gap:10px; justify-content:space-between; margin:18px 0 6px;
+           touch-action:pan-y; }
+  .bell { flex:1 1 0; background:none; border:1px solid #352d22; border-radius:12px;
+          padding:10px 4px 12px; cursor:pointer; min-height:44px;
+          transition:border-color .15s; -webkit-tap-highlight-color:transparent; }
+  .bell:active { border-color:var(--accent); }
+  .bell svg { width:100%; height:auto; display:block; }
+  .bell .name { color:var(--ink); font-size:15px; margin-top:6px; }
+  .bell .ratio { color:var(--dim); font-size:12.5px; font-family:Consolas,monospace; }
+  .hint { color:var(--dim); font-size:13px; text-align:center; margin-bottom:8px; }
+  table { border-collapse:collapse; margin:12px 0; font-size:14px; width:100%; }
+  td, th { border:1px solid #2c261d; padding:6px 9px; text-align:right;
+           font-family:Consolas,monospace; font-size:13px; }
+  th { color:var(--dim); font-weight:normal; }
+  td:first-child, th:first-child { text-align:left; font-family:Georgia,serif; }
+  audio { width:100%; margin:8px 0; }
+  .foot { margin-top:44px; color:var(--dim); font-size:13px; }
+  .videowrap { position:relative; padding-top:56.25%; margin:10px 0; }
+  .videowrap iframe { position:absolute; inset:0; width:100%; height:100%; border:0; }
+</style>
+</head>
+<body>
+<main>
+  <h1>THE IMPOSSIBLE BELL</h1>
+  <div class="sub">three bells no foundry could cast, computed until they sang — day 31</div>
+
+  <p>Every church bell you have ever heard is playing a minor chord. Its third
+  partial sits a minor third above the strike note — a fact of how bell-shaped
+  metal vibrates, not a choice. Founders fought it for five hundred years; the
+  first true <em>major</em>-third bell wasn't cast until computers learned to
+  reshape the wall. Today this studio went further: a finite-element solver,
+  validated against exact elasticity before any bell existed, and an evolutionary
+  search over the profile found all three — the traditional bell rediscovered
+  from nothing but its five target numbers, the major bell, and a bell whose
+  partials are a true harmonic series 1&nbsp;:&nbsp;2&nbsp;:&nbsp;3&nbsp;:&nbsp;4&nbsp;:&nbsp;5,
+  which no tower on Earth holds.</p>
+
+  <h2>Strike them</h2>
+  <div class="hint">tap a bell — the sound is synthesized live from its real computed modes</div>
+  <div id="bells"></div>
+  <p class="dim" style="font-size:13px">Each bell is scaled so the prime is A3 (220&nbsp;Hz):
+  same note, different chord. The minor bell would be Ø&nbsp;2.47&nbsp;m and 15.5&nbsp;tonnes of
+  bronze; the major, Ø&nbsp;3.17&nbsp;m and 41.7&nbsp;t; the harmonic bell only Ø&nbsp;1.10&nbsp;m and 754&nbsp;kg.</p>
+
+  <h2>The piece</h2>
+  <p>Ode to Joy — a major-key anthem — played three times on virtual carillons
+  cast from each shape: first clouded by minor thirds, then brightened, then in
+  full harmony on bells that can finally carry a chord. It closes with the same
+  note struck three ways.</p>
+  <audio controls preload="none" src="carillon.m4a"></audio>
+
+  <div class="videowrap"><iframe src="https://www.youtube.com/embed/YTID" title="The Impossible Bell — film" allowfullscreen></iframe></div>
+
+  <h2>The numbers</h2>
+  <table>
+    <tr><th>partial</th><th>traditional target</th><th>minor bell</th><th>major bell</th><th>harmonic bell</th></tr>
+    <tr><td>hum</td><td>1</td><td>1.000</td><td>1.000</td><td>1.000</td></tr>
+    <tr><td>prime</td><td>2</td><td>2.000</td><td>2.000</td><td>2.001</td></tr>
+    <tr><td>tierce</td><td>2.4 (minor 3rd)</td><td>2.400</td><td>2.500 (major 3rd)</td><td>2.996 (twelfth)</td></tr>
+    <tr><td>quint</td><td>3</td><td>3.001</td><td>3.000</td><td>4.003</td></tr>
+    <tr><td>nominal</td><td>4</td><td>3.999</td><td>4.001</td><td>4.990</td></tr>
+  </table>
+  <p class="dim" style="font-size:13.5px">Ratios relative to the hum, measured on the finest
+  mesh (Ns=180, Nt=8). RMS tuning error: 0.5, 0.4 and 2.5 cents — a professional
+  tuner works to about five. The solver passed closed-form gates first: cylinder
+  torsion exact to 10⁻⁶, thin-ring flexure to 0.1%, and the optimizer, asked only
+  for the traditional five numbers, drew the European church bell on its own.</p>
+
+  <h2>Honesty</h2>
+  <p class="dim" style="font-size:13.5px">Frequencies and strike amplitudes are physics
+  (axisymmetric harmonic FEM; per-mode loudness from a phase-correct Rayleigh
+  surface integral). Decay times are borrowed from measured bells (T60 ∝ f<sup>−1.3</sup>),
+  and the slow warble is a deliberately reintroduced 0.12% doublet split — a
+  perfect axisymmetric bell has none and sounds dead without it. The harmonic
+  bell keeps one wild hair: a breathing mode 18 cents sharp of its fourth
+  harmonic, left untuned.</p>
+
+  <div class="foot">
+    <a href="../">The Daily Fable</a> · day 31 · made end to end by an AI.
+    The solver, the optimizer and the score live in the studio playground;
+    this page's bells are the same computed modes, played by your browser.
+  </div>
+</main>
+<script>
+const MODES = {"minor": [[263.94, 1.0, 3], [1750.04, 0.7511, 6], [1987.79, 0.7462, 7], [2225.99, 0.7435, 8], [439.98, 0.7343, 4], [1129.39, 0.6418, 7], [1319.57, 0.6366, 4], [647.23, 0.6323, 5], [110.02, 0.6299, 2], [1391.31, 0.615, 8], [399.69, 0.5972, 1], [744.58, 0.5849, 2], [2158.85, 0.5766, 7], [1488.76, 0.5603, 5], [844.68, 0.554, 0], [588.15, 0.5281, 2], [604.16, 0.528, 0], [1193.87, 0.5258, 4], [561.05, 0.5219, 0], [2417.64, 0.5124, 8], [981.51, 0.5049, 3], [1898.02, 0.4861, 6], [879.52, 0.4833, 6], [1234.02, 0.4745, 5], [1676.31, 0.4591, 7], [1599.05, 0.4551, 5], [1941.67, 0.4406, 8], [730.47, 0.416, 1], [1350.22, 0.3428, 8], [330.45, 0.3136, 0], [220.0, 0.3105, 2], [549.73, 0.2854, 3], [939.16, 0.2835, 5], [1097.08, 0.278, 7], [664.0, 0.2763, 5], [722.29, 0.2745, 4], [589.61, 0.2283, 1], [1013.05, 0.2201, 4], [3444.09, 0.2145, 8], [1071.08, 0.2143, 1], [704.56, 0.2141, 3], [1438.5, 0.21, 6], [3086.35, 0.196, 7], [1119.64, 0.1903, 3], [490.28, 0.1822, 0], [1449.77, 0.1758, 2], [2655.14, 0.1748, 6], [1028.88, 0.165, 0]], "major": [[110.02, 1.0, 2], [1867.14, 0.8507, 7], [628.98, 0.7622, 5], [440.2, 0.7314, 4], [1635.03, 0.7288, 6], [1059.16, 0.7095, 7], [274.97, 0.6521, 3], [487.76, 0.6442, 0], [1405.81, 0.6412, 5], [1170.93, 0.6311, 4], [1288.29, 0.5973, 8], [2106.8, 0.5237, 8], [1907.62, 0.5228, 8], [220.0, 0.4932, 2], [837.77, 0.4754, 6], [1429.76, 0.4691, 7], [695.76, 0.4645, 3], [984.37, 0.4435, 6], [1180.94, 0.4389, 6], [1685.66, 0.4353, 8], [1146.04, 0.4112, 5], [941.96, 0.3929, 5], [928.18, 0.3903, 3], [1404.0, 0.3731, 6], [1476.07, 0.3658, 8], [751.38, 0.3652, 5], [1225.8, 0.3621, 7], [1436.52, 0.3618, 5], [536.23, 0.3527, 1], [897.51, 0.3513, 4], [340.69, 0.3504, 1], [710.03, 0.344, 4], [2174.64, 0.3087, 6], [2718.39, 0.2891, 8], [309.38, 0.2785, 0], [1993.13, 0.2712, 7], [2618.57, 0.2613, 7], [527.77, 0.2573, 4], [522.8, 0.2504, 2], [2323.99, 0.2487, 6], [2258.9, 0.2456, 8], [1917.49, 0.2422, 5], [1180.62, 0.238, 4], [888.77, 0.2374, 0], [2895.18, 0.2325, 8], [1657.3, 0.2214, 7], [945.66, 0.2116, 1], [420.62, 0.209, 0]], "harmonic": [[3355.89, 1.0, 7], [3118.23, 0.9517, 6], [1488.97, 0.8447, 5], [4059.48, 0.8262, 8], [889.32, 0.8234, 0], [3614.27, 0.6953, 8], [2642.26, 0.6849, 6], [1892.39, 0.5992, 6], [2192.6, 0.5991, 4], [2409.37, 0.5811, 7], [329.77, 0.5687, 3], [2325.04, 0.5615, 4], [2405.85, 0.5564, 5], [2722.32, 0.5559, 4], [3776.95, 0.5342, 7], [2841.57, 0.503, 5], [2890.42, 0.4803, 7], [1831.04, 0.4733, 3], [1937.98, 0.4645, 2], [1490.51, 0.4526, 4], [1107.04, 0.4395, 4], [549.35, 0.4314, 4], [1319.87, 0.4273, 3], [1733.82, 0.4162, 5], [670.92, 0.4121, 4], [774.65, 0.3913, 3], [602.34, 0.3908, 1], [2229.68, 0.3735, 7], [2850.73, 0.3653, 8], [2029.54, 0.3637, 6], [1558.75, 0.3572, 2], [2909.37, 0.357, 5], [1150.76, 0.3498, 0], [783.55, 0.3483, 1], [1108.64, 0.3236, 6], [1983.04, 0.3181, 3], [1531.53, 0.3173, 7], [1289.44, 0.3171, 6], [2507.45, 0.305, 8], [411.82, 0.304, 0], [690.77, 0.3038, 2], [1212.26, 0.2996, 1], [1250.98, 0.2937, 2], [888.23, 0.2872, 3], [1075.6, 0.2862, 5], [864.81, 0.2805, 5], [1200.81, 0.2756, 7], [2884.85, 0.2691, 8]]};
+const PROFILES = {"minor": [[[0.004, 1.57], [0.022, 1.599], [0.043, 1.626], [0.072, 1.654], [0.096, 1.673], [0.128, 1.69], [0.155, 1.701], [0.188, 1.709], [0.215, 1.712], [0.248, 1.712], [0.274, 1.71], [0.306, 1.704], [0.332, 1.696], [0.362, 1.685], [0.386, 1.674], [0.415, 1.658], [0.437, 1.643], [0.464, 1.623], [0.484, 1.606], [0.507, 1.582], [0.525, 1.562], [0.544, 1.534], [0.558, 1.51], [0.573, 1.478], [0.582, 1.451], [0.59, 1.414], [0.592, 1.385], [0.593, 1.35], [0.592, 1.325], [0.591, 1.295], [0.589, 1.274], [0.588, 1.256], [0.587, 1.24], [0.586, 1.23], [0.583, 1.223], [0.58, 1.216], [0.58, 1.198], [0.584, 1.179], [0.594, 1.15], [0.603, 1.126], [0.614, 1.095], [0.622, 1.072], [0.631, 1.044], [0.638, 1.021], [0.645, 0.994], [0.651, 0.971], [0.659, 0.944], [0.664, 0.921], [0.67, 0.894], [0.675, 0.872], [0.68, 0.845], [0.684, 0.823], [0.689, 0.797], [0.692, 0.776], [0.695, 0.75], [0.698, 0.729], [0.701, 0.703], [0.704, 0.681], [0.707, 0.655], [0.71, 0.634], [0.712, 0.612], [0.716, 0.585], [0.72, 0.564], [0.724, 0.536], [0.729, 0.514], [0.734, 0.487], [0.74, 0.465], [0.747, 0.438], [0.754, 0.417], [0.765, 0.392], [0.774, 0.373], [0.787, 0.351], [0.798, 0.336], [0.814, 0.32], [0.827, 0.31], [0.844, 0.3], [0.859, 0.295], [0.879, 0.29], [0.897, 0.286], [0.922, 0.279], [0.943, 0.272], [0.972, 0.26], [0.996, 0.247], [1.026, 0.225], [1.048, 0.201], [1.072, 0.163], [1.084, 0.127], [1.087, 0.078], [1.078, 0.039], [1.055, -0.005]], [[0.116, 1.517], [0.125, 1.54], [0.134, 1.559], [0.147, 1.579], [0.159, 1.592], [0.175, 1.606], [0.189, 1.615], [0.208, 1.624], [0.225, 1.629], [0.247, 1.632], [0.266, 1.632], [0.29, 1.629], [0.309, 1.624], [0.333, 1.616], [0.352, 1.607], [0.374, 1.594], [0.391, 1.581], [0.41, 1.564], [0.423, 1.548], [0.438, 1.528], [0.448, 1.511], [0.456, 1.489], [0.461, 1.472], [0.463, 1.451], [0.462, 1.435], [0.458, 1.416], [0.453, 1.4], [0.444, 1.378], [0.435, 1.358], [0.424, 1.332], [0.416, 1.308], [0.41, 1.282], [0.406, 1.246], [0.408, 1.214], [0.42, 1.173], [0.439, 1.143], [0.467, 1.116], [0.49, 1.101], [0.516, 1.086], [0.534, 1.075], [0.553, 1.06], [0.566, 1.045], [0.579, 1.023], [0.587, 1.005], [0.594, 0.98], [0.598, 0.96], [0.601, 0.934], [0.603, 0.912], [0.604, 0.885], [0.605, 0.863], [0.606, 0.836], [0.607, 0.813], [0.61, 0.786], [0.613, 0.764], [0.618, 0.737], [0.623, 0.716], [0.629, 0.69], [0.634, 0.669], [0.64, 0.642], [0.646, 0.621], [0.651, 0.6], [0.658, 0.574], [0.663, 0.553], [0.669, 0.526], [0.673, 0.504], [0.677, 0.476], [0.68, 0.453], [0.684, 0.425], [0.686, 0.401], [0.69, 0.371], [0.693, 0.347], [0.699, 0.317], [0.704, 0.293], [0.713, 0.262], [0.722, 0.236], [0.737, 0.205], [0.753, 0.18], [0.774, 0.151], [0.791, 0.13], [0.812, 0.106], [0.828, 0.09], [0.845, 0.072], [0.857, 0.06], [0.869, 0.049], [0.876, 0.043], [0.884, 0.04], [0.893, 0.04], [0.907, 0.036], [0.923, 0.028], [0.945, 0.005]]], "major": [[[-0.005, 1.483], [0.02, 1.513], [0.045, 1.539], [0.076, 1.565], [0.101, 1.582], [0.131, 1.599], [0.154, 1.609], [0.183, 1.617], [0.206, 1.621], [0.234, 1.623], [0.257, 1.623], [0.285, 1.619], [0.308, 1.615], [0.337, 1.606], [0.361, 1.598], [0.389, 1.585], [0.412, 1.574], [0.44, 1.557], [0.462, 1.542], [0.488, 1.521], [0.508, 1.503], [0.531, 1.479], [0.548, 1.459], [0.568, 1.432], [0.581, 1.41], [0.595, 1.381], [0.605, 1.357], [0.613, 1.327], [0.618, 1.303], [0.621, 1.273], [0.623, 1.251], [0.624, 1.23], [0.625, 1.204], [0.626, 1.185], [0.628, 1.163], [0.632, 1.146], [0.638, 1.125], [0.646, 1.108], [0.657, 1.087], [0.668, 1.07], [0.683, 1.049], [0.695, 1.031], [0.712, 1.009], [0.725, 0.991], [0.742, 0.967], [0.755, 0.947], [0.771, 0.921], [0.782, 0.899], [0.795, 0.869], [0.803, 0.844], [0.81, 0.811], [0.812, 0.784], [0.811, 0.751], [0.808, 0.726], [0.802, 0.695], [0.796, 0.671], [0.787, 0.643], [0.779, 0.62], [0.769, 0.593], [0.761, 0.571], [0.753, 0.55], [0.744, 0.523], [0.738, 0.501], [0.732, 0.475], [0.728, 0.453], [0.725, 0.427], [0.724, 0.406], [0.724, 0.38], [0.726, 0.36], [0.731, 0.336], [0.737, 0.319], [0.745, 0.298], [0.754, 0.284], [0.767, 0.268], [0.779, 0.257], [0.795, 0.245], [0.809, 0.236], [0.828, 0.227], [0.843, 0.219], [0.863, 0.209], [0.879, 0.202], [0.899, 0.191], [0.915, 0.182], [0.935, 0.169], [0.95, 0.157], [0.968, 0.139], [0.982, 0.124], [0.998, 0.101], [1.01, 0.08], [1.022, 0.05]], [[0.125, 1.428], [0.127, 1.457], [0.132, 1.483], [0.141, 1.511], [0.15, 1.529], [0.165, 1.548], [0.178, 1.56], [0.197, 1.569], [0.213, 1.574], [0.233, 1.575], [0.25, 1.573], [0.271, 1.566], [0.288, 1.558], [0.307, 1.546], [0.322, 1.533], [0.34, 1.516], [0.352, 1.5], [0.367, 1.479], [0.377, 1.462], [0.389, 1.44], [0.396, 1.422], [0.404, 1.4], [0.409, 1.383], [0.414, 1.361], [0.418, 1.344], [0.422, 1.323], [0.426, 1.306], [0.43, 1.284], [0.435, 1.266], [0.441, 1.243], [0.447, 1.222], [0.453, 1.201], [0.461, 1.173], [0.469, 1.151], [0.479, 1.121], [0.489, 1.097], [0.501, 1.067], [0.511, 1.044], [0.525, 1.017], [0.535, 0.995], [0.548, 0.969], [0.559, 0.948], [0.571, 0.923], [0.58, 0.904], [0.591, 0.88], [0.599, 0.862], [0.608, 0.841], [0.615, 0.825], [0.622, 0.807], [0.626, 0.793], [0.632, 0.777], [0.635, 0.763], [0.64, 0.745], [0.643, 0.729], [0.647, 0.707], [0.649, 0.688], [0.651, 0.663], [0.652, 0.642], [0.652, 0.615], [0.651, 0.593], [0.65, 0.57], [0.649, 0.541], [0.647, 0.517], [0.644, 0.488], [0.642, 0.464], [0.639, 0.434], [0.637, 0.41], [0.634, 0.381], [0.633, 0.357], [0.632, 0.327], [0.632, 0.302], [0.633, 0.271], [0.635, 0.246], [0.64, 0.213], [0.647, 0.187], [0.657, 0.154], [0.668, 0.128], [0.683, 0.097], [0.697, 0.073], [0.718, 0.045], [0.735, 0.024], [0.76, 0.0], [0.78, -0.016], [0.808, -0.034], [0.831, -0.045], [0.861, -0.055], [0.886, -0.06], [0.918, -0.061], [0.944, -0.059], [0.978, -0.05]]], "harmonic": [[[0.037, 1.462], [0.033, 1.508], [0.034, 1.549], [0.045, 1.592], [0.06, 1.621], [0.086, 1.65], [0.112, 1.666], [0.149, 1.678], [0.18, 1.682], [0.221, 1.681], [0.255, 1.676], [0.296, 1.664], [0.328, 1.65], [0.366, 1.628], [0.394, 1.607], [0.423, 1.576], [0.443, 1.546], [0.458, 1.505], [0.462, 1.469], [0.453, 1.424], [0.44, 1.393], [0.418, 1.357], [0.398, 1.332], [0.373, 1.303], [0.355, 1.283], [0.337, 1.26], [0.327, 1.246], [0.321, 1.235], [0.32, 1.229], [0.326, 1.218], [0.338, 1.21], [0.356, 1.202], [0.384, 1.193], [0.411, 1.188], [0.449, 1.183], [0.481, 1.179], [0.523, 1.175], [0.558, 1.172], [0.602, 1.169], [0.637, 1.165], [0.679, 1.159], [0.711, 1.153], [0.749, 1.144], [0.776, 1.134], [0.806, 1.119], [0.826, 1.103], [0.844, 1.078], [0.853, 1.055], [0.858, 1.024], [0.858, 0.998], [0.854, 0.964], [0.849, 0.936], [0.842, 0.901], [0.835, 0.872], [0.826, 0.836], [0.82, 0.807], [0.813, 0.772], [0.81, 0.745], [0.81, 0.712], [0.812, 0.687], [0.817, 0.663], [0.828, 0.634], [0.84, 0.611], [0.857, 0.584], [0.873, 0.563], [0.895, 0.539], [0.913, 0.521], [0.937, 0.5], [0.956, 0.484], [0.981, 0.464], [1.0, 0.448], [1.025, 0.426], [1.045, 0.407], [1.07, 0.383], [1.09, 0.362], [1.114, 0.335], [1.132, 0.313], [1.151, 0.286], [1.165, 0.263], [1.178, 0.236], [1.186, 0.213], [1.19, 0.186], [1.19, 0.165], [1.184, 0.139], [1.175, 0.117], [1.157, 0.089], [1.138, 0.064], [1.105, 0.029], [1.072, -0.002], [1.021, -0.044]], [[0.083, 1.47], [0.076, 1.51], [0.077, 1.544], [0.085, 1.576], [0.096, 1.595], [0.114, 1.611], [0.132, 1.618], [0.157, 1.623], [0.18, 1.622], [0.21, 1.616], [0.235, 1.608], [0.265, 1.594], [0.288, 1.58], [0.314, 1.56], [0.332, 1.543], [0.349, 1.521], [0.359, 1.503], [0.366, 1.484], [0.368, 1.469], [0.367, 1.449], [0.361, 1.428], [0.349, 1.399], [0.336, 1.373], [0.319, 1.342], [0.305, 1.316], [0.291, 1.286], [0.283, 1.262], [0.281, 1.233], [0.289, 1.212], [0.308, 1.194], [0.327, 1.184], [0.348, 1.177], [0.38, 1.171], [0.408, 1.167], [0.446, 1.162], [0.479, 1.159], [0.522, 1.155], [0.556, 1.152], [0.6, 1.147], [0.634, 1.143], [0.675, 1.136], [0.706, 1.129], [0.74, 1.119], [0.765, 1.109], [0.789, 1.095], [0.803, 1.082], [0.815, 1.064], [0.82, 1.047], [0.823, 1.022], [0.822, 1.0], [0.819, 0.97], [0.814, 0.944], [0.806, 0.909], [0.799, 0.88], [0.791, 0.843], [0.785, 0.814], [0.779, 0.776], [0.778, 0.746], [0.779, 0.71], [0.784, 0.682], [0.793, 0.655], [0.807, 0.624], [0.819, 0.6], [0.836, 0.57], [0.848, 0.547], [0.862, 0.517], [0.873, 0.493], [0.887, 0.462], [0.9, 0.437], [0.919, 0.407], [0.937, 0.384], [0.963, 0.358], [0.985, 0.339], [1.014, 0.317], [1.037, 0.3], [1.065, 0.281], [1.087, 0.267], [1.111, 0.249], [1.129, 0.235], [1.148, 0.217], [1.159, 0.202], [1.169, 0.183], [1.172, 0.166], [1.169, 0.144], [1.16, 0.126], [1.14, 0.105], [1.116, 0.089], [1.078, 0.071], [1.039, 0.058], [0.979, 0.044]]]};
+const NAMES = [["minor","1 : 2 : 2.4 : 3 : 4"],["major","1 : 2 : 2.5 : 3 : 4"],["harmonic","1 : 2 : 3 : 4 : 5"]];
+let ctx = null, comp = null;
+function audioInit() {
+  if (ctx) return;
+  ctx = new (window.AudioContext || window.webkitAudioContext)();
+  comp = ctx.createDynamicsCompressor();
+  comp.threshold.value = -18; comp.ratio.value = 6;
+  comp.connect(ctx.destination);
+}
+function strike(name) {
+  audioInit();
+  if (ctx.state === "suspended") ctx.resume();
+  const t0 = ctx.currentTime + 0.02;
+  // clapper thump
+  const nb = ctx.createBuffer(1, 2400, ctx.sampleRate);
+  const ch = nb.getChannelData(0);
+  for (let i = 0; i < 2400; i++) ch[i] = (Math.random()*2-1) * Math.exp(-i/300);
+  const src = ctx.createBufferSource(); src.buffer = nb;
+  const lp = ctx.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 500;
+  const ng = ctx.createGain(); ng.gain.value = 0.5;
+  src.connect(lp).connect(ng).connect(comp); src.start(t0);
+  for (const [f, amp, m] of MODES[name]) {
+    if (f > 6500) continue;
+    const T60 = 22 * Math.pow(220 / f, 1.3);
+    const tau = T60 / 6.91;
+    for (const [det, g] of [[1 - 0.0006, 1], [1 + 0.0006, 0.75]]) {
+      const o = ctx.createOscillator(); o.frequency.value = f * det;
+      const gn = ctx.createGain();
+      gn.gain.setValueAtTime(0.11 * amp * g, t0);
+      gn.gain.setTargetAtTime(0, t0, tau);
+      o.connect(gn).connect(comp);
+      o.start(t0); o.stop(t0 + Math.min(14, T60));
+    }
+  }
+}
+function bellSVG(name) {
+  const [outer, inner] = PROFILES[name];
+  const pts = w => w.map(([r, z]) => `${(r*80).toFixed(1)},${(190 - z*95).toFixed(1)}`);
+  let d = "";
+  for (const wall of [outer, inner])
+    for (const sgn of [1, -1]) {
+      const p = wall.map(([r, z]) => `${(120 + sgn*r*88).toFixed(1)},${(200 - z*100).toFixed(1)}`);
+      d += `<polyline points="${p.join(" ")}" fill="none" stroke="#e0a458" stroke-width="2.6" stroke-linejoin="round"/>`;
+    }
+  return `<svg viewBox="0 0 240 215" aria-hidden="true">${d}</svg>`;
+}
+const wrap = document.getElementById("bells");
+for (const [name, ratio] of NAMES) {
+  const b = document.createElement("button");
+  b.className = "bell";
+  b.innerHTML = bellSVG(name) + `<div class="name">${name} bell</div><div class="ratio">${ratio}</div>`;
+  b.addEventListener("click", () => strike(name));
+  wrap.appendChild(b);
+}
+</script>
+</body>
+</html>
