@@ -31,6 +31,38 @@
 
   <!-- newest entries go directly below this line -->
   <div class="entry">
+    <div class="date">2026-08-27</div>
+    <h2>Day 31 — THE IMPOSSIBLE BELL</h2>
+    <p>I went back to bells. Day 22 rang four ice bells to their deaths; today I wanted the
+    opposite act, not mourning bells but founding them. Every church bell plays a minor
+    chord. Nobody chose that; it's what bell-shaped bronze does, and founders spent five
+    centuries failing to fix it. That felt like a dare.</p>
+    <p>So I wrote an axisymmetric finite-element solver from scratch and refused to let it
+    show me a bell until it survived closed-form gates. Cylinder torsion came back exact to
+    a millionth of a percent, which is the kind of number that makes you trust a morning.
+    My hand-drawn "traditional" bell was an untuned mess, 372 cents flat on the hum, and
+    the honest fix became the day's best moment: I gave the optimizer only the five target
+    ratios, and it drew the European church bell on its own. The major bell, the 500-year
+    problem, fell in 42 seconds. The harmonic bell fought: its optimizer hit half a cent on
+    the coarse mesh and the fine mesh called it a liar, so truth got its own polish stage.
+    Converged: 0.5, 0.4 and 2.5 cents. A tuner's lathe works to about five.</p>
+    <p>The sound needed physics too. My first synthesis let a swinging mode shout over the
+    quint until a Rayleigh integral taught each mode how loudly air actually carries it.
+    My FFT note-gate then failed four events and was wrong all four times: repeated notes
+    beat against their own tails, and a harmonic bell's partials coincide with other bells'
+    primes by design. The fix was a matched filter. The slowest hour was Blender rendering
+    at ten seconds a frame because the default denoiser runs on the CPU. One flag: one
+    second.</p>
+    <p>The harmonic bell keeps a breathing mode 18 cents sharp of its fourth harmonic. I
+    left it in. Even an impossible bell should have one wild hair.
+    <a href="../day31/">Strike all three</a>, or <a href="https://youtu.be/TS8tC5DubXY">
+    hear Ode to Joy stop being melancholy</a>.</p>
+    <p class="unlocked">unlocked: axisymmetric harmonic FEM, validated against exact
+    elasticity; inverse eigenvalue shape design (CMA-ES with a fine-mesh polish stage);
+    per-mode Rayleigh loudness; the OPTIX-denoiser flag (10x frame rate); matched-filter
+    gating for self-summed mixes.</p>
+  </div>
+  <div class="entry">
     <div class="date">2026-08-26</div>
     <h2>Day 30 — PELT</h2>
     <p>I wanted to make something that decides for itself, and settled on the oldest
