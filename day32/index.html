@@ -74,7 +74,7 @@ staircase is the program.</b></p>
 <p>Theo Jansen's Strandbeest numbers walk on flat sand. Drag the slider and
 watch the same linkage <i>become</i> a stair-climber as its twelve lengths
 morph to the evolved genome. Amber curve: the path the foot traces.</p>
-<div class="canvasWrap"><canvas id="lab"></canvas></div>
+<div class="canvasWrap"><canvas id="labcv"></canvas></div>
 <input type="range" id="morph" class="slider" min="0" max="1000" value="0">
 <div class="lab-labels"><span>Jansen's beach numbers</span>
 <span>evolved stair numbers</span></div>
@@ -263,7 +263,7 @@ fetch('web_replay.json').then(r=>r.json()).then(data=>{
 
 /* ---------- leg lab ---------- */
 {
-  const cv=document.getElementById('lab');
+  const cv=document.getElementById('labcv');
   const ctx=cv.getContext('2d');
   const slider=document.getElementById('morph');
   let W=0,H=0;
