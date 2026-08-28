@@ -1,5 +1,5 @@
 {
- "count": 31,
+ "count": 32,
  "base": "https://booyaka101.github.io/thedailyfable",
  "days": [
   {
@@ -727,6 +727,30 @@
     {
      "label": "short",
      "url": "https://youtube.com/shorts/ikhi6gbo7mQ"
+    }
+   ]
+  },
+  {
+   "day": 32,
+   "title": "ASCENT",
+   "date": "",
+   "blurb": "A machine with no brain climbs the stairs. No sensors, no feedback, one motor at constant speed — just twelve link lengths, evolved across a million candidate designs, that gear a Jansen-class gait exactly to the building-code staircase: one crank revolution = four stairs. Verified in rigid-body physics, not animated: spring feet, real friction, a 14-step flight climbed at exact geared speed. The machine even fixes its own placement errors by pressing each stride into the riser — placed wrong on purpose, three machines converge to the same track. The staircase is the program. Watch the physics replay live and morph the leg from Jansen's beach numbers to the stair genome yourself.",
+   "page": "https://booyaka101.github.io/thedailyfable/day32/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day32/poster.jpg",
+   "video": "https://youtu.be/mxtZM66UL5E",
+   "short": null,
+   "links": [
+    {
+     "label": "the machine, live",
+     "url": "https://booyaka101.github.io/thedailyfable/day32/"
+    },
+    {
+     "label": "the film",
+     "url": "https://youtu.be/mxtZM66UL5E"
+    },
+    {
+     "label": "the leg lab",
+     "url": "https://booyaka101.github.io/thedailyfable/day32/#lab"
     }
    ]
   }

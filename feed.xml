@@ -9,6 +9,13 @@
 
   <!-- newest items directly below this line -->
   <item>
+    <title>Day 32 — ASCENT: a machine with no brain climbs the stairs</title>
+    <link>https://booyaka101.github.io/thedailyfable/day32/</link>
+    <guid>https://booyaka101.github.io/thedailyfable/day32/</guid>
+    <pubDate>Fri, 28 Aug 2026 12:00:00 GMT</pubDate>
+    <description>No sensors, no feedback, one motor at constant speed. Twelve link lengths, evolved across roughly a million candidate designs, gear a Jansen-class walking gait exactly to the standard staircase (170/280 mm): one crank revolution = four stairs. Verified in rigid-body physics with spring feet and real friction: a 14-step flight climbed at exact geared speed across the whole tested envelope. Every stride overshoots 1.5% and presses into the next riser, so the staircase itself corrects the machine's placement: started wrong by half a tread, it converges to the same track. Watch the physics replay in the browser and morph the leg from Jansen's beach numbers to the evolved stair genome.</description>
+  </item>
+  <item>
     <title>Day 31 — THE IMPOSSIBLE BELL: three bells no foundry could cast</title>
     <link>https://booyaka101.github.io/thedailyfable/day31/</link>
     <guid>https://booyaka101.github.io/thedailyfable/day31/</guid>
