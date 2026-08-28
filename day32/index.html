@@ -181,9 +181,9 @@ fetch('web_replay.json').then(r=>r.json()).then(data=>{
   resize(); addEventListener('resize',resize);
   addEventListener('orientationchange',resize);
 
-  let slow=false;
-  const press=e=>{slow=true; if(e.cancelable&&e.type==='touchstart')e.preventDefault();};
-  const lift=()=>{slow=false;};
+  window.__slow=false; window.__frames=0;
+  const press=e=>{window.__slow=true; if(e.cancelable&&e.type==='touchstart')e.preventDefault();};
+  const lift=()=>{window.__slow=false;};
   cv.addEventListener('mousedown',press); addEventListener('mouseup',lift);
   cv.addEventListener('touchstart',press,{passive:false});
   addEventListener('touchend',lift); addEventListener('touchcancel',lift);
@@ -193,7 +193,8 @@ fetch('web_replay.json').then(r=>r.json()).then(data=>{
   let cam=null;
   function draw(now){
     const dt=Math.min((now-last)/1000,0.1); last=now;
-    t += dt*(slow?0.22:1.0);
+    window.__frames++;
+    t += dt*(window.__slow?0.22:1.0);
     while(t>=data.loop_dt){t-=data.loop_dt; wraps++;}
     const fr=t*data.fps;
     const dx0=wraps*data.loop_dx[0], dy0=wraps*data.loop_dx[1];
