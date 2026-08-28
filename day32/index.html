@@ -199,12 +199,18 @@ fetch('web_replay.json').then(r=>r.json()).then(data=>{
     const fr=t*data.fps;
     const dx0=wraps*data.loop_dx[0], dy0=wraps*data.loop_dx[1];
 
-    // camera on chassis
-    const ch=pose(fr,chIdx);
-    const chx=ch[0]+dx0, chy=ch[1]+dy0;
-    const spanT = Math.min(5.6, 3.4*Math.max(1,W/640));
-    if(!cam)cam=[chx+0.35,chy-0.35,spanT];
-    cam[0]+=0.05*(chx+0.35-cam[0]); cam[1]+=0.05*(chy-0.35-cam[1]);
+    // camera: follow the machine's own bounding box
+    let lox=1e9,loy=1e9,hix=-1e9,hiy=-1e9;
+    for(let j=0;j<M;j++){
+      const p=pose(fr,j);
+      const px=p[0]+dx0, py=p[1]+dy0;
+      if(px<lox)lox=px; if(px>hix)hix=px;
+      if(py<loy)loy=py; if(py>hiy)hiy=py;
+    }
+    const tx=0.5*(lox+hix)+0.15, ty=0.5*(loy+hiy)-0.15;
+    const spanT=Math.max(hix-lox+0.9,(hiy-loy+1.0)*W/H);
+    if(!cam)cam=[tx,ty,spanT];
+    cam[0]+=0.05*(tx-cam[0]); cam[1]+=0.05*(ty-cam[1]);
     cam[2]+=0.05*(spanT-cam[2]);
     const s=W*DPR/cam[2];
     const X=p=>[(p[0]-cam[0])*s+W*DPR/2, H*DPR/2-(p[1]-cam[1])*s];
