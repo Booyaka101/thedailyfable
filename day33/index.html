@@ -1,0 +1,484 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SKYWRITING — grow a letter from the sky · The Daily Fable, day 33</title>
+<meta name="description" content="A snowflake is a diary of its fall. Draw a descent through real cloud physics and grow the crystal that sky would write. Gravner–Griffeath model, live on your GPU.">
+<meta property="og:title" content="SKYWRITING — grow a letter from the sky">
+<meta property="og:description" content="A snowflake is a diary of its fall. Draw a descent through a real storm's physics and grow the crystal that sky would write — live on your GPU.">
+<meta property="og:image" content="https://booyaka101.github.io/thedailyfable/day33/poster.jpg">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://booyaka101.github.io/thedailyfable/day33/">
+<meta name="twitter:card" content="summary_large_image">
+<style>
+  :root { --ink:#e8edf6; --dim:#9aa7bd; --panel:#101624; --line:#232d42; }
+  * { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+  html,body { background:#070a12; color:var(--ink);
+    font:16px/1.5 "Avenir Next","Segoe UI",system-ui,sans-serif; }
+  main { max-width:760px; margin:0 auto; padding:14px 12px 60px; }
+  h1 { font-size:26px; letter-spacing:.14em; font-weight:600; margin:10px 0 2px; }
+  .sub { color:var(--dim); font-size:14px; margin-bottom:12px; }
+  .wrap { position:relative; width:100%; }
+  canvas#cry { display:block; width:100%; aspect-ratio:1; border-radius:10px;
+    background:#0a0e1a; touch-action:pan-y; }
+  #readout { position:absolute; left:10px; top:8px; font-size:13px; color:var(--dim);
+    text-shadow:0 1px 4px #000; pointer-events:none; white-space:pre-line; }
+  #regime { position:absolute; right:10px; top:8px; font-size:13px; color:var(--ink);
+    text-shadow:0 1px 4px #000; pointer-events:none; text-align:right; }
+  #alt { position:absolute; left:0; right:0; bottom:6px; text-align:center; font-size:13px;
+    color:var(--dim); text-shadow:0 1px 4px #000; pointer-events:none; }
+  .panel { background:var(--panel); border:1px solid var(--line); border-radius:10px;
+    padding:12px; margin-top:12px; }
+  .panel h2 { font-size:14px; letter-spacing:.08em; color:var(--dim); font-weight:600;
+    margin-bottom:8px; text-transform:uppercase; }
+  canvas#nak { display:block; width:100%; height:220px; border-radius:6px;
+    background:#0b101d; touch-action:none; }
+  .hint { color:var(--dim); font-size:13px; margin-top:8px; }
+  .row { display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; }
+  button { background:#1a2338; color:var(--ink); border:1px solid var(--line);
+    border-radius:8px; padding:12px 16px; font-size:15px; min-height:44px; cursor:pointer; }
+  button.primary { background:#2b4a8f; border-color:#3c5ca6; }
+  button:active { transform:translateY(1px); }
+  .foot { color:var(--dim); font-size:13px; margin-top:16px; }
+  .foot a { color:#8fb0e8; }
+  .ledger { color:var(--dim); font-size:13px; margin-top:10px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>SKYWRITING</h1>
+  <div class="sub">A snowflake is a diary of its fall. Draw the fall; read the letter.</div>
+
+  <div class="wrap">
+    <canvas id="cry"></canvas>
+    <div id="readout"></div>
+    <div id="regime"></div>
+    <div id="alt"></div>
+  </div>
+
+  <div class="panel">
+    <h2>The sky it falls through</h2>
+    <canvas id="nak"></canvas>
+    <div class="hint" id="hint"></div>
+    <div class="row">
+      <button class="primary" id="grow">Grow</button>
+      <button id="sapporo">Sapporo, the real storm</button>
+      <button id="clear">Clear path</button>
+    </div>
+  </div>
+
+  <div class="foot">
+    <p>Every crystal here is grown live on your GPU by the Gravner–Griffeath model
+    (Physica D 237, 2008) — vapor diffuses, freezes onto the edge, and the attachment
+    rules prefer facets or throw branches depending on where in the diagram you are.
+    The horizontal axis is temperature, the vertical axis is how much more vapor the air
+    holds than ice can bear (the Nakaya diagram). Your finger is the weather.</p>
+    <p class="ledger">Honesty: the mapping from (temperature, excess vapor) to the model's
+    parameters is calibrated by hand to reproduce the classic regimes, then never touched;
+    the physics decides everything after that. The Sapporo preset follows the real
+    radiosonde ascent of 2022-02-05 12Z, station 47412, the night of the record snowfall.
+    This page grows the 2-D basal plane; columns and needles (−4 to −10 °C) live out of
+    its plane and show up here only as slow, stubborn hexagons.</p>
+    <p><a href="../index.html">The Daily Fable</a> · day 33</p>
+  </div>
+</main>
+<script>
+"use strict";
+/* ---------- the model, in two fragment passes -------------------------------
+   state texture: R=a (attached), G=b (quasi-liquid), B=c (ice), A=d (vapor)
+   pass 1: diffusion (reflecting at crystal) + freezing at boundary
+   pass 2: attachment + melting + open-atmosphere feed + noise
+   Neighbors on T' lattice: N,S,E,W,NE,SW. All rules exactly as the paper. */
+const SIM = 448;                    // lattice size
+const HOLD_LAST = true;
+
+const VS = `#version 300 es
+in vec2 p; void main(){ gl_Position = vec4(p,0.,1.); }`;
+
+const COMMON = `#version 300 es
+precision highp float;
+uniform sampler2D S; uniform float L;
+out vec4 o;
+ivec2 wrap(ivec2 q){ int n=int(L); return ivec2((q.x+n)%n,(q.y+n)%n); }
+vec4 st(ivec2 q){ return texelFetch(S, wrap(q), 0); }
+const ivec2 NB[6] = ivec2[6](ivec2(0,-1),ivec2(0,1),ivec2(1,0),ivec2(-1,0),
+                             ivec2(1,-1),ivec2(-1,1));`;
+
+const P1 = COMMON + `
+uniform float kappa;
+void main(){
+  ivec2 q = ivec2(gl_FragCoord.xy);
+  vec4 s = st(q);
+  if (s.r > .5) { o = vec4(s.rgb, 0.); return; }
+  float acc = s.a; float n = 0.;
+  for (int k=0;k<6;k++){ vec4 t = st(q+NB[k]);
+    acc += mix(t.a, s.a, t.r); n += t.r; }
+  float d = acc / 7.;
+  if (n > 0.) { o = vec4(s.r, s.g + (1.-kappa)*d, s.b + kappa*d, 0.); }
+  else o = vec4(s.rgb, d);
+}`;
+
+const P2 = COMMON + `
+uniform float beta, alpha, theta, mu, gamma, sigma, rho, lam;
+uniform float t, seed;
+float hash(vec3 v){ return fract(sin(dot(v, vec3(127.1,311.7,74.7)))*43758.5453); }
+void main(){
+  ivec2 q = ivec2(gl_FragCoord.xy);
+  vec4 s = st(q);
+  if (s.r > .5) { o = s; return; }
+  float n = 0., dsum = s.a;
+  for (int k=0;k<6;k++){ vec4 v = st(q+NB[k]); n += v.r; dsum += v.a; }
+  if (n > 0.) {
+    bool att = (n <= 2.5 && s.g >= beta)
+            || (n >= 2.5 && (s.g >= 1. || (dsum < theta && s.g >= alpha)))
+            || (n >= 3.5);
+    if (att) { o = vec4(1., 0., s.b + s.g, s.a); return; }
+    float d = s.a + mu*s.g + gamma*s.b;
+    float b = (1.-mu)*s.g, c = (1.-gamma)*s.b;
+    if (sigma > 0.) d *= 1. + sigma*(hash(vec3(q, t+seed)) < .5 ? -1. : 1.);
+    o = vec4(0., b, c, d);
+  } else {
+    float d = s.a + lam*(rho - s.a);
+    if (sigma > 0.) d *= 1. + sigma*(hash(vec3(q, t+seed)) < .5 ? -1. : 1.);
+    o = vec4(0., s.g, s.b, d);
+  }
+}`;
+
+/* render: hex-map sample + relief-lit ice, same language as the film */
+const RD = `#version 300 es
+precision highp float;
+uniform sampler2D S; uniform float L, viewR, dref;
+uniform vec2 res;
+out vec4 o;
+const float S3 = 0.8660254;
+vec4 hexs(vec2 xy){
+  float m = L*0.5;
+  float i = xy.y/S3 + m;
+  float j = xy.x - (i-m)*0.5 + m;
+  vec2 uv = (vec2(j,i)+0.5)/L;
+  return texture(S, fract(uv));
+}
+void main(){
+  vec2 p = (gl_FragCoord.xy - res*0.5)/res.y * 2.2 * viewR;
+  vec2 xy = vec2(p.x, -p.y);
+  float px = 2.2*viewR/res.y;
+  vec4 s = hexs(xy);
+  if (dot(xy,xy) > 0.24*L*L) s = vec4(0,0,0,dref*0.85);
+  float a = s.r;
+  float h = 0., hx = 0., hy = 0.;
+  if (a > 0. || true) {
+    float e = max(px, 1.2);
+    float c0 = hexs(xy).b * hexs(xy).r;
+    float cx = hexs(xy+vec2(e,0.)).b * hexs(xy+vec2(e,0.)).r;
+    float cy = hexs(xy+vec2(0.,e)).b * hexs(xy+vec2(0.,e)).r;
+    h = c0; hx = (cx-c0)/e; hy = (cy-c0)/e;
+  }
+  float g = gl_FragCoord.y/res.y;
+  vec3 sky = mix(vec3(.075,.100,.165), vec3(.020,.028,.052), g);
+  sky *= 0.45 + 0.55*clamp(s.a/dref, 0., 1.6);
+  float gs = 9.0;
+  vec3 nrm = normalize(vec3(-hx*gs, hy*gs, 1.));
+  vec3 li = normalize(vec3(-.55,.75,.36));
+  float diff = clamp(dot(nrm,li), 0., 1.);
+  float depth = clamp(h*0.9, 0., 1.);
+  vec3 ice = mix(vec3(.42,.55,.78), vec3(.78,.86,.97), depth);
+  vec3 lit = ice*(0.35+0.75*diff) + 0.5*pow(diff, 24.);
+  o = vec4(mix(sky, lit, a), 1.);
+}`;
+
+const cry = document.getElementById('cry');
+const gl = cry.getContext('webgl2', {antialias:false});
+const readout = document.getElementById('readout');
+const regimeEl = document.getElementById('regime');
+const altEl = document.getElementById('alt');
+let simOK = !!gl && !!gl.getExtension('EXT_color_buffer_float');
+
+function shader(type, src){ const s=gl.createShader(type); gl.shaderSource(s,src);
+  gl.compileShader(s);
+  if(!gl.getShaderParameter(s,gl.COMPILE_STATUS)) throw gl.getShaderInfoLog(s);
+  return s; }
+function prog(fs){ const p=gl.createProgram();
+  gl.attachShader(p, shader(gl.VERTEX_SHADER, VS));
+  gl.attachShader(p, shader(gl.FRAGMENT_SHADER, fs));
+  gl.linkProgram(p);
+  if(!gl.getProgramParameter(p,gl.LINK_STATUS)) throw gl.getProgramInfoLog(p);
+  return p; }
+
+let p1, p2, rd, texA, texB, fbo, vao;
+let stepCount = 0, growing = false, seed = (Date.now()%100000)|0;
+
+function makeTex(){ const t=gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D,t);
+  gl.texStorage2D(gl.TEXTURE_2D,1,gl.RGBA32F,SIM,SIM);
+  gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.NEAREST);
+  gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.NEAREST);
+  gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.REPEAT);
+  gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.REPEAT);
+  return t; }
+
+function initGL(){
+  p1 = prog(P1); p2 = prog(P2); rd = prog(RD);
+  vao = gl.createVertexArray(); gl.bindVertexArray(vao);
+  const b = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER,b);
+  gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),gl.STATIC_DRAW);
+  for (const p of [p1,p2,rd]){ const loc=gl.getAttribLocation(p,'p');
+    gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc,2,gl.FLOAT,false,0,0); }
+  texA = makeTex(); texB = makeTex(); fbo = gl.createFramebuffer();
+}
+
+function seedState(rho){
+  const st = new Float32Array(SIM*SIM*4);
+  for (let i=0;i<SIM*SIM;i++){ st[i*4+3] = rho; }
+  const m = (SIM>>1)*SIM + (SIM>>1);
+  st[m*4]=1; st[m*4+2]=1; st[m*4+3]=0;
+  gl.bindTexture(gl.TEXTURE_2D, texA);
+  gl.texSubImage2D(gl.TEXTURE_2D,0,0,0,SIM,SIM,gl.RGBA,gl.FLOAT,st);
+  stepCount = 0;
+}
+
+function runPass(p, dst, uni){
+  gl.useProgram(p);
+  gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
+  gl.framebufferTexture2D(gl.FRAMEBUFFER,gl.COLOR_ATTACHMENT0,gl.TEXTURE_2D,dst,0);
+  gl.viewport(0,0,SIM,SIM);
+  gl.bindTexture(gl.TEXTURE_2D, dst===texA?texB:texA);
+  gl.uniform1f(gl.getUniformLocation(p,'L'), SIM);
+  for (const k in uni) gl.uniform1f(gl.getUniformLocation(p,k), uni[k]);
+  gl.drawArrays(gl.TRIANGLES,0,3);
+}
+
+function simStep(par){
+  runPass(p1, texB, {kappa:par.kappa});
+  runPass(p2, texA, {beta:par.beta, alpha:par.alpha, theta:par.theta,
+    mu:par.mu, gamma:par.gamma, sigma:par.sigma, rho:par.rho, lam:5e-4,
+    t:stepCount, seed:seed});
+  stepCount++;
+}
+
+function draw(viewR){
+  gl.useProgram(rd);
+  gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+  gl.viewport(0,0,cry.width,cry.height);
+  gl.bindTexture(gl.TEXTURE_2D, texA);
+  gl.uniform1f(gl.getUniformLocation(rd,'L'), SIM);
+  gl.uniform1f(gl.getUniformLocation(rd,'viewR'), viewR);
+  gl.uniform1f(gl.getUniformLocation(rd,'dref'), 0.62);
+  gl.uniform2f(gl.getUniformLocation(rd,'res'), cry.width, cry.height);
+  gl.drawArrays(gl.TRIANGLES,0,3);
+}
+
+/* ---------- physics of the sky: T, excess -> params (the dictionary) ------- */
+const T_ANCH = [
+  [-2,  [2.4,.2,.026,.12,.015,1e-4]],
+  [-5,  [3.0,.1,.015,.12,.015,1e-4]],
+  [-9,  [2.6,.15,.020,.10,.015,1e-4]],
+  [-13, [1.6,.21,.0205,.05,.015,5e-5]],
+  [-16, [1.6,.30,.024,.02,.015,2e-4]],
+  [-20, [2.0,.21,.022,.06,.015,5e-5]],
+  [-26, [2.9,.1,.010,.05,.015,1e-4]],
+  [-36, [3.1,.05,.008,.05,.015,1e-4]],
+];
+function paramsAt(T, ex){
+  T = Math.min(-2, Math.max(-36, T));
+  let v = T_ANCH[0][1];
+  for (let k=0;k<T_ANCH.length-1;k++){
+    const [t1,v1]=T_ANCH[k],[t2,v2]=T_ANCH[k+1];
+    if (T<=t1 && T>=t2){ const f=(T-t1)/(t2-t1);
+      v = v1.map((a,i)=>a+f*(v2[i]-a)); break; }
+  }
+  let rho = Math.min(.70, .36 + 2.2*Math.max(0,ex));
+  if (ex<=0) rho = .30;
+  return {beta:v[0], alpha:v[1], theta:v[2], kappa:v[3], mu:v[4], gamma:v[5],
+          rho, sigma:2e-4};
+}
+function satIceExcessAtWater(T){ // g/m3, water saturation ceiling
+  const TK=T+273.15;
+  const esw=Math.exp(54.842763-6763.22/TK-4.210*Math.log(TK)+0.000367*TK
+    +Math.tanh(0.0415*(TK-218.8))*(53.878-1331.22/TK-9.44523*Math.log(TK)+0.014025*TK));
+  const esi=Math.exp(9.550426-5723.265/TK+3.53068*Math.log(TK)-0.00728332*TK);
+  return (esw-esi)/(461.5*TK)*1000;
+}
+function regimeName(T, ex){
+  if (ex<=0) return "starved — just falling";
+  if (T>-4)  return "warm plates";
+  if (T>-10) return "column country (out of this plane)";
+  if (T>-18) return ex>0.08 ? "dendrites — the branching hour"
+                   : ex>0.03 ? "sectored plates" : "quiet plates";
+  if (T>-24) return "plates again";
+  return "cold small plates";
+}
+
+/* the real storm: Sapporo 47412, 2022-02-05 12Z (z m, T C, excess g/m3) */
+const SAPPORO = [
+  [3859,-34.5,0.044],[2745,-24.7,0.041],[1769,-16.9,0.046],
+  [1299,-13.1,0.134],[649,-8.9,-0.018],[40,-4.9,-0.043]];
+
+/* ---------- the Nakaya panel: draw a path --------------------------------- */
+const nak = document.getElementById('nak');
+const nctx = nak.getContext('2d');
+const hint = document.getElementById('hint');
+const coarse = matchMedia('(pointer: coarse)').matches;
+hint.textContent = coarse
+  ? "Drag across the panel: left–right is temperature, up is more vapor. Your stroke, top to bottom of its own length, becomes the crystal's fall."
+  : "Draw with the mouse: left–right is temperature, up is more vapor. Your stroke becomes the crystal's fall.";
+let path = [];        // [{T, ex}] in drawn order = descent order
+let DPR = Math.min(devicePixelRatio||1, 3);
+
+function nakLayout(){
+  const w = nak.clientWidth, h = nak.clientHeight;
+  nak.width = w*DPR; nak.height = h*DPR;
+  nctx.setTransform(DPR,0,0,DPR,0,0);
+  drawNak();
+}
+function TtoX(T){ return (T+36)/(36-1.5) * nak.clientWidth; }
+function XtoT(x){ return x/nak.clientWidth * (36-1.5) - 36; }
+function EtoY(ex){ const h=nak.clientHeight; return h - Math.max(0,ex)/0.26*h; }
+function YtoE(y){ const h=nak.clientHeight; return (h-y)/h*0.26; }
+function drawNak(){
+  const w = nak.clientWidth, h = nak.clientHeight;
+  nctx.clearRect(0,0,w,h);
+  // water saturation curve
+  nctx.strokeStyle = '#33415e'; nctx.setLineDash([4,4]); nctx.beginPath();
+  for (let x=0;x<=w;x+=3){ const T=XtoT(x);
+    const y=EtoY(satIceExcessAtWater(T));
+    x===0?nctx.moveTo(x,y):nctx.lineTo(x,y); }
+  nctx.stroke(); nctx.setLineDash([]);
+  nctx.fillStyle = '#5b6b8c'; nctx.font = '11px system-ui';
+  nctx.fillText('water saturation', 8, EtoY(satIceExcessAtWater(-32))-8);
+  nctx.fillText('dry over ice', TtoX(-8)-10, nak.clientHeight-38);
+  nctx.fillText('0 °C', w-30, h-6); nctx.fillText('−35 °C', 4, h-6);
+  nctx.fillText('more vapor ↑', 8, 14);
+  for (const [t,label] of [[-5,'columns'],[-15,'dendrites'],[-25,'plates']]){
+    nctx.fillText(label, TtoX(t)-18, h-20);
+  }
+  if (path.length>1){
+    nctx.strokeStyle = '#8fb0e8'; nctx.lineWidth = 2.5; nctx.beginPath();
+    path.forEach((p,k)=>{ const x=TtoX(p.T), y=EtoY(p.ex);
+      k?nctx.lineTo(x,y):nctx.moveTo(x,y); });
+    nctx.stroke();
+    const p0=path[0];
+    nctx.fillStyle='#cdd9ee';
+    nctx.beginPath(); nctx.arc(TtoX(p0.T),EtoY(p0.ex),4,0,7); nctx.fill();
+  }
+}
+let drawing = false;
+function nakPoint(ev){
+  const r = nak.getBoundingClientRect();
+  const t = ev.touches ? ev.touches[0] : ev;
+  const x = Math.max(0, Math.min(r.width, t.clientX-r.left));
+  const y = Math.max(0, Math.min(r.height, t.clientY-r.top));
+  return {T: XtoT(x), ex: YtoE(y)};
+}
+nak.addEventListener('pointerdown', e=>{ e.preventDefault(); drawing=true;
+  path=[nakPoint(e)]; drawNak(); nak.setPointerCapture(e.pointerId); });
+nak.addEventListener('pointermove', e=>{ if(!drawing) return;
+  path.push(nakPoint(e)); drawNak(); });
+nak.addEventListener('pointerup', ()=>{ drawing=false; });
+
+/* ---------- growing ------------------------------------------------------- */
+const TOTAL_STEPS = 14000;
+let schedule = null, altSpan = null;
+
+function scheduleFromPath(){
+  if (path.length<2) return null;
+  return s => {
+    const f = s/TOTAL_STEPS * (path.length-1);
+    const k = Math.min(path.length-2, Math.floor(f));
+    const g = f-k;
+    return {T: path[k].T+g*(path[k+1].T-path[k].T),
+            ex: path[k].ex+g*(path[k+1].ex-path[k].ex)};
+  };
+}
+function scheduleSapporo(){
+  const zs = SAPPORO.map(r=>r[0]);
+  return s => {
+    const z = 3859 - s/TOTAL_STEPS * (3859-40);
+    let k=0; while (k<SAPPORO.length-2 && SAPPORO[k+1][0] > z) k++;
+    const [z1,T1,e1]=SAPPORO[k],[z2,T2,e2]=SAPPORO[k+1];
+    const g=(z1-z)/(z1-z2);
+    return {T:T1+g*(T2-T1), ex:e1+g*(e2-e1), z};
+  };
+}
+
+const FALL_SECONDS = 40;
+let growStart = 0;
+function startGrow(sch, span){
+  if (!simOK || !sch) return;
+  schedule = sch; altSpan = span||null;
+  const c0 = sch(0);
+  seedState(paramsAt(c0.T, c0.ex).rho);
+  growing = true; growStart = performance.now();
+}
+
+let lastDraw = 0;
+function tick(ts){
+  requestAnimationFrame(tick);
+  if (!simOK) return;
+  if (growing && stepCount < TOTAL_STEPS){
+    // pace by wall clock so the fall takes FALL_SECONDS on every display
+    const target = Math.min(TOTAL_STEPS,
+      (ts-growStart)/1000 * TOTAL_STEPS/FALL_SECONDS);
+    const batch = Math.max(0, Math.min(40, Math.floor(target-stepCount)));
+    const cond = schedule(stepCount);
+    const par = paramsAt(cond.T, cond.ex);
+    for (let k=0;k<batch;k++) simStep(par);
+    const prog = stepCount/TOTAL_STEPS;
+    readout.textContent = `${cond.T.toFixed(1)} °C\n` +
+      `${cond.ex>0?'+':''}${cond.ex.toFixed(3)} g/m³ over ice`;
+    regimeEl.textContent = regimeName(cond.T, cond.ex);
+    altEl.textContent = cond.z !== undefined
+      ? `${Math.round(cond.z)} m over Sapporo`
+      : `${Math.round((1-prog)*100)} % of the fall left`;
+    if (stepCount>=TOTAL_STEPS){ growing=false;
+      altEl.textContent = "landed — draw another sky, or replant this one"; }
+  }
+  if (ts-lastDraw > 33){ lastDraw=ts;
+    // cinematic pull-out synced to the fall
+    const u = growing ? Math.min(1,(ts-growStart)/1000/FALL_SECONDS) : 1;
+    draw(SIM*0.52*(0.28+0.72*u*u));
+  }
+}
+
+/* window hooks for the gate */
+window.__cryStats = () => {
+  gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
+  gl.framebufferTexture2D(gl.FRAMEBUFFER,gl.COLOR_ATTACHMENT0,gl.TEXTURE_2D,texA,0);
+  const px = new Float32Array(SIM*SIM*4);
+  gl.readPixels(0,0,SIM,SIM,gl.RGBA,gl.FLOAT,px);
+  let sites=0, mass=0;
+  for (let i=0;i<SIM*SIM;i++){ if (px[i*4]>0.5){ sites++; mass+=px[i*4+2]; } }
+  return {sites, mass, step:stepCount, growing};
+};
+
+/* buttons */
+document.getElementById('grow').addEventListener('click', ()=>{
+  startGrow(scheduleFromPath());
+  if (path.length<2){ hint.textContent = "Draw a path on the panel first, or press the Sapporo button."; }
+});
+document.getElementById('sapporo').addEventListener('click', ()=>{
+  path = SAPPORO.slice().map(r=>({T:r[1],ex:r[2]})); drawNak();
+  startGrow(scheduleSapporo());
+});
+document.getElementById('clear').addEventListener('click', ()=>{ path=[]; drawNak(); });
+
+/* layout */
+function layout(){
+  const w = cry.clientWidth;
+  DPR = Math.min(devicePixelRatio||1, 3);
+  cry.width = Math.round(w*DPR); cry.height = Math.round(w*DPR);
+  nakLayout();
+}
+addEventListener('resize', layout);
+addEventListener('orientationchange', layout);
+
+if (simOK){
+  try { initGL(); seedState(0.5); layout(); requestAnimationFrame(tick); }
+  catch(e){ simOK=false; }
+}
+if (!simOK){
+  document.getElementById('hint').textContent =
+    "This device's browser doesn't offer float render targets, so the crystal can't grow here. The film shows the same physics.";
+}
+</script>
+</body>
+</html>
