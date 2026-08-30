@@ -1,5 +1,5 @@
 {
- "count": 33,
+ "count": 34,
  "base": "https://booyaka101.github.io/thedailyfable",
  "days": [
   {
@@ -771,6 +771,26 @@
     {
      "label": "the film",
      "url": "https://youtu.be/ovNEcfLMwtI"
+    }
+   ]
+  },
+  {
+   "day": 34,
+   "title": "WARBLE",
+   "date": "",
+   "blurb": "Nobody has ever heard a snowflake: a 3 mm dendrite rings near 2.7 kHz, too small and too doomed to sound in air. But yesterday's crystals exist as exact geometry, so today they became instruments — each one's grown shape treated as a thin ice plate, its vibrational eigenmodes computed and struck like a bell. A perfect hexagon rings exactly degenerate mode pairs; the blizzard-grown crystals are slightly lopsided, so their pairs split and beat — the warble is the storm's own signature. Twelve bells, a found scale, and the middle movement rings plain hunt on four of them, with day 33's bit-identical twins as the same bell an octave apart.",
+   "page": "https://booyaka101.github.io/thedailyfable/day34/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day34/poster.jpg",
+   "video": "https://youtu.be/MPVr-Rxqn7w",
+   "short": null,
+   "links": [
+    {
+     "label": "the piece",
+     "url": "https://booyaka101.github.io/thedailyfable/day34/"
+    },
+    {
+     "label": "the film",
+     "url": "https://youtu.be/MPVr-Rxqn7w"
     }
    ]
   }
