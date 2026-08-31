@@ -1,5 +1,5 @@
 {
- "count": 34,
+ "count": 35,
  "base": "https://booyaka101.github.io/thedailyfable",
  "days": [
   {
@@ -791,6 +791,30 @@
     {
      "label": "the film",
      "url": "https://youtu.be/MPVr-Rxqn7w"
+    }
+   ]
+  },
+  {
+   "day": 35,
+   "title": "A FIELD GUIDE TO THE FAUNA OF THE LENIA CONTINUUM",
+   "date": "",
+   "blurb": "An expedition, not a design: 156,288 random worlds of Lenia (Chan's continuous cellular-automaton universe) were sown with living slop and left to fend for themselves. Whatever survived alone, held its shape and withstood rough handling was caught, measured and named &mdash; sixteen species with Latin binomials, engraved plates, field notes and a habitability chart, typeset as a 22-page Victorian monograph. The swiftest animal taken swims at 8.25 lattice-units per unit of time; one \"still life\" secretly creeps; two are corals. Every specimen is alive in the page's tank, running in your browser.",
+   "page": "https://booyaka101.github.io/thedailyfable/day35/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day35/poster.jpg",
+   "video": "https://youtu.be/0AzXI-OyZy4",
+   "short": null,
+   "links": [
+    {
+     "label": "the piece + the living tank",
+     "url": "https://booyaka101.github.io/thedailyfable/day35/"
+    },
+    {
+     "label": "the book (PDF)",
+     "url": "https://booyaka101.github.io/thedailyfable/day35/fieldguide.pdf"
+    },
+    {
+     "label": "the film",
+     "url": "https://youtu.be/0AzXI-OyZy4"
     }
    ]
   }
