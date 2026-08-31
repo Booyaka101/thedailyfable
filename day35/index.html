@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Day 35 — A Field Guide to the Fauna of the Lenia Continuum</title>
+<meta property="og:title" content="A Field Guide to the Fauna of the Lenia Continuum">
+<meta property="og:description" content="Sixteen forms of mathematical life, discovered in one day's expedition through 156,288 worlds. Field guide PDF, habitability chart, and a living specimen tank.">
+<meta property="og:image" content="https://booyaka101.github.io/thedailyfable/day35/poster.jpg">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<style>
+  :root { --paper:#f4ecd8; --ink:#3a2a1e; --rust:#8c1e14; --faint:#3a2a1e22; }
+  * { box-sizing:border-box; margin:0; }
+  body { background:var(--paper); color:var(--ink);
+    font-family:'Iowan Old Style','Palatino Linotype','Book Antiqua',Palatino,Georgia,serif;
+    line-height:1.55; }
+  .wrap { max-width:880px; margin:0 auto; padding:22px 16px 60px; }
+  header { text-align:center; margin:26px 0 10px; }
+  .over { letter-spacing:.28em; font-size:12px; }
+  h1 { font-size:clamp(26px,6vw,44px); letter-spacing:.04em; line-height:1.12; margin:6px 0; }
+  .sub { font-style:italic; font-size:clamp(14px,2.6vw,17px); max-width:560px; margin:8px auto; }
+  hr.rule { border:0; border-top:1px solid var(--ink); width:40%; margin:16px auto; }
+  .tankbox { border:2px solid var(--ink); margin:18px 0 8px; position:relative; background:var(--paper); }
+  canvas { display:block; width:100%; height:auto; touch-action:pan-y; }
+  .tanklabel { position:absolute; left:10px; top:8px; font-size:11px; letter-spacing:.18em; opacity:.75; }
+  .controls { display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin:12px 0 6px; }
+  button { font:inherit; font-size:14px; letter-spacing:.06em; color:var(--ink);
+    background:transparent; border:1.5px solid var(--ink); padding:10px 16px; min-height:44px;
+    cursor:pointer; border-radius:2px; }
+  button:active { background:var(--ink); color:var(--paper); }
+  .specsel { display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:8px; margin:14px 0; }
+  .specsel button { text-align:left; padding:8px 10px; font-size:13px; line-height:1.3; min-height:52px; }
+  .specsel button.on { background:var(--ink); color:var(--paper); }
+  .specsel .pl { color:var(--rust); letter-spacing:.1em; font-size:11px; }
+  .specsel button.on .pl { color:#e8c9a0; }
+  .binom { text-align:center; margin:10px 0 2px; }
+  .binom .n { font-style:italic; font-size:clamp(19px,4vw,25px); }
+  .binom .c { letter-spacing:.12em; font-size:13px; }
+  .binom .s { font-size:13px; opacity:.8; margin-top:2px; }
+  section { margin:44px 0; }
+  h2 { text-align:center; font-size:15px; letter-spacing:.28em; font-weight:normal; margin-bottom:14px; }
+  h2:after { content:""; display:block; width:60px; border-top:1px solid var(--ink); margin:8px auto 0; }
+  .note { font-size:15px; }
+  .note p { margin:10px 0; }
+  img.figure { width:100%; height:auto; border:1px solid var(--faint); }
+  .dl { display:flex; gap:12px; flex-wrap:wrap; justify-content:center; }
+  a { color:var(--rust); }
+  .plates-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:10px; }
+  .plates-grid figure { border:1px solid var(--faint); padding:6px; text-align:center; }
+  .plates-grid img { width:100%; height:auto; }
+  .plates-grid figcaption { font-size:11px; font-style:italic; margin-top:4px; }
+  footer { text-align:center; font-size:13px; margin-top:50px; opacity:.85; }
+  .warn { text-align:center; font-size:13px; font-style:italic; padding:30px 10px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="over">THE DAILY FABLE — DAY 35</div>
+  <h1>A FIELD GUIDE TO THE FAUNA<br>OF THE LENIA CONTINUUM</h1>
+  <p class="sub">being a natural history of sixteen forms of mathematical life,
+  discovered, measured, figured and named in a single day's expedition through
+  156,288 worlds</p>
+  <hr class="rule">
+</header>
+
+<section>
+  <h2>THE SPECIMEN TANK</h2>
+  <p class="note" style="text-align:center; font-style:italic;">Every specimen below is
+  alive: the equation is running in your browser. <span id="hint">Tap</span> the tank to
+  drop a pinch of living matter near your finger.</p>
+  <div class="tankbox">
+    <div class="tanklabel">LIVE</div>
+    <canvas id="tank"></canvas>
+  </div>
+  <div class="binom">
+    <div class="n" id="bn"></div>
+    <div class="c" id="bc"></div>
+    <div class="s" id="bs"></div>
+  </div>
+  <div class="controls">
+    <button id="agitate">the agitation trial (3%)</button>
+    <button id="reset">release a fresh specimen</button>
+  </div>
+  <div class="specsel" id="sel"></div>
+  <div class="warn" id="noglow" hidden>This tank needs WebGL2 with float
+  textures; your browser declined. The plates and the book below are still
+  yours.</div>
+</section>
+
+<section>
+  <h2>THE BOOK</h2>
+  <div class="note">
+    <p>The expedition's full monograph — twenty-two pages: the country, the
+    methods, sixteen plates in the manner of a nineteenth-century natural
+    history (each with portrait, gait figures, the kernel, and field notes),
+    the habitability chart, and the calibration appendix.</p>
+  </div>
+  <p class="dl" style="margin:14px 0">
+    <a href="fieldguide.pdf"><strong>Read the field guide (PDF, 22 pages)</strong></a>
+    <a href="register.jsonl">the full register (422 records, JSONL)</a>
+  </p>
+  <img class="figure" src="spread.jpg" alt="Two pages from the field guide: Plate I, Sagittella cristata, and Plate XV, the year-ring coral">
+</section>
+
+<section>
+  <h2>CHART 1 — THE HABITABLE SEA</h2>
+  <img class="figure" src="chart.png" alt="Survival probability over the constitution plane; life occupies one narrow diagonal reef">
+  <div class="note"><p>A uniform census of 87,051 random worlds: the fraction
+  still bearing bounded life after forty units of time, over growth centre
+  <i>m</i> and tolerance <i>s</i>. Life in this country is a single narrow
+  reef. Red marks are the sixteen catalogued species' habitats.</p></div>
+</section>
+
+<section>
+  <h2>THE FILM</h2>
+  <div class="note"><p style="text-align:center">
+    <a id="filmlink" href="https://youtu.be/0AzXI-OyZy4"><strong>Watch the expedition's film</strong></a>
+    — every creature in it was alive on the machine, on the day.</p></div>
+</section>
+
+<footer>
+  Physics after B. W.-C. Chan, <i>Lenia — Biology of Artificial Life</i> (2019).
+  The taxonomy is the author's invention and has no standing, which is the charm
+  of it. CC BY 4.0 · <a href="../">The Daily Fable</a>
+</footer>
+</div>
+
+<script>
+"use strict";
+const SIM = 176;                      // world size (lattice units)
+let SPECIES = [];
+let gl, canvas, progSim, progDraw, texes, fbs, kernTex, cur = 0, spIdx = 0;
+let kernR = 0, dt = 0.1, gm = 0.15, gs = 0.015;
+let stepsPerSec = 60, lastT = 0, stepDebt = 0, running = false;
+
+function $(id){ return document.getElementById(id); }
+
+function compile(src, type){
+  const s = gl.createShader(type);
+  gl.shaderSource(s, src); gl.compileShader(s);
+  if(!gl.getShaderParameter(s, gl.COMPILE_STATUS))
+    throw new Error(gl.getShaderInfoLog(s));
+  return s;
+}
+function program(vs, fs){
+  const p = gl.createProgram();
+  gl.attachShader(p, compile(vs, gl.VERTEX_SHADER));
+  gl.attachShader(p, compile(fs, gl.FRAGMENT_SHADER));
+  gl.linkProgram(p);
+  if(!gl.getProgramParameter(p, gl.LINK_STATUS))
+    throw new Error(gl.getProgramInfoLog(p));
+  return p;
+}
+
+const VS = `#version 300 es
+in vec2 q; out vec2 uv;
+void main(){ uv = q*0.5+0.5; gl_Position = vec4(q,0,1); }`;
+
+const FS_SIM = `#version 300 es
+precision highp float;
+uniform sampler2D state; uniform sampler2D kern;
+uniform int R; uniform float ksum, m, s, dt;
+in vec2 uv; out vec4 frag;
+void main(){
+  float px = 1.0/${SIM}.0;
+  float u = 0.0;
+  for(int dy=-24; dy<=24; dy++){
+    if(dy<-R||dy>R) continue;
+    for(int dx=-24; dx<=24; dx++){
+      if(dx<-R||dx>R) continue;
+      float k = texelFetch(kern, ivec2(dx+R, dy+R), 0).r;
+      if(k==0.0) continue;
+      vec2 p = fract(uv + vec2(float(dx),float(dy))*px);
+      u += k * texture(state, p).r;
+    }
+  }
+  u /= ksum;
+  float g = exp(-(u-m)*(u-m)/(2.0*s*s))*2.0 - 1.0;
+  float a = texture(state, uv).r;
+  frag = vec4(clamp(a + dt*g, 0.0, 1.0), 0,0,1);
+}`;
+
+const FS_DRAW = `#version 300 es
+precision highp float;
+uniform sampler2D state;
+in vec2 uv; out vec4 frag;
+const vec3 PAPER = vec3(0.957,0.925,0.847);
+const vec3 INK   = vec3(0.227,0.165,0.118);
+void main(){
+  float px = 1.0/${SIM}.0;
+  float a  = texture(state, uv).r;
+  float ax = texture(state, uv+vec2(px,0)).r - texture(state, uv-vec2(px,0)).r;
+  float ay = texture(state, uv+vec2(0,px)).r - texture(state, uv-vec2(0,px)).r;
+  float gmag = length(vec2(ax,ay))*0.5 + 1e-6;
+  float lines = 0.0;
+  for(int i=1;i<=9;i++){
+    float lv = float(i)/10.0;
+    float dd = abs(a-lv)/(gmag*2.4);
+    lines = max(lines, clamp(1.5-dd, 0.0, 1.0));
+  }
+  if(a < 0.015) lines = 0.0;
+  float wash = 0.52*pow(floor(a*10.0)/10.0, 0.75);
+  float dens = clamp(wash + 0.5*lines, 0.0, 1.0);
+  frag = vec4(mix(PAPER, INK, dens), 1.0);
+}`;
+
+function makeKernel(R, betas){
+  const D = 2*R+1, k = new Float32Array(D*D);
+  let sum = 0;
+  for(let y=-R;y<=R;y++) for(let x=-R;x<=R;x++){
+    const r = Math.sqrt(x*x+y*y)/R;
+    if(r>=1){ continue; }
+    const B = betas.length, Br = B*r;
+    const b = betas[Math.min(Math.floor(Br), B-1)];
+    const rr = Math.min(Br%1, 1);
+    let core = 0;
+    if(rr>0 && rr<1) core = Math.exp(4 - 1/(rr*(1-rr)));
+    const v = core*b;
+    k[(y+R)*D + (x+R)] = v; sum += v;
+  }
+  return {k, sum, D};
+}
+
+function texF(w, h, data){
+  const t = gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_2D, t);
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.R16F, w, h, 0, gl.RED, gl.FLOAT, data);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
+  return t;
+}
+
+function initGL(){
+  canvas = $("tank");
+  gl = canvas.getContext("webgl2", {antialias:false});
+  if(!gl) return false;
+  if(!gl.getExtension("EXT_color_buffer_float")) return false;
+  progSim = program(VS, FS_SIM);
+  progDraw = program(VS, FS_DRAW);
+  const buf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 3,-1, -1,3]), gl.STATIC_DRAW);
+  for(const p of [progSim, progDraw]){
+    gl.useProgram(p);
+    const loc = gl.getAttribLocation(p, "q");
+    gl.enableVertexAttribArray(loc);
+    gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+  }
+  texes = [texF(SIM,SIM,null), texF(SIM,SIM,null)];
+  fbs = texes.map(t => {
+    const fb = gl.createFramebuffer();
+    gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
+    gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, t, 0);
+    return fb;
+  });
+  return true;
+}
+
+let ksum = 1;
+function loadSpecies(i, fresh){
+  spIdx = i;
+  const sp = SPECIES[i], P = sp.params;
+  gm = P.m; gs = P.s; dt = 1/P.T; kernR = P.R;
+  const {k, sum, D} = makeKernel(P.R, P.b);
+  ksum = sum;
+  if(kernTex) gl.deleteTexture(kernTex);
+  kernTex = gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_2D, kernTex);
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.R16F, D, D, 0, gl.RED, gl.FLOAT, k);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+
+  const st = new Float32Array(SIM*SIM);
+  const cells = sp.cells, h = cells.length, w = cells[0].length;
+  const y0 = (SIM-h)>>1, x0 = (SIM-w)>>1;
+  for(let y=0;y<h;y++) for(let x=0;x<w;x++)
+    st[(y0+y)*SIM + (x0+x)] = cells[y][x];
+  gl.bindTexture(gl.TEXTURE_2D, texes[0]);
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.R16F, SIM, SIM, 0, gl.RED, gl.FLOAT, st);
+  gl.bindTexture(gl.TEXTURE_2D, texes[1]);
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.R16F, SIM, SIM, 0, gl.RED, gl.FLOAT, st);
+  cur = 0;
+  // pacing: aim for ~5 time-units/sec for swimmers, slower for big kernels
+  stepsPerSec = kernR >= 17 ? 40 : 60;
+  $("bn").textContent = sp.binomial;
+  $("bc").textContent = sp.common.toUpperCase();
+  $("bs").textContent = "Plate " + sp.plate + " · " + sp.order + " · " + sp.stat;
+  document.querySelectorAll(".specsel button").forEach((b,k)=>
+    b.classList.toggle("on", k===i));
+}
+
+function splat(nx, ny){
+  // read-modify-write a small noise disk at (nx,ny) in [0,1]
+  const r = Math.max(8, kernR);
+  const D = 2*r+1, patch = new Float32Array(D*D);
+  const cx = Math.floor(nx*SIM), cy = Math.floor(ny*SIM);
+  // read current state around the point
+  gl.bindFramebuffer(gl.FRAMEBUFFER, fbs[cur]);
+  const px = new Float32Array(D*D*4);
+  const x0 = ((cx-r)%SIM+SIM)%SIM, y0 = ((cy-r)%SIM+SIM)%SIM;
+  // simple case: skip wrap reads; clamp to interior
+  const xs = Math.min(Math.max(cx-r,0), SIM-D), ys = Math.min(Math.max(cy-r,0), SIM-D);
+  gl.readPixels(xs, ys, D, D, gl.RGBA, gl.FLOAT, px);
+  for(let y=0;y<D;y++) for(let x=0;x<D;x++){
+    const dd = Math.hypot(x-r, y-r);
+    let v = px[(y*D+x)*4];
+    if(dd < r) v = Math.min(1, v + Math.random()*0.8*(1-dd/r));
+    patch[y*D+x] = v;
+  }
+  gl.bindTexture(gl.TEXTURE_2D, texes[cur]);
+  gl.texSubImage2D(gl.TEXTURE_2D, 0, xs, ys, D, D, gl.RED, gl.FLOAT, patch);
+}
+
+function agitate(){
+  gl.bindFramebuffer(gl.FRAMEBUFFER, fbs[cur]);
+  const px = new Float32Array(SIM*SIM*4);
+  gl.readPixels(0,0,SIM,SIM,gl.RGBA,gl.FLOAT,px);
+  const st = new Float32Array(SIM*SIM);
+  for(let i=0;i<SIM*SIM;i++)
+    st[i] = Math.min(1, Math.max(0, px[i*4]*(1+(Math.random()-0.5)*0.06)));
+  gl.bindTexture(gl.TEXTURE_2D, texes[cur]);
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.R16F, SIM, SIM, 0, gl.RED, gl.FLOAT, st);
+}
+
+function frame(t){
+  requestAnimationFrame(frame);
+  if(!lastT){ lastT = t; return; }
+  const dtms = Math.min(t-lastT, 100); lastT = t;
+  stepDebt += stepsPerSec*dtms/1000;
+  let n = Math.min(Math.floor(stepDebt), 4);
+  stepDebt -= Math.floor(stepDebt);
+  gl.viewport(0,0,SIM,SIM);
+  gl.useProgram(progSim);
+  gl.uniform1i(gl.getUniformLocation(progSim,"state"), 0);
+  gl.uniform1i(gl.getUniformLocation(progSim,"kern"), 1);
+  gl.uniform1i(gl.getUniformLocation(progSim,"R"), kernR);
+  gl.uniform1f(gl.getUniformLocation(progSim,"ksum"), ksum);
+  gl.uniform1f(gl.getUniformLocation(progSim,"m"), gm);
+  gl.uniform1f(gl.getUniformLocation(progSim,"s"), gs);
+  gl.uniform1f(gl.getUniformLocation(progSim,"dt"), dt);
+  gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D, kernTex);
+  while(n-- > 0){
+    gl.bindFramebuffer(gl.FRAMEBUFFER, fbs[1-cur]);
+    gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, texes[cur]);
+    gl.drawArrays(gl.TRIANGLES, 0, 3);
+    cur = 1-cur;
+  }
+  gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+  gl.viewport(0,0,canvas.width,canvas.height);
+  gl.useProgram(progDraw);
+  gl.uniform1i(gl.getUniformLocation(progDraw,"state"), 0);
+  gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, texes[cur]);
+  gl.drawArrays(gl.TRIANGLES, 0, 3);
+}
+
+function sizeCanvas(){
+  const w = canvas.clientWidth || canvas.parentElement.clientWidth;
+  const S = Math.min(window.devicePixelRatio||1, 2);
+  canvas.width = Math.round(w*S);
+  canvas.height = Math.round(w*S);  // square tank
+  canvas.style.height = w + "px";
+}
+
+async function boot(){
+  if(matchMedia("(pointer: fine)").matches) $("hint").textContent = "Click";
+  const rsp = await fetch("species.json");
+  SPECIES = await rsp.json();
+  const sel = $("sel");
+  SPECIES.forEach((sp,i)=>{
+    const b = document.createElement("button");
+    b.innerHTML = `<span class="pl">PLATE ${sp.plate}</span><br><i>${sp.binomial}</i>`;
+    b.addEventListener("click", ()=>loadSpecies(i, true));
+    sel.appendChild(b);
+  });
+  if(!initGL()){ $("noglow").hidden = false;
+    document.querySelector(".tankbox").style.display = "none"; return; }
+  sizeCanvas();
+  addEventListener("resize", sizeCanvas);
+  addEventListener("orientationchange", sizeCanvas);
+  loadSpecies(0, true);
+  $("agitate").addEventListener("click", agitate);
+  $("reset").addEventListener("click", ()=>loadSpecies(spIdx, true));
+  canvas.addEventListener("pointerdown", e=>{
+    const r = canvas.getBoundingClientRect();
+    splat((e.clientX-r.left)/r.width, (e.clientY-r.top)/r.height);
+  });
+  requestAnimationFrame(frame);
+}
+boot();
+</script>
+</body>
+</html>
