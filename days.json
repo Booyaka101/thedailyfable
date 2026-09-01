@@ -1,5 +1,5 @@
 {
- "count": 35,
+ "count": 36,
  "base": "https://booyaka101.github.io/thedailyfable",
  "days": [
   {
@@ -815,6 +815,30 @@
     {
      "label": "the film",
      "url": "https://youtu.be/0AzXI-OyZy4"
+    }
+   ]
+  },
+  {
+   "day": 36,
+   "title": "SÉANCE FOR AN EXTINCT ORCHESTRA",
+   "date": "",
+   "blurb": "Five instruments that no longer exist &mdash; the glass armonica blamed for madness, the tromba marina the nuns bowed instead of forbidden trumpets, the serpent Berlioz insulted, the ophicleide born and dead in one lifetime, the baryton that existed for one prince &mdash; rebuilt as physical simulations: stick-slip friction, lip valves, a deliberately rattling bridge, ten sympathetic wires. Then the concert they never had: a passacaglia in D on a falling ground, until the candle goes out. Every one of the 285 notes gate-proven to sound.",
+   "page": "https://booyaka101.github.io/thedailyfable/day36/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day36/poster.jpg",
+   "video": "https://youtu.be/ED74QJbG-Bc",
+   "short": "https://youtube.com/shorts/v9wAtlx3Uos",
+   "links": [
+    {
+     "label": "the recording + the ghosts",
+     "url": "https://booyaka101.github.io/thedailyfable/day36/"
+    },
+    {
+     "label": "the film",
+     "url": "https://youtu.be/ED74QJbG-Bc"
+    },
+    {
+     "label": "the short",
+     "url": "https://youtube.com/shorts/v9wAtlx3Uos"
     }
    ]
   }
