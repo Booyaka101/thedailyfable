@@ -1,5 +1,5 @@
 {
- "count": 36,
+ "count": 37,
  "base": "https://booyaka101.github.io/thedailyfable",
  "days": [
   {
@@ -839,6 +839,26 @@
     {
      "label": "the short",
      "url": "https://youtube.com/shorts/v9wAtlx3Uos"
+    }
+   ]
+  },
+  {
+   "day": 37,
+   "title": "ECHOLOCATION",
+   "date": "",
+   "blurb": "A cave you can only see with sound. You are a bat: every tap is a real acoustic wave, the 2D wave equation solved live on your GPU, and the rock exists only where the wavefront touches it, then fades. Water drips somewhere in warm light; find it. What you hear is not an effect: the same solver runs again, faster, from each click and records the pressure at your two ears, so the echo is the echo of this exact cave. Press B and play it blind.",
+   "page": "https://booyaka101.github.io/thedailyfable/day37/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day37/poster.jpg",
+   "video": "https://youtu.be/hDSwXejcU8Y",
+   "short": null,
+   "links": [
+    {
+     "label": "play it (phone works, headphones help)",
+     "url": "https://booyaka101.github.io/thedailyfable/day37/"
+    },
+    {
+     "label": "the film",
+     "url": "https://youtu.be/hDSwXejcU8Y"
     }
    ]
   }

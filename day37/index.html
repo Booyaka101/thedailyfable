@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>ECHOLOCATION — a cave you can only see with sound</title>
+<meta property="og:title" content="ECHOLOCATION — a cave you can only see with sound">
+<meta property="og:description" content="You are a bat. Every click is a real acoustic wave, computed live. Walls exist only where the sound touches them. The echo you hear is the echo of this exact cave.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://booyaka101.github.io/thedailyfable/day37/poster.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<style>
+  html, body { margin:0; height:100%; background:#000; color:#c9c4b8; overflow:hidden;
+    font: 14px/1.5 "Cascadia Code", Consolas, ui-monospace, monospace; -webkit-user-select:none; user-select:none;
+    touch-action:none; overscroll-behavior:none; }
+  canvas#gl { position:fixed; inset:0; width:100%; height:100%; display:block; }
+  #hud { position:fixed; left:14px; top:12px; color:#6e6a62; font-size:13px; letter-spacing:1px;
+    pointer-events:none; text-shadow:0 0 6px #000; }
+  #hud b { color:#c9c4b8; font-weight:normal; }
+  #msg { position:fixed; left:0; right:0; top:42%; text-align:center; color:#e8e0d0; font-size:16px;
+    letter-spacing:2px; pointer-events:none; opacity:0; transition:opacity .6s; text-shadow:0 0 12px #000; }
+  #msg.on { opacity:1; }
+  #overlay { position:fixed; inset:0; display:flex; align-items:center; justify-content:center;
+    background:rgba(0,0,0,.72); z-index:5; cursor:pointer; }
+  #overlay .card { max-width:420px; padding:28px 30px; color:#d8d2c6; }
+  #overlay h1 { font-size:22px; letter-spacing:6px; margin:0 0 14px; color:#fff; font-weight:normal; }
+  #overlay p { margin:8px 0; color:#a9a397; }
+  #overlay p.go { color:#fff; margin-top:18px; letter-spacing:2px; }
+  #overlay small { color:#5f5b54; display:block; margin-top:16px; line-height:1.4; }
+  #foot { position:fixed; right:14px; bottom:10px; color:#4a4740; font-size:12px; z-index:3; }
+  #foot a { color:#6f6a60; text-decoration:none; }
+  #foot a:hover { color:#c9c4b8; }
+  #blind { position:fixed; left:14px; bottom:10px; color:#4a4740; font-size:12px; cursor:pointer; z-index:3; }
+  #blind:hover { color:#c9c4b8; }
+  #stick { position:fixed; width:120px; height:120px; border-radius:50%; border:1px solid rgba(255,255,255,.12);
+    pointer-events:none; opacity:0; transform:translate(-50%,-50%); transition:opacity .2s; }
+  #stick i { position:absolute; left:50%; top:50%; width:34px; height:34px; border-radius:50%;
+    background:rgba(255,255,255,.18); transform:translate(-50%,-50%); }
+  body.blind #hud, body.blind #foot, body.blind #stick { opacity:0 !important; }
+</style>
+</head>
+<body>
+<canvas id="gl"></canvas>
+<div id="hud"></div>
+<div id="msg"></div>
+<div id="stick"><i></i></div>
+<div id="blind" title="hide the picture, keep the sound">▣ blind mode</div>
+<div id="foot"><a href="#" id="about">about</a> · <a href="../">the daily fable</a> · day 37</div>
+<div id="overlay"><div class="card">
+  <h1>ECHOLOCATION</h1>
+  <p>You are a bat in a cave with no light at all.</p>
+  <p><b>Tap</b> or press <b>space</b> to click. The click is a real sound wave, computed as it spreads. The rock exists only where the wave touches it, then fades.</p>
+  <p><b>Drag</b> or use <b>WASD</b> to fly. Somewhere, water drips: a warm sound. Fly to the drip.</p>
+  <p>What you hear is the pressure the simulation delivers to your two ears, from this exact cave. Headphones help.</p>
+  <p class="go">tap to begin</p>
+  <p style="font-size:12px;color:#6e6a62">B toggles blind mode: no picture, only the echoes. Bats manage.</p>
+  <small>2D acoustic wave equation, finite differences, on your GPU. Your clicks and the drip are separate fields drawn in separate colours. The audio is the same solver run again, faster, from the moment of each sound.</small>
+</div></div>
+<script>
+'use strict';
+// ---------------------------------------------------------------- helpers
+const $ = id => document.getElementById(id);
+const Q = new URLSearchParams(location.search);
+const TICK = Q.get('tick') === '1';             // deterministic fixed-step loop for bots
+const SEED0 = parseInt(Q.get('seed') || '0') || (Date.now() & 0xffff);
+const LEVEL0 = parseInt(Q.get('level') || '1') || 1;
+let rngState = 1;
+function srand(s) { rngState = (s >>> 0) || 1; }
+function rand() { // mulberry32
+  rngState |= 0; rngState = rngState + 0x6D2B79F5 | 0;
+  let t = Math.imul(rngState ^ rngState >>> 15, 1 | rngState);
+  t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+  return ((t ^ t >>> 14) >>> 0) / 4294967296;
+}
+const clamp = (x, a, b) => x < a ? a : x > b ? b : x;
+// a click in time: Ricker wavelet, zero mean, so the 2D wake carries no static offset
+const RICK_W = 3.2, RICK_LEN = 48;
+function ricker(k) { const t = (k - 7) / RICK_W; if (k > 20) return 0; return (1 - 2 * t * t) * Math.exp(-t * t); }
+// a water drop: the bubble it pinches off rings as a damped sine whose pitch rises as the
+// bubble shrinks (Minnaert); this is the drip's source waveform in both runs
+function drop(k) { if (k > RICK_LEN) return 0; const t = k / 6.0; const f = 0.55 + 0.012 * k; return Math.sin(2 * Math.PI * f * k / 6.0) * Math.exp(-t * 0.55) * (k < 3 ? k / 3 : 1) * 0.9; }
+
+// ---------------------------------------------------------------- GL setup
+const canvas = $('gl');
+const gl = canvas.getContext('webgl2', { antialias: false, alpha: false, premultipliedAlpha: false, preserveDrawingBuffer: TICK });
+if (!gl) { $('overlay').innerHTML = '<div class="card"><h1>ECHOLOCATION</h1><p>This needs WebGL2. Any phone or laptop browser from the last few years has it.</p></div>'; throw new Error('no webgl2'); }
+const extF = gl.getExtension('EXT_color_buffer_float');
+const extHF = extF ? null : gl.getExtension('EXT_color_buffer_half_float');
+if (!extF && !extHF) { $('overlay').innerHTML = '<div class="card"><h1>ECHOLOCATION</h1><p>Your GPU cannot render to float textures, which the wave solver needs.</p></div>'; throw new Error('no float fbo'); }
+const MAXTEX = gl.getParameter(gl.MAX_TEXTURE_SIZE);
+gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);   // single-channel wall uploads of any width
+
+function shader(type, src) {
+  const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s);
+  if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) { console.error(gl.getShaderInfoLog(s)); throw new Error('shader'); }
+  return s;
+}
+function program(vs, fs) {
+  const p = gl.createProgram(); gl.attachShader(p, shader(gl.VERTEX_SHADER, vs)); gl.attachShader(p, shader(gl.FRAGMENT_SHADER, fs));
+  gl.linkProgram(p); if (!gl.getProgramParameter(p, gl.LINK_STATUS)) { console.error(gl.getProgramInfoLog(p)); throw new Error('link'); }
+  const u = {}; const n = gl.getProgramParameter(p, gl.ACTIVE_UNIFORMS);
+  for (let i = 0; i < n; i++) { const inf = gl.getActiveUniform(p, i); u[inf.name.replace('[0]', '')] = gl.getUniformLocation(p, inf.name); }
+  return { p, u };
+}
+const VS = `#version 300 es
+in vec2 aP; out vec2 vUv; void main(){ vUv = aP*0.5+0.5; gl_Position = vec4(aP,0.,1.); }`;
+
+// Two fields, linearly superposed in reality, kept apart here so each can have its own colour:
+// field A = the bat's clicks, field B = the drip at the exit.  state0: (pA, pA_prev, pB, pB_prev)
+// state1: (glowA, glowB, .,.) — light memory on wall cells.  Walls are rigid (Neumann): the
+// laplacian only sums fluxes through faces that are open.
+const SIM_FS = `#version 300 es
+precision highp float; precision highp sampler2D;
+uniform sampler2D uS0, uS1, uWall;
+uniform float uC2, uDamp, uWallAbs, uGlowDecay, uGlowGain;
+uniform vec4 uSrcA, uSrcB;   // x, y (cells), amplitude (already shaped in time), sigma
+layout(location=0) out vec4 o0;
+layout(location=1) out vec4 o1;
+void main(){
+  ivec2 ij = ivec2(gl_FragCoord.xy);
+  ivec2 sz = textureSize(uS0, 0);
+  vec4 s = texelFetch(uS0, ij, 0);
+  float w = texelFetch(uWall, ij, 0).r;
+  ivec2 iL = ivec2(max(ij.x-1,0), ij.y), iR = ivec2(min(ij.x+1,sz.x-1), ij.y);
+  ivec2 iD = ivec2(ij.x, max(ij.y-1,0)),  iU = ivec2(ij.x, min(ij.y+1,sz.y-1));
+  vec4 sL = texelFetch(uS0,iL,0), sR = texelFetch(uS0,iR,0), sD = texelFetch(uS0,iD,0), sU = texelFetch(uS0,iU,0);
+  float wL = texelFetch(uWall,iL,0).r, wR = texelFetch(uWall,iR,0).r, wD = texelFetch(uWall,iD,0).r, wU = texelFetch(uWall,iU,0).r;
+  float oL = 1.-wL, oR = 1.-wR, oD = 1.-wD, oU = 1.-wU;
+  vec4 g = texelFetch(uS1, ij, 0);
+  if (w > 0.5) {
+    // wall cell: no pressure of its own; remembers the loudest thing that touched it
+    float mA = max(max(abs(sL.x)*oL, abs(sR.x)*oR), max(abs(sD.x)*oD, abs(sU.x)*oU));
+    float mB = max(max(abs(sL.z)*oL, abs(sR.z)*oR), max(abs(sD.z)*oD, abs(sU.z)*oU));
+    // light creeps into the rock so a lit surface reads as a body of stone, not a rim
+    vec4 gL = texelFetch(uS1,iL,0), gR = texelFetch(uS1,iR,0), gD = texelFetch(uS1,iD,0), gU = texelFetch(uS1,iU,0);
+    vec2 nb = max(max(gL.xy*wL, gR.xy*wR), max(gD.xy*wD, gU.xy*wU)) * 0.84;
+    o0 = vec4(0.);
+    o1 = vec4(max(max(g.x*uGlowDecay, mA*uGlowGain), nb.x), max(max(g.y*uGlowDecay, mB*uGlowGain), nb.y), 0., 0.);
+    return;
+  }
+  vec2 p = s.xz, pp = s.yw;
+  vec2 lap = oL*(sL.xz-p) + oR*(sR.xz-p) + oD*(sD.xz-p) + oU*(sU.xz-p);
+  // locally reacting rock: each wall face drains pressure in proportion to its rate of change
+  float nWall = 4. - (oL+oR+oD+oU);
+  vec2 pn = uDamp * (2.*p - pp + uC2*lap) - uWallAbs*nWall*(p - pp);
+  vec2 d = gl_FragCoord.xy - 0.5;
+  vec2 dA = d - uSrcA.xy, dB = d - uSrcB.xy;
+  pn.x += uSrcA.z * exp(-dot(dA,dA)/(2.*uSrcA.w*uSrcA.w));
+  pn.y += uSrcB.z * exp(-dot(dB,dB)/(2.*uSrcB.w*uSrcB.w));
+  o0 = vec4(pn.x, p.x, pn.y, p.y);
+  o1 = vec4(g.xy*uGlowDecay, 0., 0.);
+}`;
+
+// Picture.  Rock is drawn only by the light it remembers; the wave itself is visible as it
+// travels (this is the game's one conceit: sound drawn as light).
+const DRAW_FS = `#version 300 es
+precision highp float; precision highp sampler2D;
+uniform sampler2D uS0, uS1, uWall;
+uniform vec2 uRes, uSim;
+uniform vec2 uBat, uExit; uniform float uBatR, uExitR, uT, uBlind, uWaveGain, uReveal;
+out vec4 o;
+float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1,311.7)))*43758.5453); }
+float vnoise(vec2 p){ vec2 i=floor(p), f=fract(p); f=f*f*(3.-2.*f);
+  return mix(mix(hash(i),hash(i+vec2(1,0)),f.x), mix(hash(i+vec2(0,1)),hash(i+vec2(1,1)),f.x), f.y); }
+float fbm(vec2 p){ float a=0., s=0.5; for(int k=0;k<4;k++){ a+=s*vnoise(p); p=p*2.03+vec2(7.1,3.3); s*=0.5;} return a; }
+void main(){
+  vec2 uv = gl_FragCoord.xy / uRes;
+  vec2 cell = uv * uSim;
+  vec4 s = texture(uS0, uv);
+  vec4 g = texture(uS1, uv);
+  float w = texture(uWall, uv).r;
+  float rock = smoothstep(0.42, 0.58, w);
+  // wall shading: gradient of the mask gives a rim normal; light comes from the wave, so
+  // shade by the remembered glow with a little relief from stone texture
+  vec2 e = 1.0/uSim;
+  float gx = texture(uWall, uv+vec2(e.x,0)).r - texture(uWall, uv-vec2(e.x,0)).r;
+  float gy = texture(uWall, uv+vec2(0,e.y)).r - texture(uWall, uv-vec2(0,e.y)).r;
+  float edge = clamp(length(vec2(gx,gy))*1.4, 0.0, 1.0);    // 1 at the rock surface
+  float tex = 0.55 + 0.45*fbm(cell*0.35);
+  float tex2 = 0.7 + 0.3*fbm(cell*1.7 + 11.0);
+  float gA = g.x, gB = g.y;
+  vec3 stoneA = vec3(0.62, 0.66, 0.74);
+  vec3 stoneB = vec3(0.98, 0.72, 0.36);
+  vec3 wallCol = (stoneA*gA + stoneB*gB) * tex * tex2 * (0.5 + 0.9*edge) * 2.2 * uReveal;
+  // the travelling wave
+  float pA = s.x, pB = s.z;
+  // soft knee: far fronts stay visible, the reverberant shimmer stays dim
+  float aA = abs(pA)*uWaveGain; aA = aA/(aA+0.35)*1.3;
+  float aB = abs(pB)*uWaveGain; aB = aB/(aB+0.35)*1.3;
+  vec3 waveA = vec3(0.55, 0.72, 1.0) * aA * (pA > 0. ? 1.0 : 0.55);
+  vec3 waveB = vec3(1.0, 0.68, 0.30) * aB * (pB > 0. ? 1.0 : 0.55);
+  vec3 col = mix(waveA + waveB, wallCol, rock);
+  // exit pool: a dark water disc, seen only in the drip's own light
+  float dE = length(cell - uExit);
+  float pool = smoothstep(uExitR, uExitR-2.0, dE) * (1.0-rock);
+  col = mix(col, vec3(0.06,0.05,0.04) + vec3(1.0,0.72,0.35)*aB*1.4, pool*0.85);
+  // the bat: a small warm-grey body, only the barest marker
+  float dB2 = length(cell - uBat);
+  float body = smoothstep(uBatR, uBatR-1.5, dB2);
+  float halo = exp(-dB2*dB2/(uBatR*uBatR*6.0))*0.10;
+  col = mix(col, vec3(0.86,0.83,0.78), body*0.9) + halo;
+  col *= (1.0 - uBlind);
+  // filmic-ish soft clip + tiny dither so the black is not banded
+  col = col / (1.0 + col*0.25);
+  col += (hash(gl_FragCoord.xy + fract(uT)) - 0.5) / 255.0;
+  o = vec4(col, 1.0);
+}`;
+
+// Ear trace for the audio run: one texel per step, both ears, mu-law packed into 16 bits.
+const TRACE_FS = `#version 300 es
+precision highp float; precision highp sampler2D;
+uniform sampler2D uS0; uniform vec2 uEarL, uEarR; uniform float uField; // 0 = A, 1 = B
+out vec4 o;
+vec2 pack(float p){ float mu = 255.0; float v = sign(p)*log(1.0+mu*abs(p))/log(1.0+mu);
+  float q = floor(clamp(v*0.5+0.5, 0.0, 1.0)*65535.0); float hi = floor(q/256.0); return vec2(hi, q-hi*256.0)/255.0; }
+void main(){
+  vec2 sz = vec2(textureSize(uS0,0));
+  vec4 l = texture(uS0, uEarL/sz), r = texture(uS0, uEarR/sz);
+  float pl = uField < 0.5 ? l.x : l.z, pr = uField < 0.5 ? r.x : r.z;
+  o = vec4(pack(pl), pack(pr));
+}`;
+
+const quad = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, quad);
+gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
+const vao = gl.createVertexArray(); gl.bindVertexArray(vao); gl.enableVertexAttribArray(0); gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
+const simProg = program(VS, SIM_FS), drawProg = program(VS, DRAW_FS), traceProg = program(VS, TRACE_FS);
+
+const FMT = extF ? { internal: gl.RGBA32F, type: gl.FLOAT } : { internal: gl.RGBA16F, type: gl.HALF_FLOAT };
+function makeTex(w, h, internal, format, type, filter, data) {
+  const t = gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D, t);
+  gl.texImage2D(gl.TEXTURE_2D, 0, internal, w, h, 0, format, type, data || null);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, filter); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, filter);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+  return t;
+}
+// RGBA32F is not filterable without OES_texture_float_linear; fall back to 16F for sampling if missing
+const linearF = extF ? !!gl.getExtension('OES_texture_float_linear') : true;
+if (extF && !linearF) { FMT.internal = gl.RGBA16F; FMT.type = gl.HALF_FLOAT; }
+
+class Field {   // a pair of MRT framebuffers (state0, state1), ping-pong
+  constructor(w, h) {
+    this.w = w; this.h = h; this.fb = []; this.tex = [];
+    for (let i = 0; i < 2; i++) {
+      const t0 = makeTex(w, h, FMT.internal, gl.RGBA, FMT.type, gl.LINEAR);
+      const t1 = makeTex(w, h, FMT.internal, gl.RGBA, FMT.type, gl.LINEAR);
+      const fb = gl.createFramebuffer(); gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
+      gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, t0, 0);
+      gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT1, gl.TEXTURE_2D, t1, 0);
+      gl.drawBuffers([gl.COLOR_ATTACHMENT0, gl.COLOR_ATTACHMENT1]);
+      if (gl.checkFramebufferStatus(gl.FRAMEBUFFER) !== gl.FRAMEBUFFER_COMPLETE) throw new Error('fbo incomplete');
+      this.fb.push(fb); this.tex.push([t0, t1]);
+    }
+    this.cur = 0; this.clear();
+  }
+  clear() { for (let i = 0; i < 2; i++) { gl.bindFramebuffer(gl.FRAMEBUFFER, this.fb[i]); gl.clearColor(0,0,0,0); gl.clear(gl.COLOR_BUFFER_BIT); } }
+  destroy() { for (const fb of this.fb) gl.deleteFramebuffer(fb); for (const t of this.tex) { gl.deleteTexture(t[0]); gl.deleteTexture(t[1]); } }
+  step(wallTex, P, srcA, srcB) {
+    const src = this.cur, dst = 1 - src;
+    gl.bindFramebuffer(gl.FRAMEBUFFER, this.fb[dst]); gl.viewport(0, 0, this.w, this.h);
+    gl.useProgram(simProg.p);
+    gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, this.tex[src][0]); gl.uniform1i(simProg.u.uS0, 0);
+    gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D, this.tex[src][1]); gl.uniform1i(simProg.u.uS1, 1);
+    gl.activeTexture(gl.TEXTURE2); gl.bindTexture(gl.TEXTURE_2D, wallTex); gl.uniform1i(simProg.u.uWall, 2);
+    gl.uniform1f(simProg.u.uC2, P.c2); gl.uniform1f(simProg.u.uDamp, P.damp); gl.uniform1f(simProg.u.uWallAbs, P.wallAbs);
+    gl.uniform1f(simProg.u.uGlowDecay, P.glowDecay); gl.uniform1f(simProg.u.uGlowGain, P.glowGain);
+    gl.uniform4f(simProg.u.uSrcA, srcA[0], srcA[1], srcA[2], srcA[3]);
+    gl.uniform4f(simProg.u.uSrcB, srcB[0], srcB[1], srcB[2], srcB[3]);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    this.cur = dst;
+  }
+  get s0() { return this.tex[this.cur][0]; }
+  get s1() { return this.tex[this.cur][1]; }
+}
+
+// ---------------------------------------------------------------- cave generation
+// value-noise fbm thresholded, smoothed by the classic cave automaton, then a clearance
+// map so the bat (radius R) can actually pass; start and exit are the two ends of the
+// longest BFS journey in the largest open component.
+function makeCave(W, H, seed, level) {
+  srand(seed);
+  const N = W * H;
+  const wall = new Uint8Array(N);
+  const feat = 22 + 2 * Math.min(level, 6);          // feature size in cells
+  const lat = new Float32Array(1024 * 4);
+  for (let i = 0; i < lat.length; i++) lat[i] = rand();
+  const ox = rand() * 1000, oy = rand() * 1000;
+  function vn(x, y, oct) {
+    const xi = Math.floor(x), yi = Math.floor(y), fx = x - xi, fy = y - yi;
+    const sx = fx * fx * (3 - 2 * fx), sy = fy * fy * (3 - 2 * fy);
+    const h = (a, b) => lat[((a * 73 + b * 151 + oct * 977) & 1023) * 4 + (oct & 3)];
+    return (h(xi, yi) * (1 - sx) + h(xi + 1, yi) * sx) * (1 - sy) + (h(xi, yi + 1) * (1 - sx) + h(xi + 1, yi + 1) * sx) * sy;
+  }
+  const vals = new Float32Array(N);
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+    let a = 0, amp = 0.5, f = 1 / feat, tot = 0;
+    for (let o = 0; o < 4; o++) { a += amp * vn(x * f + ox, y * f + oy, o); tot += amp; amp *= 0.5; f *= 2.1; }
+    vals[y * W + x] = a / tot;
+  }
+  const sorted = Float32Array.from(vals).sort();
+  const openFrac = 0.56 - 0.015 * Math.min(level, 6);
+  const thr = sorted[Math.floor((1 - openFrac) * N)];
+  for (let i = 0; i < N; i++) wall[i] = vals[i] < thr ? 1 : 0;
+  const B = 4;
+  const border = () => { for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if (x < B || y < B || x >= W - B || y >= H - B) wall[y * W + x] = 1; };
+  border();
+  const tmp = new Uint8Array(N);
+  for (let it = 0; it < 4; it++) {
+    for (let y = 1; y < H - 1; y++) for (let x = 1; x < W - 1; x++) {
+      let n = 0; const i = y * W + x;
+      n = wall[i-W-1]+wall[i-W]+wall[i-W+1]+wall[i-1]+wall[i+1]+wall[i+W-1]+wall[i+W]+wall[i+W+1];
+      tmp[i] = n >= 5 ? 1 : (n <= 3 ? 0 : wall[i]);
+    }
+    wall.set(tmp); border();
+  }
+  // chamfer distance to wall (in cells) for clearance
+  const dist = new Float32Array(N).fill(1e9);
+  for (let i = 0; i < N; i++) if (wall[i]) dist[i] = 0;
+  for (let y = 1; y < H; y++) for (let x = 1; x < W - 1; x++) { const i = y * W + x;
+    dist[i] = Math.min(dist[i], dist[i-1]+1, dist[i-W]+1, dist[i-W-1]+1.414, dist[i-W+1]+1.414); }
+  for (let y = H - 2; y >= 0; y--) for (let x = W - 2; x >= 1; x--) { const i = y * W + x;
+    dist[i] = Math.min(dist[i], dist[i+1]+1, dist[i+W]+1, dist[i+W-1]+1.414, dist[i+W+1]+1.414); }
+  const R = 3.0;                                    // bat radius in cells
+  const ok = new Uint8Array(N); for (let i = 0; i < N; i++) ok[i] = dist[i] > R + 1.5 ? 1 : 0;
+  // components over ok
+  const comp = new Int32Array(N).fill(-1); const sizes = []; const q = new Int32Array(N);
+  for (let s = 0; s < N; s++) {
+    if (!ok[s] || comp[s] >= 0) continue;
+    const c = sizes.length; let qh = 0, qt = 0; q[qt++] = s; comp[s] = c; let cnt = 0;
+    while (qh < qt) { const i = q[qh++]; cnt++;
+      const nb = [i-1, i+1, i-W, i+W];
+      for (const j of nb) if (ok[j] && comp[j] < 0) { comp[j] = c; q[qt++] = j; } }
+    sizes.push(cnt);
+  }
+  if (!sizes.length) return null;
+  let big = 0; for (let c = 1; c < sizes.length; c++) if (sizes[c] > sizes[big]) big = c;
+  // BFS distance from a random cell of the big component, twice (approx. diameter ends)
+  function bfs(s) { const d = new Int32Array(N).fill(-1); let qh = 0, qt = 0; q[qt++] = s; d[s] = 0; let far = s;
+    while (qh < qt) { const i = q[qh++]; if (d[i] > d[far]) far = i;
+      const nb = [i-1, i+1, i-W, i+W];
+      for (const j of nb) if (ok[j] && comp[j] === big && d[j] < 0) { d[j] = d[i] + 1; q[qt++] = j; } }
+    return { d, far }; }
+  let s0 = -1; for (let tries = 0; tries < 10000; tries++) { const i = Math.floor(rand() * N); if (comp[i] === big) { s0 = i; break; } }
+  const b1 = bfs(s0); const start = b1.far; const b2 = bfs(start); const exit = b2.far;
+  const journey = b2.d[exit]; const toExit = bfs(exit).d;
+  // seal pockets the bat can never enter (they would echo invisibly)
+  const reach = new Uint8Array(N); { let qh = 0, qt = 0; q[qt++] = start; reach[start] = 1;
+    while (qh < qt) { const i = q[qh++]; const x = i % W, y = (i / W) | 0;
+      for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) { const j = i + dy * W + dx;
+        if (x + dx < 0 || x + dx >= W || y + dy < 0 || y + dy >= H) continue;
+        if (!wall[j] && !reach[j]) { reach[j] = 1; q[qt++] = j; } } } }
+  for (let i = 0; i < N; i++) if (!wall[i] && !reach[i]) wall[i] = 1;
+  return { W, H, wall, dist, ok, start: [start % W, (start / W) | 0], exit: [exit % W, (exit / W) | 0], bfsExit: toExit, journey, R };
+}
+
+// ---------------------------------------------------------------- audio
+let actx = null, master = null;
+function audioInit() {
+  if (actx) return;
+  actx = new (window.AudioContext || window.webkitAudioContext)();
+  master = actx.createGain(); master.gain.value = 0.9; master.connect(actx.destination);
+}
+// The audio run: same solver, same cave (downsampled), from the moment of one sound, for
+// enough steps that the wave crosses the cave twice; the ear trace is then played back at
+// AUDIO_RATE samples per step.  Bats contract the stapedius during their own call so it does
+// not deafen them; the first few milliseconds after a click are ducked for the same reason.
+const AUDIO_RATE = 16000;
+const audioQ = [];
+let audioJob = null;
+class AudioRun {
+  constructor(lvl, field, src, ears, gain) {
+    this.lvl = lvl; this.field = field; this.src = src; this.ears = ears; this.gain = gain;
+    const f = lvl.aScale;
+    this.w = lvl.aW; this.h = lvl.aH;
+    this.steps = Math.min(lvl.aSteps, MAXTEX);
+    this.k = 0;
+    this.fld = new Field(this.w, this.h);
+    this.srcCell = [src[0] * f, src[1] * f, field === 0 ? 1.0 : 0.7, Math.max(1.2, lvl.sigma * f)];
+    this.earL = [ears[0][0] * f, ears[0][1] * f]; this.earR = [ears[1][0] * f, ears[1][1] * f];
+    if (!AudioRun.trace || AudioRun.traceW < this.steps) {
+      if (AudioRun.trace) { gl.deleteTexture(AudioRun.trace); gl.deleteFramebuffer(AudioRun.traceFb); }
+      AudioRun.traceW = this.steps;
+      AudioRun.trace = makeTex(this.steps, 1, gl.RGBA8, gl.RGBA, gl.UNSIGNED_BYTE, gl.NEAREST);
+      AudioRun.traceFb = gl.createFramebuffer(); gl.bindFramebuffer(gl.FRAMEBUFFER, AudioRun.traceFb);
+      gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, AudioRun.trace, 0);
+    }
+  }
+  run(n) {  // advance n steps; returns true when finished
+    const P = this.lvl.PA;
+    const none = [0, 0, 0, 1];
+    gl.bindVertexArray(vao);
+    for (let i = 0; i < n && this.k < this.steps; i++, this.k++) {
+      const s = [this.srcCell[0], this.srcCell[1], this.srcCell[2] * (this.field === 0 ? ricker(this.k) : drop(this.k)), this.srcCell[3]];
+      this.fld.step(this.lvl.aWallTex, P, this.field === 0 ? s : none, this.field === 1 ? s : none);
+      gl.bindFramebuffer(gl.FRAMEBUFFER, AudioRun.traceFb); gl.viewport(this.k, 0, 1, 1);
+      gl.useProgram(traceProg.p);
+      gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, this.fld.s0); gl.uniform1i(traceProg.u.uS0, 0);
+      gl.uniform2f(traceProg.u.uEarL, this.earL[0] + 0.5, this.earL[1] + 0.5); gl.uniform2f(traceProg.u.uEarR, this.earR[0] + 0.5, this.earR[1] + 0.5);
+      gl.uniform1f(traceProg.u.uField, this.field);
+      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    }
+    if (this.k < this.steps) return false;
+    this.finish(); return true;
+  }
+  finish() {
+    const n = this.steps; const px = new Uint8Array(n * 4);
+    gl.bindFramebuffer(gl.FRAMEBUFFER, AudioRun.traceFb); gl.readPixels(0, 0, n, 1, gl.RGBA, gl.UNSIGNED_BYTE, px);
+    this.fld.destroy();
+    if (!actx) return;
+    const buf = actx.createBuffer(2, n, AUDIO_RATE);
+    const L = buf.getChannelData(0), Rr = buf.getChannelData(1);
+    const mu = 255, lg = Math.log(1 + mu);
+    const dec = (hi, lo) => { const v = ((hi * 256 + lo) / 65535 - 0.5) * 2; return Math.sign(v) * (Math.exp(Math.abs(v) * lg) - 1) / mu; };
+    const g = this.gain, self = this.field === 0;
+    for (let i = 0; i < n; i++) {
+      // ducking of the bat's own call (stapedius reflex), first ~6 ms
+      const duck = self ? (i < 100 ? 0.12 + 0.88 * (i / 100) : 1) : 1;
+      const l = dec(px[i * 4], px[i * 4 + 1]) * g * duck, r = dec(px[i * 4 + 2], px[i * 4 + 3]) * g * duck;
+      L[i] = Math.tanh(l); Rr[i] = Math.tanh(r);
+    }
+    // short fade at the end so a cut tail does not click
+    for (let i = 0; i < 200 && i < n; i++) { const f = i / 200; L[n - 1 - i] *= f; Rr[n - 1 - i] *= f; }
+    const s = actx.createBufferSource(); s.buffer = buf; s.connect(master); s.start();
+    lastAudio = { L: Array.from(L), R: Array.from(Rr), field: this.field };
+  }
+}
+let lastAudio = null;
+function queueAudio(lvl, field, src, ears, gain) {
+  if (!actx) return;
+  if (audioQ.length > 3) audioQ.shift();
+  audioQ.push({ lvl, field, src, ears, gain });
+}
+function serviceAudio(budgetMs) {
+  // GPU work is asynchronous, so CPU time is not the cost; cap the steps per frame instead
+  const t0 = performance.now();
+  for (let chunk = 0; chunk < 8 && performance.now() - t0 < budgetMs; chunk++) {
+    if (!audioJob) { const j = audioQ.shift(); if (!j) return; if (j.lvl !== level) continue; audioJob = new AudioRun(j.lvl, j.field, j.src, j.ears, j.gain); }
+    if (audioJob.run(96)) audioJob = null;
+  }
+}
+
+// ---------------------------------------------------------------- level / game state
+let level = null, levelNo = LEVEL0, seed = SEED0;
+let bat = { x: 0, y: 0, vx: 0, vy: 0, dirx: 1, diry: 0 };
+let clicks = 0, tStart = 0, simT = 0, won = false, wonAt = 0, blind = false, started = false;
+let stepsPerFrame = 8, subCount = 0, nextDrip = 0;
+const keys = {};
+let joy = null;   // {x0,y0,x,y}
+let pendingClick = false;
+
+function buildLevel(n, sd) {
+  if (level) { level.fld.destroy(); gl.deleteTexture(level.wallTex); gl.deleteTexture(level.aWallTex); }
+  const aspect = canvas.width / canvas.height;
+  const long = Math.min(MAXTEX, 440 + 70 * Math.min(n - 1, 9));
+  let W, H; if (aspect >= 1) { W = long; H = Math.round(long / aspect); } else { H = long; W = Math.round(long * aspect); }
+  W = Math.max(64, W & ~1); H = Math.max(64, H & ~1);
+  let cave = null;
+  for (let t = 0; t < 8 && !cave; t++) cave = makeCave(W, H, sd + t * 7919, n);
+  const wallTex = makeTex(W, H, gl.R8, gl.RED, gl.UNSIGNED_BYTE, gl.LINEAR, Uint8Array.from(cave.wall, v => v * 255));
+  // audio grid: half res; a cell is wall if any of its four parents is
+  const aScale = 0.5, aW = W >> 1, aH = H >> 1; const aw = new Uint8Array(aW * aH);
+  for (let y = 0; y < aH; y++) for (let x = 0; x < aW; x++) {
+    const i = 2 * y * W + 2 * x; aw[y * aW + x] = (cave.wall[i] | cave.wall[i + 1] | cave.wall[i + W] | cave.wall[i + W + 1]) * 255; }
+  const aWallTex = makeTex(aW, aH, gl.R8, gl.RED, gl.UNSIGNED_BYTE, gl.NEAREST, aw);
+  // eye-run: rock absorbs more so the reverberation clears for the eye within ~2 s.
+  // ear-run: rock absorbs like limestone (a few % per bounce), air like air.
+  const P = { c2: 0.25, damp: 0.9990, wallAbs: 0.08, glowDecay: 0.9970, glowGain: 1.3 };
+  const PA = { c2: 0.25, damp: 0.99995, wallAbs: 0.01, glowDecay: 0.99, glowGain: 0 };
+  level = { ...cave, no: n, seed: sd, wallTex, aWallTex, aScale, aW, aH, P, PA, sigma: 2.0, srcA: [], srcB: [],
+    aSteps: Math.min(4096, MAXTEX, Math.round((aW + aH) * 4.0 / 0.5)),
+    fld: new Field(W, H), exitR: Math.max(5, Math.min(W, H) * 0.028) };
+  bat.x = cave.start[0] + 0.5; bat.y = cave.start[1] + 0.5; bat.vx = bat.vy = 0;
+  clicks = 0; tStart = simT; won = false; nextDrip = simT + 0.8;
+  audioQ.length = 0; if (audioJob) { audioJob.fld.destroy(); audioJob = null; }
+  hud();
+}
+function hud() {
+  if (!level) return;
+  const t = Math.max(0, (won ? wonAt : simT) - tStart);
+  $('hud').innerHTML = `cave <b>${level.no}</b> &nbsp; clicks <b>${clicks}</b> &nbsp; <b>${Math.floor(t / 60)}:${String(Math.floor(t % 60)).padStart(2, '0')}</b>`;
+}
+function say(s, ms) { const m = $('msg'); m.textContent = s; m.classList.add('on'); clearTimeout(say.t); say.t = setTimeout(() => m.classList.remove('on'), ms || 2600); }
+
+function ears() { // perpendicular to heading, 5 cells apart
+  const nx = -bat.diry, ny = bat.dirx;
+  return [[bat.x + nx * 2.5, bat.y + ny * 2.5], [bat.x - nx * 2.5, bat.y - ny * 2.5]];
+}
+function doClick() {
+  if (!level || won) return;
+  clicks++; level.srcA.push(Object.assign([bat.x, bat.y, 1.0, level.sigma], { k: 0 }));
+  queueAudio(level, 0, [bat.x, bat.y], ears(), 2.2);
+  hud();
+}
+function drip() {
+  const amp = 0.8 * Math.sqrt(Math.max(level.W, level.H) / 440);
+  level.srcB.push(Object.assign([level.exit[0] + 0.5, level.exit[1] + 0.5, amp, level.sigma], { k: 0 }));
+  queueAudio(level, 1, [level.exit[0] + 0.5, level.exit[1] + 0.5], ears(), 2.6);
+}
+
+function distAt(x, y) { // bilinear clearance, cells
+  const { W, H, dist } = level;
+  const fx = clamp(x - 0.5, 0, W - 1.001), fy = clamp(y - 0.5, 0, H - 1.001);
+  const xi = Math.floor(fx), yi = Math.floor(fy), tx = fx - xi, ty = fy - yi, i = yi * W + xi;
+  return (dist[i] * (1 - tx) + dist[i + 1] * tx) * (1 - ty) + (dist[i + W] * (1 - tx) + dist[i + W + 1] * tx) * ty;
+}
+function tryMove(dx, dy) {
+  const R = level.R;
+  bat.x += dx; bat.y += dy;
+  for (let it = 0; it < 4; it++) {
+    const d = distAt(bat.x, bat.y); if (d >= R) break;
+    const h = 0.5; let nx = distAt(bat.x + h, bat.y) - distAt(bat.x - h, bat.y), ny = distAt(bat.x, bat.y + h) - distAt(bat.x, bat.y - h);
+    const m = Math.hypot(nx, ny) || 1; nx /= m; ny /= m;
+    bat.x += nx * (R - d + 0.02); bat.y += ny * (R - d + 0.02);
+    const vn = bat.vx * nx + bat.vy * ny; if (vn < 0) { bat.vx -= vn * nx; bat.vy -= vn * ny; }
+  }
+}
+
+function update(dt) {
+  if (!level) return;
+  simT += dt;
+  // input → acceleration (cells/s^2); WASD or virtual stick
+  let ax = 0, ay = 0;
+  if (keys.KeyW || keys.ArrowUp) ay += 1; if (keys.KeyS || keys.ArrowDown) ay -= 1;
+  if (keys.KeyA || keys.ArrowLeft) ax -= 1; if (keys.KeyD || keys.ArrowRight) ax += 1;
+  if (joy) { const jx = (joy.x - joy.x0) / 50, jy = -(joy.y - joy.y0) / 50; const m = Math.hypot(jx, jy); const s = m > 1 ? 1 / m : 1; ax += jx * s; ay += jy * s; }
+  if (botInput) { ax += botInput[0]; ay += botInput[1]; }
+  const m = Math.hypot(ax, ay); if (m > 1) { ax /= m; ay /= m; }
+  const speed = 55 + 5 * Math.min(level.no, 8);   // cells/s
+  const acc = 9.0;
+  bat.vx += (ax * speed - bat.vx) * Math.min(1, acc * dt);
+  bat.vy += (ay * speed - bat.vy) * Math.min(1, acc * dt);
+  if (!won) tryMove(bat.vx * dt, bat.vy * dt);
+  const sp = Math.hypot(bat.vx, bat.vy); if (sp > 4) { bat.dirx = bat.vx / sp; bat.diry = bat.vy / sp; }
+  if (pendingClick) { pendingClick = false; doClick(); }
+  if (simT >= nextDrip && !won) { drip(); nextDrip = simT + 3.2 + rand() * 1.4; }
+  // win
+  if (!won) { const d = Math.hypot(bat.x - level.exit[0] - 0.5, bat.y - level.exit[1] - 0.5);
+    if (d < level.exitR + level.R) { won = true; wonAt = simT; const t = wonAt - tStart;
+      say(`found the drip · ${t.toFixed(1)} s · ${clicks} click${clicks === 1 ? '' : 's'}`, 3200); hud();
+      if (actx) { // a small splash: the drip field, louder, at the exit
+        level.srcB.push(Object.assign([level.exit[0] + 0.5, level.exit[1] + 0.5, 1.2, level.sigma * 1.5], { k: 0 }));
+        queueAudio(level, 1, [level.exit[0] + 0.5, level.exit[1] + 0.5], ears(), 3.0); }
+      setTimeout(() => { levelNo++; seed = (seed * 1103515245 + 12345) & 0x7fffffff; buildLevel(levelNo, seed); say(`cave ${levelNo}`, 1800); }, 3400);
+    } }
+  // physics: substeps
+  const none = [0, 0, 0, 1];
+  gl.bindVertexArray(vao);
+  const shape = (list, fn) => { let out = none; for (const e of list) { const amp = e[2] * fn(e.k); if (amp !== 0) out = [e[0], e[1], amp, e[3]]; e.k++; } return out; };
+  level.P.glowDecay = Math.pow(0.9970, 8 / stepsPerFrame);   // fade per frame, whatever the substep count
+  for (let i = 0; i < stepsPerFrame; i++) {
+    const a = shape(level.srcA, ricker), b = shape(level.srcB, drop);
+    level.fld.step(level.wallTex, level.P, a, b); subCount++;
+  }
+  level.srcA = level.srcA.filter(e => e.k <= RICK_LEN); level.srcB = level.srcB.filter(e => e.k <= RICK_LEN);
+}
+function draw() {
+  if (!level) return;
+  gl.bindFramebuffer(gl.FRAMEBUFFER, null); gl.viewport(0, 0, canvas.width, canvas.height);
+  gl.useProgram(drawProg.p);
+  gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, level.fld.s0); gl.uniform1i(drawProg.u.uS0, 0);
+  gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D, level.fld.s1); gl.uniform1i(drawProg.u.uS1, 1);
+  gl.activeTexture(gl.TEXTURE2); gl.bindTexture(gl.TEXTURE_2D, level.wallTex); gl.uniform1i(drawProg.u.uWall, 2);
+  gl.uniform2f(drawProg.u.uRes, canvas.width, canvas.height); gl.uniform2f(drawProg.u.uSim, level.W, level.H);
+  gl.uniform2f(drawProg.u.uBat, bat.x, bat.y); gl.uniform1f(drawProg.u.uBatR, level.R);
+  gl.uniform2f(drawProg.u.uExit, level.exit[0] + 0.5, level.exit[1] + 0.5); gl.uniform1f(drawProg.u.uExitR, level.exitR);
+  gl.uniform1f(drawProg.u.uT, simT); gl.uniform1f(drawProg.u.uBlind, blind ? 1 : 0);
+  gl.uniform1f(drawProg.u.uWaveGain, 7.0); gl.uniform1f(drawProg.u.uReveal, 1.0);
+  gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+}
+
+// ---------------------------------------------------------------- loop
+let lastT = 0, frameMs = 16, botInput = null;
+function frame(now) {
+  if (!TICK) requestAnimationFrame(frame);
+  let dt = lastT ? (now - lastT) / 1000 : 1 / 60; lastT = now;
+  if (TICK) dt = 1 / 60;
+  dt = Math.min(dt, 1 / 20);
+  const t0 = performance.now();
+  if (started) { update(dt); draw(); serviceAudio(Math.max(1.5, 9 - frameMs)); }
+  frameMs = 0.9 * frameMs + 0.1 * (performance.now() - t0);
+  // adapt substeps to what the device can afford; wave speed follows, so on a slow phone the
+  // cave is simply quieter and slower, never stuttery
+  if (!TICK) { if (frameMs > 12 && stepsPerFrame > 5) stepsPerFrame--; else if (frameMs < 6 && stepsPerFrame < 10) stepsPerFrame++; }
+  if ((subCount & 15) === 0) hud();
+}
+function resize() {
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  const w = Math.round(innerWidth * dpr), h = Math.round(innerHeight * dpr);
+  if (canvas.width === w && canvas.height === h) return;
+  canvas.width = w; canvas.height = h;
+  if (level) { const n = level.no, s = level.seed; buildLevel(n, s); }
+}
+addEventListener('resize', resize); resize();
+
+// ---------------------------------------------------------------- input
+function begin() {
+  if (started) return;
+  audioInit(); if (actx.state === 'suspended') actx.resume();
+  $('overlay').style.display = 'none'; started = true;
+  buildLevel(levelNo, seed); say('click to see', 2400);
+  if (TICK) setInterval(() => frame(performance.now()), 1000 / 60); else requestAnimationFrame(frame);
+}
+$('overlay').addEventListener('pointerdown', e => { e.preventDefault(); if (started) { $('overlay').style.display = 'none'; return; } begin(); });
+$('about').addEventListener('click', e => { e.preventDefault(); $('overlay').style.display = 'flex'; });
+addEventListener('keydown', e => {
+  if (e.repeat) return; keys[e.code] = true;
+  if (!started) { begin(); return; }
+  if (e.code === 'Space' || e.code === 'Enter') { pendingClick = true; e.preventDefault(); }
+  if (e.code === 'KeyB') toggleBlind();
+});
+addEventListener('keyup', e => { keys[e.code] = false; });
+let ptr = null;
+canvas.addEventListener('pointerdown', e => {
+  if (!started) return; e.preventDefault(); canvas.setPointerCapture(e.pointerId);
+  ptr = { id: e.pointerId, x0: e.clientX, y0: e.clientY, x: e.clientX, y: e.clientY, t0: performance.now(), moved: false };
+  if (actx && actx.state === 'suspended') actx.resume();
+});
+canvas.addEventListener('pointermove', e => {
+  if (!ptr || e.pointerId !== ptr.id) return;
+  ptr.x = e.clientX; ptr.y = e.clientY;
+  if (!ptr.moved && Math.hypot(ptr.x - ptr.x0, ptr.y - ptr.y0) > 10) {
+    ptr.moved = true; joy = ptr; const st = $('stick'); st.style.left = ptr.x0 + 'px'; st.style.top = ptr.y0 + 'px'; st.style.opacity = 1;
+  }
+  if (ptr.moved) { const dx = ptr.x - ptr.x0, dy = ptr.y - ptr.y0, m = Math.hypot(dx, dy), s = m > 50 ? 50 / m : 1;
+    $('stick').firstElementChild.style.transform = `translate(calc(-50% + ${dx * s}px), calc(-50% + ${dy * s}px))`; }
+});
+function ptrUp(e) {
+  if (!ptr || e.pointerId !== ptr.id) return;
+  if (!ptr.moved && performance.now() - ptr.t0 < 400) pendingClick = true;
+  ptr = null; joy = null; $('stick').style.opacity = 0;
+}
+canvas.addEventListener('pointerup', ptrUp); canvas.addEventListener('pointercancel', ptrUp);
+function toggleBlind() { blind = !blind; document.body.classList.toggle('blind', blind); $('blind').textContent = blind ? '▢ blind mode on · B or tap here' : '▣ blind mode'; }
+$('blind').addEventListener('pointerdown', e => { e.stopPropagation(); e.preventDefault(); toggleBlind(); });
+document.addEventListener('visibilitychange', () => { lastT = 0; });
+
+// ---------------------------------------------------------------- bot / test surface
+window.__game = {
+  get level() { return level; }, get bat() { return bat; }, get won() { return won; }, get clicks() { return clicks; },
+  get levelNo() { return levelNo; }, get simT() { return simT; }, get stepsPerFrame() { return stepsPerFrame; },
+  get lastAudio() { return lastAudio; }, get frameMs() { return frameMs; }, get audioState() { return actx ? actx.state : 'none'; },
+  begin, click: () => { pendingClick = true; }, setInput: v => { botInput = v; }, toggleBlind,
+  // read the visible sim state (for gates): pressure field A and glow A at a cell
+  probe: (x, y) => { const px = new Float32Array(4);
+    gl.bindFramebuffer(gl.FRAMEBUFFER, level.fld.fb[level.fld.cur]); gl.readBuffer(gl.COLOR_ATTACHMENT0);
+    if (FMT.type === gl.FLOAT) { gl.readPixels(x, y, 1, 1, gl.RGBA, gl.FLOAT, px); return Array.from(px); }
+    return null; },
+  energy: () => { // sum |pA| over the grid (float path only)
+    const { W, H } = level; const buf = new Float32Array(W * H * 4);
+    gl.bindFramebuffer(gl.FRAMEBUFFER, level.fld.fb[level.fld.cur]); gl.readBuffer(gl.COLOR_ATTACHMENT0);
+    if (FMT.type !== gl.FLOAT) return null; gl.readPixels(0, 0, W, H, gl.RGBA, gl.FLOAT, buf);
+    let eA = 0, eB = 0, mx = 0; for (let i = 0; i < W * H; i++) { eA += Math.abs(buf[i * 4]); eB += Math.abs(buf[i * 4 + 2]); mx = Math.max(mx, Math.abs(buf[i * 4])); }
+    return { eA, eB, maxA: mx }; },
+  glow: () => { const { W, H } = level; const buf = new Float32Array(W * H * 4);
+    gl.bindFramebuffer(gl.FRAMEBUFFER, level.fld.fb[level.fld.cur]); gl.readBuffer(gl.COLOR_ATTACHMENT1);
+    if (FMT.type !== gl.FLOAT) return null; gl.readPixels(0, 0, W, H, gl.RGBA, gl.FLOAT, buf);
+    let lit = 0, wallN = 0; for (let i = 0; i < W * H; i++) if (level.wall[i]) { wallN++; if (buf[i * 4] > 0.02) lit++; }
+    return { lit, wallN }; },
+};
+</script>
+</body>
+</html>
