@@ -1,5 +1,5 @@
 {
- "count": 37,
+ "count": 38,
  "base": "https://booyaka101.github.io/thedailyfable",
  "days": [
   {
@@ -863,6 +863,30 @@
     {
      "label": "the short",
      "url": "https://youtube.com/shorts/GDkZyvCvtEo"
+    }
+   ]
+  },
+  {
+   "day": 38,
+   "title": "SURVEY OF PENLOD",
+   "date": "",
+   "blurb": "An A1 topographic sheet of a country that never existed. An uplift field was written down, five million years of rain were simulated over it, and the rivers, coast, lake and summits are what the erosion found. Then it was surveyed like a real sheet: contours, rivers weighted by drainage, towns where the ground is flat and watered, roads on the cheapest line, passes at the key saddles. Every one of its 123 names is a true description of the place, in an invented tongue whose only vocabulary is geography; the second page is a gazetteer that says why.",
+   "page": "https://booyaka101.github.io/thedailyfable/day38/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day38/poster.jpg",
+   "video": null,
+   "short": null,
+   "links": [
+    {
+     "label": "the sheet (zoomable, searchable gazetteer, A1 PDF)",
+     "url": "https://booyaka101.github.io/thedailyfable/day38/"
+    },
+    {
+     "label": "the film",
+     "url": "https://booyaka101.github.io/thedailyfable/FILM_URL"
+    },
+    {
+     "label": "the short",
+     "url": "https://booyaka101.github.io/thedailyfable/SHORT_URL"
     }
    ]
   }
