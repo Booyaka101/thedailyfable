@@ -1,5 +1,5 @@
 {
- "count": 38,
+ "count": 39,
  "base": "https://booyaka101.github.io/thedailyfable",
  "days": [
   {
@@ -873,8 +873,8 @@
    "blurb": "An A1 topographic sheet of a country that never existed. An uplift field was written down, five million years of rain were simulated over it, and the rivers, coast, lake and summits are what the erosion found. Then it was surveyed like a real sheet: contours, rivers weighted by drainage, towns where the ground is flat and watered, roads on the cheapest line, passes at the key saddles. Every one of its 123 names is a true description of the place, in an invented tongue whose only vocabulary is geography; the second page is a gazetteer that says why.",
    "page": "https://booyaka101.github.io/thedailyfable/day38/",
    "poster": "https://booyaka101.github.io/thedailyfable/day38/poster.jpg",
-   "video": null,
-   "short": null,
+   "video": "https://youtu.be/cY2hkhXDJI4",
+   "short": "https://youtube.com/shorts/s1cOMAIZipE",
    "links": [
     {
      "label": "the sheet (zoomable, searchable gazetteer, A1 PDF)",
@@ -882,11 +882,35 @@
     },
     {
      "label": "the film",
-     "url": "https://booyaka101.github.io/thedailyfable/FILM_URL"
+     "url": "https://youtu.be/cY2hkhXDJI4"
     },
     {
      "label": "the short",
-     "url": "https://booyaka101.github.io/thedailyfable/SHORT_URL"
+     "url": "https://youtube.com/shorts/s1cOMAIZipE"
+    }
+   ]
+  },
+  {
+   "day": 39,
+   "title": "THE TONGUES OF PENLOD",
+   "date": "",
+   "blurb": "Yesterday's country is fifteen hundred years older and its language has split. Thirty-eight sound changes, each born once in one town, carried along the survey's real roads and stalling at the mountains; the lines where they stalled are the isoglosses on a two-sheet linguistic atlas. No road crosses the northern wall, so the north still speaks the old tongue. On the page every town is a hotspot that says the same sentence in its own dialect. The film walks twenty towns and lets you hear it drift.",
+   "page": "https://booyaka101.github.io/thedailyfable/day39/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day39/poster.jpg",
+   "video": "https://youtu.be/0gnigEN7n2Q",
+   "short": "https://youtube.com/shorts/Kh8oXDIevYc",
+   "links": [
+    {
+     "label": "the atlas (zoomable, every town speaking, A2 PDF)",
+     "url": "https://booyaka101.github.io/thedailyfable/day39/"
+    },
+    {
+     "label": "the film",
+     "url": "https://youtu.be/0gnigEN7n2Q"
+    },
+    {
+     "label": "the short",
+     "url": "https://youtube.com/shorts/Kh8oXDIevYc"
     }
    ]
   }
