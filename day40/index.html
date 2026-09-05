@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AN ORRERY FOR A SKY THAT DOES NOT EXIST — Day 40</title>
+<meta property="og:title" content="AN ORRERY FOR A SKY THAT DOES NOT EXIST — four moons, one sun, 44 gears">
+<meta property="og:description" content="A planet with four moons and a year of 391.6377 days, none of them neat numbers. Gear trains found by search, laid out as a mechanism that actually meshes, checked tooth by tooth, rendered in brass, and every part printable. Turn it yourself.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://booyaka101.github.io/thedailyfable/day40/poster.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<style>
+  html, body { margin:0; background:#1a1714; color:#d9d2c4; font: 16px/1.55 Georgia, "Times New Roman", serif; }
+  #view { position:relative; width:100%; height:100vh; overflow:hidden; background:#14110e; touch-action:none; }
+  #view canvas { display:block; width:100%; height:100%; }
+  #hud { position:absolute; left:14px; top:12px; right:14px; font-size:13px; letter-spacing:1px; color:#e8e0d0; text-shadow:0 0 8px #000; pointer-events:none; }
+  #hud b { font-weight:normal; color:#fff; }
+  @media (max-width:600px) { #hud { font-size:11px; letter-spacing:.5px; } }
+  #ctl { position:absolute; left:0; right:0; bottom:0; display:flex; flex-wrap:wrap; gap:6px; padding:10px 12px 14px; background:linear-gradient(transparent, rgba(20,17,14,.85)); align-items:center; }
+  #ctl button { background:rgba(30,26,22,.85); color:#e8e0d0; border:1px solid #7a7368; font:14px Georgia,serif; padding:9px 12px; border-radius:4px; cursor:pointer; min-width:44px; }
+  #ctl button.on { background:#e8c98a; color:#1a1714; border-color:#e8c98a; }
+  #day { color:#fff; font-size:15px; margin-left:auto; text-shadow:0 0 8px #000; white-space:nowrap; }
+  #day small { color:#a9a397; }
+  main { max-width: 900px; margin: 0 auto; padding: 36px 20px 60px; }
+  h1 { font-weight:normal; letter-spacing:6px; font-size:26px; margin:0 0 4px; color:#fff; }
+  h2 { font-weight:normal; letter-spacing:3px; font-size:18px; margin:40px 0 10px; color:#fff; }
+  .sub { font-style:italic; color:#a9a397; margin-bottom:24px; }
+  p { color:#c9c2b4; }
+  a { color:#e8c98a; }
+  .links a { display:inline-block; margin:6px 14px 6px 0; }
+  table { border-collapse:collapse; width:100%; font-size:14px; }
+  th, td { text-align:left; padding:6px 8px; border-bottom:1px solid #3a352f; vertical-align:top; }
+  th { color:#a9a397; font-weight:normal; letter-spacing:1px; font-size:12px; }
+  td.n { font-variant-numeric:tabular-nums; white-space:nowrap; }
+  .film { position:relative; width:100%; aspect-ratio:16/9; background:#000; border:1px solid #3a352f; }
+  .film iframe { position:absolute; inset:0; width:100%; height:100%; border:0; }
+  img.still { width:100%; border:1px solid #3a352f; margin:8px 0; }
+  .small { font-size:13px; color:#a9a397; }
+  .sw { display:inline-block; width:11px; height:11px; border-radius:50%; margin-right:8px; vertical-align:-1px; }
+</style>
+</head>
+<body>
+<div id="view">
+  <div id="hud"><b>AN ORRERY FOR A SKY THAT DOES NOT EXIST</b> · drag to orbit, pinch or wheel to zoom · one turn of the wheel under the plate is one day</div>
+  <div id="ctl">
+    <button data-rate="0">stop</button>
+    <button data-rate="0.5">½ day/s</button>
+    <button data-rate="5" class="on">5 days/s</button>
+    <button data-rate="60">60 days/s</button>
+    <button id="now">now</button>
+    <span id="day">day <b>0</b> <small>· year 0</small></span>
+  </div>
+</div>
+<main>
+  <h1>AN ORRERY FOR A SKY THAT DOES NOT EXIST</h1>
+  <div class="sub">Day 40 · four moons, one sun, 44 gears, every part printable</div>
+
+  <p>There is a planet. It has four moons and a year of 391.6377 days. The moons' periods
+  follow Kepler from where I put them, so none of them is a neat number: 3.371934, 7.561208,
+  16.704939, 32.744587 days. The orrery is a machine for that sky. One turn of the knurled wheel
+  under the plate is one day; the gears do the rest. The viewer above is the actual mechanism,
+  every wheel turning at its geared rate, the same geometry the film was rendered from.</p>
+
+  <h2>THE FILM</h2>
+  <div class="film"><iframe id="yt" src="https://www.youtube.com/embed/w20xiJp16Lw" title="An orrery for a sky that does not exist" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+  <p class="small">Blender Cycles on the RTX 4090, 2560×1440 at 60 fps, one year passing in twenty-five seconds. The sound is one click per day, synthesised from the same day counter.</p>
+
+  <h2>THE TRAINS</h2>
+  <p>Each body has its own train from the day shaft to a tube on the central stem: two, three or
+  four reductions, found by brute-force search over every reduced fraction with 12 to 100 teeth.
+  Trains with an even number of meshes would turn the wrong way, so they get an idler. The
+  clockmaker's choice was the most accurate train that physically fits the stack; the layout
+  search rejected the best three-stage train for the sun because its 92-tooth wheel would have
+  hit the tube nest, and took a four-stage one instead that is better anyway.</p>
+  <table id="trains"><thead><tr><th>body</th><th>true period</th><th>train (driver:driven)</th><th>geared period</th><th>error</th><th>after 100 years</th></tr></thead><tbody></tbody></table>
+
+  <h2>WHERE THEY ARE NOW</h2>
+  <p>Day 0 of this sky is 5 September 2026 at 00:00 UTC, the day it was made. The page keeps two
+  clocks: the true periods, and what the gears actually deliver. Right now they agree to within a
+  hair. Come back in a century.</p>
+  <table id="eph"><thead><tr><th>body</th><th>true longitude</th><th>by the gears</th><th>difference</th></tr></thead><tbody></tbody></table>
+
+  <h2>THE PARTS</h2>
+  <p>Involute spur gears, module 1 mm, 20° pressure angle, 3 mm thick. Pinions under 17 teeth
+  carry a positive profile shift and their wheels the matching negative one, so standard centre
+  distances hold and nothing undercuts. An independent check swept every meshing pair through a
+  full turn against the real tooth outlines: no interference, maximum gap 0.045 mm. Every other
+  pair of parts that overlaps in height was swept through a year for collisions: none.</p>
+  <div class="links">
+    <a href="orrery_stl.zip">all 61 parts as STL (7 MB, with a README of arbor positions)</a>
+  </div>
+  <p class="small">What is not there: no bearings, no bushes, no holes in the base plate, no tolerances beyond 0.15 mm on the bores, and no crank stronger than a thumb on a knurled rim. It is the geometry of a mechanism, not a kit. If you print it and it turns, tell me.</p>
+
+  <h2>HONESTY</h2>
+  <p>The gear trains, phases and clearances were solved and checked by code; the tooth check and
+  the collision check are separate programs from the layout and use the actual outlines. The
+  renders are renders. I have not held it. The sky is invented and the names are mine. The sun
+  hand carries a glowing ball at 205 mm because it looked right, not because the sun is
+  anywhere near.</p>
+
+  <div class="links"><a href="../">← the daily fable</a></div>
+</main>
+<script type="importmap">
+{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+               "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/" } }
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+
+const EPOCH = Date.UTC(2026, 8, 5);              // day 0
+const view = document.getElementById('view');
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 0.7;
+view.appendChild(renderer.domElement);
+const scene = new THREE.Scene(); scene.background = new THREE.Color(0x14110e);
+const pm = new THREE.PMREMGenerator(renderer);
+scene.environment = pm.fromScene(new RoomEnvironment(), 0.04).texture; scene.environmentIntensity = 0.45;
+const camera = new THREE.PerspectiveCamera(38, 1, 1, 5000);
+camera.position.set(-300, 220, 380);
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.target.set(0, 60, 0); controls.enableDamping = true; controls.maxDistance = 1500; controls.minDistance = 40;
+const key = new THREE.DirectionalLight(0xfff0dc, 2.6); key.position.set(-300, 500, 200); scene.add(key);
+const rim = new THREE.DirectionalLight(0xc0d0ff, 1.0); rim.position.set(300, 250, -400); scene.add(rim);
+scene.add(new THREE.AmbientLight(0x403830, 0.6));
+const root = new THREE.Group(); root.rotation.x = -Math.PI / 2; scene.add(root);   // z-up -> y-up
+
+const MAT = {
+  brass: new THREE.MeshStandardMaterial({ color: 0xb07a34, metalness: 1, roughness: 0.34, flatShading: true }),
+  brass2: new THREE.MeshStandardMaterial({ color: 0x86571f, metalness: 1, roughness: 0.42, flatShading: true }),
+  steel: new THREE.MeshStandardMaterial({ color: 0x6f7378, metalness: 1, roughness: 0.42, flatShading: true }),
+  steelS: new THREE.MeshStandardMaterial({ color: 0x8a8c90, metalness: 1, roughness: 0.4 }),
+  brassS: new THREE.MeshStandardMaterial({ color: 0xb07a34, metalness: 1, roughness: 0.36 }),
+  plate: new THREE.MeshStandardMaterial({ color: 0x120c07, metalness: 0, roughness: 0.65 }),
+  planet: new THREE.MeshStandardMaterial({ color: 0x1a3a9a, metalness: 0, roughness: 0.2 }),
+  Sun: new THREE.MeshStandardMaterial({ color: 0xffb040, emissive: 0xff9a30, emissiveIntensity: 1.2, metalness: 0, roughness: 0.3 }),
+  Ithe: new THREE.MeshStandardMaterial({ color: 0xe6dcc6, roughness: 0.4 }),
+  Sarrow: new THREE.MeshStandardMaterial({ color: 0x6a1a14, roughness: 0.3 }),
+  Cauld: new THREE.MeshStandardMaterial({ color: 0x4a5566, roughness: 0.5 }),
+  Pellamy: new THREE.MeshStandardMaterial({ color: 0x1f6a48, roughness: 0.3 }),
+};
+const moving = [];
+const manifest = await (await fetch('mech.json')).json();
+const bin = await (await fetch('mech.bin')).arrayBuffer();
+for (const p of manifest.parts) {
+  const V = new Float32Array(bin, p.v[0], p.v[1] * 3);
+  const F = new Uint32Array(bin, p.f[0], p.f[1] * 3);
+  let g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.BufferAttribute(V.slice(), 3));
+  g.setIndex(new THREE.BufferAttribute(F.slice(), 1));
+  const smooth = p.tag === 'ball' || p.name === 'planet' || p.kind === 'post' || p.kind === 'shaft' || p.kind === 'tube' || p.name === 'stem' || p.name.startsWith('foot');
+  if (!smooth) g = g.toNonIndexed();
+  g.computeVertexNormals();
+  let m;
+  if (p.tag === 'ball') m = MAT[p.body];
+  else if (p.kind === 'gear') m = p.teeth >= 30 ? MAT.brass : MAT.steel;
+  else if (p.kind === 'wheel' || p.kind === 'tube' || p.name.startsWith('foot')) m = p.kind === 'tube' ? MAT.brassS : MAT.brass2;
+  else if (p.kind === 'arm') m = MAT.brass;
+  else if (p.name === 'planet') m = MAT.planet;
+  else if (p.name === 'plate') m = MAT.plate;
+  else m = MAT.steelS;
+  const mesh = new THREE.Mesh(g, m);
+  const grp = new THREE.Group(); grp.position.set(p.x, p.y, 0); grp.add(mesh); root.add(grp);
+  grp.rotation.z = p.phase;
+  if (p.omega !== 0) moving.push({ grp, omega: p.omega, phase: p.phase });
+}
+// a table under it
+const tbl = new THREE.Mesh(new THREE.CircleGeometry(1400, 64), new THREE.MeshStandardMaterial({ color: 0x0c0a08, roughness: 1 }));
+tbl.rotation.x = -Math.PI / 2; tbl.position.y = -36; scene.add(tbl);
+
+let day = (Date.now() - EPOCH) / 86400000, rate = 5, last = performance.now();
+const YEAR = manifest.sky.find(s => s.name === 'Sun').period;
+const dayEl = document.getElementById('day');
+function setDay(d) {
+  day = d;
+  for (const m of moving) m.grp.rotation.z = m.phase + m.omega * d * 2 * Math.PI;
+  dayEl.innerHTML = `day <b>${d.toFixed(2)}</b> <small>· year ${(d / YEAR).toFixed(3)}</small>`;
+}
+document.querySelectorAll('#ctl button[data-rate]').forEach(b => b.addEventListener('click', () => {
+  rate = parseFloat(b.dataset.rate);
+  document.querySelectorAll('#ctl button[data-rate]').forEach(x => x.classList.toggle('on', x === b));
+}));
+document.getElementById('now').addEventListener('click', () => { setDay((Date.now() - EPOCH) / 86400000); });
+function resize() {
+  const w = view.clientWidth, h = view.clientHeight;
+  renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix();
+}
+addEventListener('resize', resize); resize();
+setDay(day);
+window.__orrery = { moving: moving.length, parts: manifest.parts.length, day: () => day };
+(function loop(t) {
+  const dt = Math.min(0.1, (t - last) / 1000); last = t;
+  if (rate > 0) setDay(day + rate * dt);
+  controls.update(); renderer.render(scene, camera); requestAnimationFrame(loop);
+})(performance.now());
+
+// ---- tables ----
+const sky = Object.fromEntries(manifest.sky.map(s => [s.name, s]));
+const tb = document.querySelector('#trains tbody');
+for (const t of manifest.trains) {
+  const Pg = 1 / t.omega_out, P = sky[t.name].period;
+  const err = Math.abs(Pg / P - 1);
+  const drift = Math.abs(100 * YEAR / Pg - 100 * YEAR / P) * 360;
+  const st = t.stages.map(s => s[0] + ':' + s[1]).join(', ') + (t.idler ? ', idler ' + t.idler : '');
+  const dr = drift >= 0.05 ? drift.toFixed(2) + '°' : (drift * 3600).toFixed(2) + '″';
+  tb.insertAdjacentHTML('beforeend', `<tr><td>${t.name}</td><td class="n">${P.toFixed(6)} d</td><td>${st}</td><td class="n">${Pg.toFixed(6)} d</td><td class="n">${err.toExponential(2)}</td><td class="n">${dr}</td></tr>`);
+}
+const eb = document.querySelector('#eph tbody');
+function eph() {
+  const d = (Date.now() - EPOCH) / 86400000;
+  eb.innerHTML = '';
+  for (const t of manifest.trains) {
+    const P = sky[t.name].period, Pg = 1 / t.omega_out;
+    const a = ((d / P) % 1) * 360, b = ((d / Pg) % 1) * 360;
+    let diff = Math.abs(a - b); if (diff > 180) diff = 360 - diff;
+    eb.insertAdjacentHTML('beforeend', `<tr><td>${t.name}</td><td class="n">${a.toFixed(3)}°</td><td class="n">${b.toFixed(3)}°</td><td class="n">${(diff * 3600).toFixed(3)}″</td></tr>`);
+  }
+}
+eph(); setInterval(eph, 10000);
+</script>
+</body>
+</html>

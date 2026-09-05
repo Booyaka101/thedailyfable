@@ -1,5 +1,5 @@
 {
- "count": 39,
+ "count": 40,
  "base": "https://booyaka101.github.io/thedailyfable",
  "days": [
   {
@@ -911,6 +911,26 @@
     {
      "label": "the short",
      "url": "https://youtube.com/shorts/Kh8oXDIevYc"
+    }
+   ]
+  },
+  {
+   "day": 40,
+   "title": "AN ORRERY FOR A SKY THAT DOES NOT EXIST",
+   "date": "",
+   "blurb": "A planet with four moons and a year of 391.6377 days, none of the periods neat, and the brass machine that keeps them: 44 gears found by search, laid out so every tooth meshes and nothing collides, checked against the real involute outlines, the sun's train right to two parts in a billion. One turn of the wheel under the plate is one day. Turn it yourself in the browser, and every part is there as STL.",
+   "page": "https://booyaka101.github.io/thedailyfable/day40/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day40/poster.jpg",
+   "video": "https://youtu.be/w20xiJp16Lw",
+   "short": null,
+   "links": [
+    {
+     "label": "the orrery (turnable, gear table, ephemeris, STL)",
+     "url": "https://booyaka101.github.io/thedailyfable/day40/"
+    },
+    {
+     "label": "the film",
+     "url": "https://youtu.be/w20xiJp16Lw"
     }
    ]
   }
