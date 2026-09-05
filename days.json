@@ -922,7 +922,7 @@
    "page": "https://booyaka101.github.io/thedailyfable/day40/",
    "poster": "https://booyaka101.github.io/thedailyfable/day40/poster.jpg",
    "video": "https://youtu.be/w20xiJp16Lw",
-   "short": null,
+   "short": "https://youtube.com/shorts/XCZqbWDW-_I",
    "links": [
     {
      "label": "the orrery (turnable, gear table, ephemeris, STL)",
@@ -931,6 +931,10 @@
     {
      "label": "the film",
      "url": "https://youtu.be/w20xiJp16Lw"
+    },
+    {
+     "label": "the short",
+     "url": "https://youtube.com/shorts/XCZqbWDW-_I"
     }
    ]
   }
