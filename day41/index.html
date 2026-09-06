@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>HOW MANY SHAFTS DOES IT TAKE TO WEAVE A FACE — Day 41</title>
+<meta property="og:title" content="HOW MANY SHAFTS DOES IT TAKE TO WEAVE A FACE">
+<meta property="og:description" content="A photograph from 1867 woven in two wefts on 3, 4, 8, 16, 32 shafts and up to a jacquard, in a 1500-year-old structure. Every draft is a real loom file. Drag the slider and watch the loom re-weave her.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://booyaka101.github.io/thedailyfable/day41/poster.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<style>
+  html, body { margin:0; background:#161412; color:#d9d2c4; font: 16px/1.55 Georgia, "Times New Roman", serif; }
+  #view { position:relative; width:100%; height:100vh; overflow:hidden; background:#0e0d0c; touch-action:none; }
+  #view canvas { display:block; width:100%; height:100%; }
+  #hud { position:absolute; left:14px; top:12px; right:14px; font-size:13px; letter-spacing:1px; color:#e8e0d0; text-shadow:0 0 8px #000; pointer-events:none; }
+  #hud b { font-weight:normal; color:#fff; }
+  @media (max-width:600px) { #hud { font-size:11px; letter-spacing:.5px; } #hud .hint { display:none; } #lab { min-width:120px; font-size:15px; } #lab small { white-space:normal; letter-spacing:0; } #ticks span { display:none; } #ticks span:first-child, #ticks span:nth-child(4), #ticks span:nth-child(8), #ticks span:last-child { display:inline; } }
+  #ctl { position:absolute; left:0; right:0; bottom:0; padding:10px 14px 16px; background:linear-gradient(transparent, rgba(14,13,12,.9)); }
+  #row { display:flex; align-items:center; gap:12px; }
+  #slcol { flex:1; display:flex; flex-direction:column; }
+  #shafts { width:100%; -webkit-appearance:none; appearance:none; height:34px; background:transparent; margin:0; }
+  #shafts::-webkit-slider-runnable-track { height:4px; background:#5a534a; border-radius:2px; }
+  #shafts::-webkit-slider-thumb { -webkit-appearance:none; width:30px; height:30px; border-radius:50%; background:#e8c98a; margin-top:-13px; border:2px solid #161412; }
+  #shafts::-moz-range-track { height:4px; background:#5a534a; border-radius:2px; }
+  #shafts::-moz-range-thumb { width:28px; height:28px; border-radius:50%; background:#e8c98a; border:2px solid #161412; }
+  #lab { color:#fff; font-size:17px; min-width:150px; max-width:45%; text-align:right; white-space:nowrap; text-shadow:0 0 8px #000; }
+  #lab small { display:block; color:#a9a397; font-size:12px; letter-spacing:1px; }
+  #ticks { display:flex; justify-content:space-between; font-size:11px; color:#a9a397; letter-spacing:.5px; margin:0 12px; }
+  #btns { position:absolute; right:14px; top:44px; display:flex; flex-direction:column; gap:6px; }
+  #btns button { background:rgba(30,26,22,.85); color:#e8e0d0; border:1px solid #7a7368; font:14px Georgia,serif; padding:9px 12px; border-radius:4px; cursor:pointer; min-width:44px; min-height:44px; }
+  #btns button.on { background:#e8c98a; color:#1a1714; border-color:#e8c98a; }
+  main { max-width: 900px; margin: 0 auto; padding: 36px 20px 60px; }
+  h1 { font-weight:normal; letter-spacing:6px; font-size:26px; margin:0 0 4px; color:#fff; }
+  h2 { font-weight:normal; letter-spacing:3px; font-size:18px; margin:40px 0 10px; color:#fff; }
+  .sub { font-style:italic; color:#a9a397; margin-bottom:24px; }
+  p { color:#c9c2b4; }
+  a { color:#e8c98a; }
+  .links a { display:inline-block; margin:6px 14px 6px 0; }
+  table { border-collapse:collapse; width:100%; font-size:14px; }
+  th, td { text-align:left; padding:6px 8px; border-bottom:1px solid #3a352f; vertical-align:top; }
+  th { color:#a9a397; font-weight:normal; letter-spacing:1px; font-size:12px; }
+  td.n { font-variant-numeric:tabular-nums; white-space:nowrap; }
+  .film { position:relative; width:100%; aspect-ratio:16/9; background:#000; border:1px solid #3a352f; }
+  .film iframe { position:absolute; inset:0; width:100%; height:100%; border:0; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(150px, 1fr)); gap:10px; }
+  .grid figure { margin:0; }
+  .grid img { width:100%; border:1px solid #3a352f; display:block; }
+  .grid figcaption { font-size:12px; color:#a9a397; margin-top:4px; }
+  img.still { width:100%; border:1px solid #3a352f; margin:8px 0; }
+  .small { font-size:13px; color:#a9a397; }
+</style>
+</head>
+<body>
+<div id="view">
+  <canvas id="gl"></canvas>
+  <div id="hud"><b>HOW MANY SHAFTS DOES IT TAKE TO WEAVE A FACE</b><span class="hint"> · drag the slider: the loom re-weaves her · pinch or wheel to see the yarn · drag to pan</span></div>
+  <div id="btns"><button id="back" title="turn the cloth over">back</button><button id="fit" title="whole cloth">fit</button></div>
+  <div id="ctl">
+    <div id="row"><div id="slcol"><input id="shafts" type="range" min="0" max="16" step="1" value="10"><div id="ticks"><span>3</span><span>4</span><span>6</span><span>8</span><span>12</span><span>16</span><span>24</span><span>32</span><span>48</span><span>64</span><span>128</span><span>jacquard</span></div></div><div id="lab"><span id="labn">32 shafts</span><small id="labs">30 blocks · a dobby loom</small></div></div>
+  </div>
+</div>
+<main>
+  <h1>HOW MANY SHAFTS DOES IT TAKE TO WEAVE A FACE</h1>
+  <div class="sub">Day 41 · a photograph from 1867, two wefts, one loom with more and more shafts</div>
+
+  <p>A loom lifts threads in groups. Every warp thread is tied to one shaft, and a shaft rises
+  or stays down as a whole. A floor loom in a spare room has four or eight shafts; a computer
+  dobby has sixteen, twenty-four, forty; a jacquard lifts every thread on its own. The number
+  of shafts is the number of different things the warp can do. So: how many does it take to
+  weave a face?</p>
+
+  <p>The face is Julia Jackson, photographed by her aunt Julia Margaret Cameron in 1867 (the
+  print is in the Met and public domain; she was later Virginia Woolf's mother). The cloth is
+  <em>taqueté</em>, a weft-faced compound tabby, the structure of Sasanian and Byzantine
+  pictorial silks: a binding warp on two shafts, a pattern warp on the rest, and two wefts,
+  one white and one black, thrown in turn. Wherever the pattern warp is lifted the white weft
+  goes underneath and the black shows; where it is down the white shows. The other weft is
+  always there, on the back, so the reverse of the cloth is the negative. No weft ever floats
+  more than three ends and no end more than two picks, at any shaft count, so every one of
+  these drafts is sound cloth.</p>
+
+  <p>With N shafts there are N−2 pattern blocks. The 240 pattern ends are grouped into blocks
+  by clustering the photograph's columns (k-means on the grey profile of each column), each
+  block gets a lift sequence dithered down its own length, and the result is the best two-weft
+  picture that loom can make. At three shafts the loom can only weave rows. At four it weaves
+  the light on her face and nothing else. At sixteen there is a person. OpenCV's face detector
+  first agrees at <b>32 shafts</b>, and stays about as sure as it is of the jacquard.</p>
+
+  <h2>THE FILM</h2>
+  <div class="film"><iframe id="yt" src="" title="How many shafts does it take to weave a face" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+  <p class="small">The loom shot is the 32-shaft cloth, rendered yarn by yarn in Blender (hair curves; 1,200 wefts, 480 ends, 200,000 fibres), then every shaft count as the finished cloth.</p>
+
+  <h2>EVERY CLOTH</h2>
+  <div class="grid" id="cloths"></div>
+
+  <h2>THE DRAFTS</h2>
+  <p>Each row is a real draft: a WIF file (loads in Fiberworks, WeavePoint, PixeLoom, and the
+  TC2 software) and a weaver's sheet as PDF with the threading in strips and the liftplan.
+  The detector column is OpenCV's YuNet face detector run on the two-weft cloth, blurred as
+  you would see it across a room; blank means it found nothing above 0.5.</p>
+  <table id="tbl"><thead><tr><th>shafts</th><th>blocks</th><th>loom</th><th>error vs photo</th><th>ssim</th><th>face detector</th><th>files</th></tr></thead><tbody></tbody></table>
+
+  <h2>HONEST NOTES</h2>
+  <p>The cloth in the viewer and in the film is a model, not a photograph of woven cloth: round
+  yarns, a depth rule for face weft, back weft and binding point, some fly-away fibre. Real
+  taqueté packs its wefts flatter than this and its binding specks are smaller. The block
+  assignment is plain k-means; a weaver would hand-tune it, and a smarter optimiser might buy
+  a few shafts. The dithering runs down each block independently, so the dark ground carries
+  stray white picks wherever a block also passes through hair or light; that is the price of
+  the constraint and I left it in. Nothing here has been woven on a real loom yet. If you
+  weave one, tell me.</p>
+
+  <div class="links">
+    <a href="https://www.metmuseum.org/art/collection/search/267426">the photograph at the Met</a>
+    <a href="target.png">the 240 × 300 target</a>
+    <a href="../">all days</a>
+  </div>
+</main>
+<script>
+(async function () {
+const data = await (await fetch('data.json')).json();
+const drafts = data.drafts; const W = data.W, H = data.H;
+const canvas = document.getElementById('gl');
+const gl = canvas.getContext('webgl2', {antialias:false, alpha:false});
+if (!gl) { document.getElementById('hud').textContent = 'WebGL2 is needed for the cloth.'; return; }
+
+const vs = `#version 300 es
+in vec2 p; out vec2 uv; void main(){ uv = p; gl_Position = vec4(p*2.0-1.0, 0.0, 1.0); }`;
+const fs = `#version 300 es
+precision highp float; in vec2 uv; out vec4 o;
+uniform sampler2D pixA, pixB; uniform vec2 res; uniform vec2 origin; uniform float scale;   // cloth units per css px
+uniform float fell;    // y in passes below which pixB (the new draft) shows
+uniform float back;    // 1 = looking at the back
+uniform float t;
+float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1,311.7)))*43758.5453); }
+void main(){
+  vec2 px = vec2(uv.x, 1.0-uv.y) * res;               // css px, y down
+  vec2 c = origin + px * scale;                        // cloth coords: x in ends (0..480), y in passes (0..600), y down
+  if (c.x < 0.0 || c.x >= 480.0 || c.y < 0.0 || c.y >= 600.0) { o = vec4(0.055,0.052,0.05,1); return; }
+  float ex = back > 0.5 ? 479.0 - c.x : c.x;          // the back is mirrored
+  float e = floor(ex); float pa = floor(c.y);
+  float fx = fract(ex); float fy = fract(c.y);
+  // which draft at this pass: below the fell (larger y = lower on screen) the new one
+  vec2 tc = vec2((floor(e/2.0)+0.5)/float(${W}), (floor((599.0-pa)/2.0)+0.5)/float(${H}));
+  float white = (pa >= fell) ? texture(pixB, tc).r : texture(pixA, tc).r;
+  if (back > 0.5) white = 1.0 - white;
+  // binding ends are the odd ends; the binding point alternates with pass parity (W K / K W order)
+  bool bind = mod(e, 2.0) > 0.5;
+  bool bindHere = bind && (mod(floor(e/2.0) + pa, 2.0) > 0.5);
+  float speck = bindHere ? 1.0 : 0.0;
+  // weft cylinder shading across the pass (fy), dip near a binding point
+  float prof = sqrt(max(0.0, 1.0 - pow((fy-0.5)*2.0, 2.0)));
+  float dip = bindHere ? smoothstep(0.5, 0.0, abs(fx-0.5)) * 0.35 : 0.0;
+  float shade = 0.55 + 0.45*prof - dip;
+  // twist and fibre noise
+  float tw = 0.5 + 0.5*sin((c.x*3.1 + fy*4.0)*2.2);
+  shade *= 0.92 + 0.08*tw + 0.06*(hash(vec2(e, pa)) - 0.5);
+  vec3 wcol = vec3(0.86, 0.83, 0.76), kcol = vec3(0.045, 0.04, 0.036);
+  // the speck: the other weft shows through in a small spot at the binding point
+  float sp = speck * smoothstep(0.42, 0.18, abs(fx-0.5)) * smoothstep(0.5, 0.25, abs(fy-0.5));
+  float wf = mix(white, 1.0 - white, sp);
+  vec3 col = mix(kcol, wcol, wf) * shade;
+  // when zoomed far out, blend toward flat colour so aliasing does not shimmer
+  float far = smoothstep(0.6, 2.5, scale);
+  col = mix(col, mix(kcol, wcol, white) * 0.9, far);
+  // the moving fell: a faint bright line where the new cloth is arriving
+  float fl = exp(-abs(c.y - fell) * 1.5) * (fell > 0.0 && fell < 600.0 ? 0.35 : 0.0);
+  col += fl;
+  o = vec4(pow(col, vec3(1.0/1.0)), 1.0);
+}`;
+function sh(type, src){ const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s); if(!gl.getShaderParameter(s, gl.COMPILE_STATUS)) console.error(gl.getShaderInfoLog(s)); return s; }
+const prog = gl.createProgram(); gl.attachShader(prog, sh(gl.VERTEX_SHADER, vs)); gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, fs)); gl.linkProgram(prog);
+gl.useProgram(prog);
+const buf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([0,0, 1,0, 0,1, 1,1]), gl.STATIC_DRAW);
+const loc = gl.getAttribLocation(prog, 'p'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+const U = n => gl.getUniformLocation(prog, n);
+gl.uniform1i(U('pixA'), 0); gl.uniform1i(U('pixB'), 1);
+
+const texes = {};
+function loadTex(tag){
+  if (texes[tag]) return texes[tag];
+  const t = gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D, t);
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.R8, 1, 1, 0, gl.RED, gl.UNSIGNED_BYTE, new Uint8Array([0]));
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+  const img = new Image(); img.onload = () => { gl.bindTexture(gl.TEXTURE_2D, t); gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true); gl.texImage2D(gl.TEXTURE_2D, 0, gl.R8, gl.RED, gl.UNSIGNED_BYTE, img); gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false); draw(); };
+  img.src = 'pix/' + tag + '.png';
+  texes[tag] = t; return t;
+}
+
+// view state: origin (cloth units at top-left css px), scale (cloth units per css px)
+let scale = 1, origin = [0, 0], cssW = 1, cssH = 1;
+let cur = 10, prev = 10, fell = 600, fellStart = 0, isBack = 0;
+function fit(){ scale = Math.max(480 / cssW, 600 / cssH) * 1.04; origin = [240 - cssW * scale / 2, 300 - cssH * scale / 2]; }
+function resize(){
+  const dpr = Math.min(2, window.devicePixelRatio || 1);
+  cssW = canvas.clientWidth; cssH = canvas.clientHeight;
+  canvas.width = Math.round(cssW * dpr); canvas.height = Math.round(cssH * dpr);
+  gl.viewport(0, 0, canvas.width, canvas.height);
+}
+function draw(){
+  gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, loadTex(drafts[prev].tag));
+  gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D, loadTex(drafts[cur].tag));
+  gl.uniform2f(U('res'), cssW, cssH); gl.uniform2f(U('origin'), origin[0], origin[1]); gl.uniform1f(U('scale'), scale);
+  gl.uniform1f(U('fell'), fell); gl.uniform1f(U('back'), isBack); gl.uniform1f(U('t'), performance.now() / 1000);
+  gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+}
+let anim = null;
+function reweave(){
+  // the fell sweeps from the bottom of the cloth (y=600) up to the top (y=0)
+  if (anim) cancelAnimationFrame(anim);
+  fellStart = performance.now();
+  const step = () => { const u = Math.min(1, (performance.now() - fellStart) / 1400); fell = 600 - 600 * u * u * (3 - 2 * u); draw();
+    if (u < 1) anim = requestAnimationFrame(step); else { fell = -1; prev = cur; draw(); anim = null; } };
+  step();
+}
+const loomName = N => N <= 8 ? 'a floor loom' : N <= 40 ? 'a dobby loom' : N <= 128 ? 'a big dobby, rare' : 'a jacquard, every end free';
+function setLabel(){ const d = drafts[cur]; document.getElementById('labn').textContent = d.N >= 242 ? 'jacquard' : d.N + ' shafts';
+  document.getElementById('labs').textContent = d.blocks + (d.blocks === 1 ? ' block · ' : ' blocks · ') + loomName(d.N) + (d.face_conf > 0 ? ' · detector sees a face' : ''); }
+const slider = document.getElementById('shafts'); slider.max = drafts.length - 1; slider.value = cur;
+slider.addEventListener('input', () => { const v = +slider.value; if (v === cur) return; prev = (anim ? cur : prev === cur ? cur : cur); prev = cur; cur = v; setLabel(); reweave(); });
+document.getElementById('back').addEventListener('click', e => { isBack = 1 - isBack; e.target.classList.toggle('on', !!isBack); draw(); });
+document.getElementById('fit').addEventListener('click', () => { fit(); draw(); });
+
+// pan and zoom
+let ptrs = new Map(), lastMid = null, lastDist = 0; const evc = {down:0, move:0, multi:0};
+canvas.addEventListener('pointerdown', e => { evc.down++; canvas.setPointerCapture(e.pointerId); ptrs.set(e.pointerId, [e.clientX, e.clientY]); lastMid = null; });
+canvas.addEventListener('pointerup', e => { ptrs.delete(e.pointerId); lastMid = null; });
+canvas.addEventListener('pointercancel', e => { ptrs.delete(e.pointerId); lastMid = null; });
+canvas.addEventListener('pointermove', e => {
+  if (!ptrs.has(e.pointerId)) return; evc.move++; ptrs.set(e.pointerId, [e.clientX, e.clientY]); if (ptrs.size > 1) evc.multi++;
+  const pts = [...ptrs.values()]; const r = canvas.getBoundingClientRect();
+  const mid = pts.reduce((a, p) => [a[0] + p[0] / pts.length, a[1] + p[1] / pts.length], [0, 0]);
+  const dist = pts.length > 1 ? Math.hypot(pts[0][0] - pts[1][0], pts[0][1] - pts[1][1]) : 0;
+  if (lastMid) {
+    origin[0] -= (mid[0] - lastMid[0]) * scale; origin[1] -= (mid[1] - lastMid[1]) * scale;
+    if (pts.length > 1 && lastDist > 0) zoomAt(mid[0] - r.left, mid[1] - r.top, lastDist / dist);
+  }
+  lastMid = mid; lastDist = dist; draw();
+});
+function zoomAt(px, py, f){ const ns = Math.min(4, Math.max(0.02, scale * f)); origin[0] += px * (scale - ns); origin[1] += py * (scale - ns); scale = ns; }
+canvas.addEventListener('wheel', e => { e.preventDefault(); const r = canvas.getBoundingClientRect(); zoomAt(e.clientX - r.left, e.clientY - r.top, Math.exp(e.deltaY * 0.0015)); draw(); }, {passive:false});
+window.addEventListener('resize', () => { resize(); fit(); draw(); });
+resize(); fit(); setLabel(); draw();
+window.__d41 = () => ({cur, N: drafts[cur].N, scale: +scale.toFixed(4), fell: Math.round(fell), isBack, anim: !!anim, evc, ptrs: ptrs.size});
+// preload all pixel maps so the slider never waits
+drafts.forEach(d => loadTex(d.tag));
+
+// the table and the gallery
+const tb = document.querySelector('#tbl tbody'); const gal = document.getElementById('cloths');
+for (const d of drafts) {
+  const tr = document.createElement('tr');
+  const name = d.N >= 242 ? 'jacquard' : d.N;
+  tr.innerHTML = `<td class="n">${name}</td><td class="n">${d.blocks}</td><td>${loomName(d.N)}</td><td class="n">${d.rmse != null ? d.rmse.toFixed(3) : ''}</td><td class="n">${d.ssim != null ? d.ssim.toFixed(2) : ''}</td><td class="n">${d.face_conf > 0 ? (d.face_conf * 100).toFixed(0) + '%' : ''}</td><td><a href="files/julia_${d.tag}.wif">WIF</a> · <a href="files/julia_${d.tag}.pdf">PDF</a></td>`;
+  tb.appendChild(tr);
+  const fig = document.createElement('figure'); fig.innerHTML = `<a href="cloth/${d.tag}.jpg"><img loading="lazy" src="cloth/${d.tag}.jpg" alt="${name} shafts"></a><figcaption>${name}${d.N >= 242 ? '' : ' shafts'} · ${d.blocks} block${d.blocks === 1 ? '' : 's'}</figcaption>`;
+  gal.appendChild(fig);
+}
+const yt = document.getElementById('yt'); if (window.YT_ID) yt.src = 'https://www.youtube-nocookie.com/embed/' + window.YT_ID;
+})();
+</script>
+<script>window.YT_ID = "";</script>
+</body>
+</html>
