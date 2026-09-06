@@ -1,5 +1,5 @@
 {
- "count": 40,
+ "count": 41,
  "base": "https://booyaka101.github.io/thedailyfable",
  "days": [
   {
@@ -935,6 +935,30 @@
     {
      "label": "the short",
      "url": "https://youtube.com/shorts/XCZqbWDW-_I"
+    }
+   ]
+  },
+  {
+   "day": 41,
+   "title": "HOW MANY SHAFTS DOES IT TAKE TO WEAVE A FACE",
+   "date": "",
+   "blurb": "A loom lifts threads in groups, and the number of groups is the number of shafts. A photograph from 1867 (Julia Jackson, by Julia Margaret Cameron) is woven in two wefts, in the 1500-year-old taqueté structure, on 3, 4, 5, 6, 8 ... 128 shafts and a jacquard. At four shafts the loom weaves only the light on her face; by sixteen there is a person; a face detector first agrees at thirty-two. Every draft is a real loom file (WIF + weaver's sheet), the cloth is rendered yarn by yarn, and the slider re-weaves her live.",
+   "page": "https://booyaka101.github.io/thedailyfable/day41/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day41/poster.jpg",
+   "video": "https://youtu.be/GBI_Y6Kz6i4",
+   "short": "https://youtube.com/shorts/MtxNDP83hb4",
+   "links": [
+    {
+     "label": "the loom (slider, every cloth, WIF + PDF drafts)",
+     "url": "https://booyaka101.github.io/thedailyfable/day41/"
+    },
+    {
+     "label": "the film",
+     "url": "https://youtu.be/GBI_Y6Kz6i4"
+    },
+    {
+     "label": "the short",
+     "url": "https://youtube.com/shorts/MtxNDP83hb4"
     }
    ]
   }
