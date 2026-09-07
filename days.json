@@ -1,5 +1,5 @@
 {
- "count": 41,
+ "count": 42,
  "base": "https://booyaka101.github.io/thedailyfable",
  "days": [
   {
@@ -959,6 +959,30 @@
     {
      "label": "the short",
      "url": "https://youtube.com/shorts/MtxNDP83hb4"
+    }
+   ]
+  },
+  {
+   "day": 42,
+   "title": "PAPER THAT REMEMBERS",
+   "date": "",
+   "blurb": "A flat sheet cannot be a dome, unless it is corrugated and every cell is slightly different from its neighbours. Four crease patterns computed to fold into a wave, a dome, a saddle, and the relief of Penlod, the country this studio made by rain on day 38, with its map printed on the sheet pre-distorted so it only reads once folded. Every crease straight, every vertex flat; a physics model folds each one from the flat sheet to prove it. Fold them in the browser, or print the PDFs and fold the real thing.",
+   "page": "https://booyaka101.github.io/thedailyfable/day42/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day42/poster.jpg",
+   "video": "https://youtu.be/iKnbsagLWfA",
+   "short": "https://youtube.com/shorts/riMe_yNq91M",
+   "links": [
+    {
+     "label": "the sheets (fold slider, crease-pattern PDFs)",
+     "url": "https://booyaka101.github.io/thedailyfable/day42/"
+    },
+    {
+     "label": "the film",
+     "url": "https://youtu.be/iKnbsagLWfA"
+    },
+    {
+     "label": "the short",
+     "url": "https://youtube.com/shorts/riMe_yNq91M"
     }
    ]
   }
