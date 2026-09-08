@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>BITS PER GLANCE — Day 43</title>
+<meta property="og:title" content="BITS PER GLANCE (an eye, evolved from a flat patch of cells)">
+<meta property="og:description" content="A flat patch of light-sensitive cells is left to evolve in a forest, at noon, at dusk, by moonlight and by starlight, selected on one number: how many bits each glance delivers. Scrub the generations; every glance rolls real photon noise.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://booyaka101.github.io/thedailyfable/day43/poster.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<style>
+  html, body { margin:0; background:#161412; color:#d9d2c4; font: 16px/1.55 Georgia, "Times New Roman", serif; }
+  #view { position:relative; width:100%; background:#0e0d0c; padding-bottom:6px; }
+  #panes { display:flex; gap:0; align-items:stretch; justify-content:center; }
+  #panes canvas { display:block; touch-action:pan-y; }
+  #retina { background:#000; }
+  #hud { position:absolute; left:14px; top:10px; right:14px; font-size:13px; letter-spacing:1px; color:#e8e0d0; text-shadow:0 0 8px #000; pointer-events:none; }
+  #hud b { font-weight:normal; color:#fff; }
+  #worlds { display:flex; gap:6px; justify-content:center; padding:10px 14px 4px; flex-wrap:wrap; }
+  #worlds button, #play, #glance { background:rgba(30,26,22,.85); color:#e8e0d0; border:1px solid #7a7368; font:14px Georgia,serif; padding:9px 12px; border-radius:4px; cursor:pointer; min-width:44px; min-height:44px; }
+  #worlds button.on { background:#e8c98a; color:#1a1714; border-color:#e8c98a; }
+  #ctl { padding:6px 14px 10px; }
+  #row { display:flex; align-items:center; gap:12px; }
+  #gen { flex:1; -webkit-appearance:none; appearance:none; height:34px; background:transparent; margin:0; }
+  #gen::-webkit-slider-runnable-track { height:4px; background:#5a534a; border-radius:2px; }
+  #gen::-webkit-slider-thumb { -webkit-appearance:none; width:30px; height:30px; border-radius:50%; background:#e8c98a; margin-top:-13px; border:2px solid #161412; }
+  #gen::-moz-range-track { height:4px; background:#5a534a; border-radius:2px; }
+  #gen::-moz-range-thumb { width:28px; height:28px; border-radius:50%; background:#e8c98a; border:2px solid #161412; }
+  #lab { color:#fff; font-size:16px; min-width:120px; text-align:right; white-space:nowrap; }
+  #lab small { display:block; color:#a9a397; font-size:12px; letter-spacing:1px; }
+  #nums { display:flex; gap:18px; flex-wrap:wrap; padding:0 14px 8px; font: 14px Consolas, monospace; color:#c9c2b4; }
+  #nums b { color:#fff; font-weight:normal; }
+  #worldimg { position:absolute; right:14px; bottom:14px; width:120px; border:1px solid #3a3530; display:none; }
+  main { max-width: 900px; margin: 0 auto; padding: 36px 20px 60px; }
+  h1 { font-weight:normal; letter-spacing:6px; font-size:26px; margin:0 0 4px; color:#fff; }
+  h2 { font-weight:normal; letter-spacing:3px; font-size:18px; margin:40px 0 10px; color:#fff; }
+  .sub { font-style:italic; color:#a9a397; margin-bottom:24px; }
+  p { color:#c9c2b4; }
+  a { color:#e8c98a; }
+  .links a { display:inline-block; margin:6px 14px 6px 0; }
+  table { border-collapse:collapse; width:100%; font-size:14px; }
+  td, th { border-bottom:1px solid #2c2926; padding:6px 8px; text-align:left; vertical-align:top; }
+  th { color:#a9a397; font-weight:normal; letter-spacing:1px; }
+  .film { position:relative; padding-top:56.25%; margin:16px 0; background:#000; }
+  .film iframe { position:absolute; inset:0; width:100%; height:100%; border:0; }
+  code { font: 13px/1.4 Consolas, monospace; color:#e8c98a; }
+  .wv { float:right; width:200px; margin:0 0 12px 16px; border:1px solid #2c2926; }
+  @media (max-width:700px) { .wv { float:none; width:100%; margin:0 0 12px; } }
+</style>
+</head>
+<body>
+<div id="view">
+  <div id="worlds">
+    <button data-w="day" class="on">NOON</button><button data-w="dusk">DUSK</button><button data-w="moon">MOONLIGHT</button><button data-w="star">STARLIGHT</button>
+  </div>
+  <div id="panes"><canvas id="eye"></canvas><canvas id="retina"></canvas></div>
+  <div id="ctl"><div id="row"><button id="play">▶</button><input id="gen" type="range" min="0" max="1000" value="0"><button id="glance" title="a new glance">glance</button><div id="lab">1<small>generation</small></div></div></div>
+  <div id="nums"><span><b id="nbits">–</b> bits per glance</span><span>cup <b id="ncup">–</b></span><span>iris <b id="niris">–</b></span><span>lens <b id="nlens">–</b></span><span><b id="nlight">–</b></span></div>
+</div>
+<main>
+  <h1>BITS PER GLANCE</h1>
+  <div class="sub">an eye, evolved from a flat patch of cells, four times, in four different lights</div>
+
+  <img class="wv" src="data/world.jpg" alt="the forest the eye is looking at">
+  <p>Above: on the left, a cross-section of the eye, with rays traced back from three of its
+  cells (yellow from the centre of the patch, green from halfway out, red from the edge). On
+  the right, what the eye sees: the same forest (the picture at right, a 100° field of an
+  autumn wood) as it lands on the eye's 1,024 cells, with the photon noise of that world's
+  light, re-rolled at every glance. Pick a light, drag the generation slider, press play.
+  Tap the mosaic for a new glance.</p>
+  <p>The eye starts as a flat disc of light-sensitive cells one millimetre across. Seven numbers
+  describe it: how far the disc curls into a cup, how wide the hole at the rim is, whether there
+  is a lens, how big it is and where it sits, and the refractive index of the lens's outer,
+  middle and core layers (a lens starts as water and only counts when it is denser). Nothing
+  else. Each generation, ten mutants are made, every one is scored, and the best replaces the
+  parent if it is not worse.</p>
+  <p>The score is one number: how many bits of information about the world the eye's cells
+  deliver per glance, in the presence of the noise that light itself brings. Few photons, much
+  noise. A cell that receives a million photons can report its brightness to about six bits
+  (I give every cell 2% gain noise: a photoreceptor is not a photometer); a cell that receives
+  one photon can barely say whether it is dark. An eye is 1,024 such channels, and the bits
+  they carry together depend on how <i>different</i> their views are, which is what optics is
+  for. The same forest at noon, at dusk, by moonlight and by starlight is a different problem,
+  and the four eyes that come out are not the same eye.</p>
+
+  <h2>WHAT HAPPENED</h2>
+  <p>Four thousand generations in each light, from the same flat patch. <b>Noon</b> sat in a
+  shallow dish for 180 generations, then in one event about twenty generations long curled to
+  a 94° cup and shut its rim to a 0.09 mm pinhole: 3,493 bits per glance, and it never grew a
+  lens; there is light to spare, so the sharpest hole wins. <b>Moonlight</b> made the cup in
+  thirteen generations, and the blob of water at the rim densified over the next hundred into
+  a lens with a core index of 1.60 (glass is 1.5): 567 bits. <b>Dusk</b> is the odd one: it
+  hesitated in a shallow dish for five hundred generations while a small lens densified, then
+  deepened the cup and closed the iris together, and ends with the second-best eye, 2,550
+  bits, a lens of radius 0.29 mm behind a 0.39 mm pupil. <b>Starlight</b>, one photon per cell
+  per glance, made the cup in four generations and then grew a lens the size of the whole eye
+  and never closed the iris at all: 10.5 bits, a bucket for light that can tell the ground from
+  the sky and little else. The re-scored eyes with real rays instead of the fitness's Gaussian
+  approximation come out higher (4,037 / 3,565 / 756 / 11), same order.</p>
+  <img src="data/chart.svg" alt="bits per glance by generation for the four worlds, with cup angle, iris diameter and lens index" style="width:100%;margin:8px 0 14px;border:1px solid #2c2926">
+  <div id="results"></div>
+
+  <h2>THE FILM</h2>
+  <div class="film"><iframe src="https://www.youtube.com/embed/FraigeWzmZ0" title="BITS PER GLANCE" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+  <p class="links"><a href="https://youtu.be/FraigeWzmZ0">the film on YouTube</a> <a href="https://youtube.com/shorts/Aby8BxaS5Ss">the short</a></p>
+
+  <h2>HOW IT IS COMPUTED</h2>
+  <p>The eye is a body of revolution: a spherical cap of fixed area for the retina (area held
+  constant, so curling the patch is free), an iris at the rim, a ball lens of three concentric
+  shells. Rays are traced <i>backwards</i> from each cell, through the shells by Snell's law,
+  past the cup wall and the iris, out to a real HDR photograph of a forest (Poly Haven's
+  <code>autumn_forest_01</code>, CC0). Because the eye is symmetric, one point-spread function
+  per ring of cells suffices: its mean direction, its angular spread, and how much of the
+  open hemisphere's light still gets through. Cell size (0.03 mm) and diffraction at the iris
+  both blur. The information is the Gaussian mutual information between the world, sampled as
+  2,048 random rotations of the photograph, and the cells' photon counts with Poisson noise,
+  a dark floor of four photons and the 2% gain noise, computed as half the log-determinant of
+  the whitened covariance. Evolution is a (1+10) strategy with 1% steps for most mutants and
+  3% and 10% steps for a few, because the landscape has shallow valleys that 1% steps cannot
+  cross. Everything runs on the GPU in about 20 ms per eye.</p>
+  <p>The mosaic above is <i>not</i> that approximation: it is 4,096 rays per cell traced
+  through the actual eye into the photograph, and then the photon dice are rolled in your
+  browser for every glance.</p>
+
+  <h2>HONESTY</h2>
+  <ul id="honesty">
+    <li>One kind of cell, so the eye is colour-blind; the world is shown in colour only for you.</li>
+    <li>The lens is a homogeneous-shell ball lens, not a true graded index; the retina is a
+    perfect sphere; there is no cornea because the eye lives in water.</li>
+    <li>The fitness uses a Gaussian point-spread approximation and a Gaussian channel model;
+    the mosaic uses the real rays. Where they disagree, the mosaic is right.</li>
+    <li>Time is measured in generations of a hill-climber, not years or individuals. It is not
+    the Nilsson–Pelger estimate and does not try to be.</li>
+    <li>The retina's cell count is fixed at 1,024 and its area at 3.1 mm²; real eyes can also
+    grow, and growth changes the answer.</li>
+    <li>Selection accepted ties on a noisy score, so each trajectory ends a few percent below
+    its own best generation (noon 3,493 vs 3,508 at generation 354; dusk 2,550 vs 2,670 at
+    758; moonlight 567 vs 594 at 448). The numbers shown are the final generation's.</li>
+    <li>The dish that noon and dusk sat in for hundreds of generations is a real local
+    optimum of this score, about 2.5% deep; 1% mutations could not cross it, and the run was
+    restarted with occasional 3% and 10% mutations. Whether biology has the same valley I
+    do not know.</li>
+  </ul>
+
+  <div class="links">
+    <a href="../">← the daily fable</a>
+    <a href="https://github.com/Booyaka101/thedailyfable">source</a>
+  </div>
+</main>
+<script>
+(async function () {
+  const $ = s => document.querySelector(s);
+  const eyeC = $('#eye'), retC = $('#retina');
+  const meta = await (await fetch('data/meta.json')).json();
+  const layoutBuf = new DataView(await (await fetch('data/layout.bin')).arrayBuffer());
+  const N = meta.N;
+  // layout polygons
+  const polys = []; let o = 0;
+  for (let i = 0; i < N; i++) {
+    const n = layoutBuf.getUint8(o); o += 1; const p = [];
+    for (let k = 0; k < n; k++) { p.push([layoutBuf.getInt16(o, true) / 32000, layoutBuf.getInt16(o + 2, true) / 32000]); o += 4; }
+    polys.push(p);
+  }
+  const bins = {};
+  async function loadWorld(w) {
+    if (bins[w]) return bins[w];
+    const b = new Uint16Array(await (await fetch(`data/${w}.bin`)).arrayBuffer());
+    bins[w] = b; return b;
+  }
+  const N_WATER = 1.33, SHELL = [1.0, 0.7, 0.4], RANGES = [[0.01, 2.8], [0.02, 1.0], [0, 1.2], [0, 1], [1.33, 1.6], [1.33, 1.6], [1.33, 1.6]];
+  function decode(g) {
+    const v = g.map((x, i) => RANGES[i][0] + Math.min(1, Math.max(0, x)) * (RANGES[i][1] - RANGES[i][0]));
+    const cap = v[0], R = 1 / cap, z_rim = R * (1 - Math.cos(cap)), r_rim = R * Math.sin(cap);
+    return { cap, R, z_rim, r_rim, a: v[1] * r_rim, rl: v[2] >= 0.03 ? v[2] : 0, zl: v[3] * (z_rim + 1), n: [v[4], v[5], v[6]] };
+  }
+  // ---- 2D tracer (same rules as the simulator)
+  function isect(x, d, c, r, inside) {
+    const ox = x[0] - c[0], oz = x[1] - c[1]; const b = ox * d[0] + oz * d[1]; const cc = ox * ox + oz * oz - r * r;
+    const disc = b * b - cc; if (disc < 0) return null; const s = Math.sqrt(disc); const t = inside ? -b + s : -b - s; return t > 1e-7 ? t : null;
+  }
+  function refract(d, n, n1, n2) {
+    const eta = n1 / n2, cosi = -(d[0] * n[0] + d[1] * n[1]); const k = 1 - eta * eta * (1 - cosi * cosi);
+    if (k < 0) { const dn = d[0] * n[0] + d[1] * n[1]; return [[d[0] - 2 * dn * n[0], d[1] - 2 * dn * n[1]], false]; }
+    const o = [eta * d[0] + (eta * cosi - Math.sqrt(k)) * n[0], eta * d[1] + (eta * cosi - Math.sqrt(k)) * n[1]]; const l = Math.hypot(o[0], o[1]); return [[o[0] / l, o[1] / l], true];
+  }
+  function trace2d(e, x, d, far) {
+    far = far || 3.0; const R = e.R, z_rim = e.z_rim, a = e.a, cc = [0, R]; const l = Math.hypot(d[0], d[1]); d = [d[0] / l, d[1] / l];
+    const path = [x.slice()]; x = x.slice();
+    function seg(x, d, tEnd) {
+      const ts = isect(x, d, cc, R, true); if (ts !== null && ts < tEnd && (x[1] + ts * d[1]) < z_rim - 1e-6) return [ts, false];
+      if (Math.abs(d[1]) > 1e-9) { const tp = (z_rim - x[1]) / d[1]; if (tp > 0 && tp < tEnd && Math.abs(x[0] + tp * d[0]) > a) return [tp, false]; }
+      return [tEnd, true];
+    }
+    if (e.rl > 0) {
+      const cl = [0, e.zl], radii = SHELL.map(f => e.rl * f), ns = [N_WATER, ...e.n];
+      const tin = isect(x, d, cl, radii[0], false);
+      if (tin !== null) {
+        let [tEnd, ok] = seg(x, d, tin); x = [x[0] + tEnd * d[0], x[1] + tEnd * d[1]]; path.push(x.slice()); if (!ok) return [path, false];
+        let nr = [x[0] - cl[0], x[1] - cl[1]]; let ln = Math.hypot(nr[0], nr[1]); nr = [nr[0] / ln, nr[1] / ln];
+        let r; [d, r] = refract(d, nr, ns[0], ns[1]); let level = r ? 1 : 0; const K = radii.length;
+        for (let it = 0; it < 2 * K + 6 && level > 0; it++) {
+          const tout = isect(x, d, cl, radii[level - 1], true); const tinn = level < K ? isect(x, d, cl, radii[level], false) : null;
+          const goIn = tinn !== null && tinn < tout; const t = goIn ? tinn : tout; x = [x[0] + t * d[0], x[1] + t * d[1]]; path.push(x.slice());
+          let rad = [x[0] - cl[0], x[1] - cl[1]]; ln = Math.hypot(rad[0], rad[1]); rad = [rad[0] / ln, rad[1] / ln];
+          const nf = ns[level], nt = goIn ? ns[level + 1] : ns[level - 1]; const nn = goIn ? rad : [-rad[0], -rad[1]];
+          [d, r] = refract(d, nn, nf, nt); if (r) level = goIn ? level + 1 : level - 1;
+        }
+        if (level !== 0) return [path, false];
+      }
+    }
+    const [tEnd, ok] = seg(x, d, far); x = [x[0] + tEnd * d[0], x[1] + tEnd * d[1]]; path.push(x); return [path, ok];
+  }
+  const INK = '#ede8db', PAPER = '#0e0e0f';
+  function drawSection(e, size) {
+    const ctx = eyeC.getContext('2d'); const S = window.devicePixelRatio || 1;
+    const Hh = eyeC.height / S; ctx.setTransform(S, 0, 0, S, 0, 0); ctx.fillStyle = PAPER; ctx.fillRect(0, 0, size, Hh);
+    const extent = Math.max(e.r_rim, 1.05, e.rl > 0 ? e.zl + e.rl : 0, e.z_rim) * 1.15; const sc = size * 0.42 / extent;
+    const cx = size / 2, cz = Hh - size * 0.38; const P = (x, z) => [cx + x * sc, cz - z * sc];
+    ctx.lineWidth = Math.max(2, 0.018 * sc); ctx.strokeStyle = INK; ctx.beginPath();
+    const [ccx, ccz] = P(0, e.R); ctx.arc(ccx, ccz, e.R * sc, Math.PI / 2 - e.cap, Math.PI / 2 + e.cap); ctx.stroke();
+    ctx.lineWidth = 1.2; for (let i = 0; i <= 40; i++) { const t = -e.cap + 2 * e.cap * i / 40; const px = e.R * Math.sin(t), pz = e.R - e.R * Math.cos(t); const nx = -Math.sin(t), nz = Math.cos(t); ctx.beginPath(); ctx.moveTo(...P(px, pz)); ctx.lineTo(...P(px + nx * 0.06, pz + nz * 0.06)); ctx.stroke(); }
+    if (e.a < e.r_rim - 1e-4) { ctx.lineWidth = Math.max(2.5, 0.03 * sc); for (const s of [-1, 1]) { ctx.beginPath(); ctx.moveTo(...P(s * e.r_rim, e.z_rim)); ctx.lineTo(...P(s * e.a, e.z_rim)); ctx.stroke(); } }
+    if (e.rl > 0) { const [lx, lz] = P(0, e.zl); SHELL.forEach((f, k) => { const g = (e.n[k] - N_WATER) / (1.6 - N_WATER); ctx.fillStyle = `rgba(140,191,242,${0.12 + 0.55 * g})`; ctx.beginPath(); ctx.arc(lx, lz, e.rl * f * sc, 0, 2 * Math.PI); ctx.fill(); }); ctx.strokeStyle = 'rgba(191,224,255,.8)'; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.arc(lx, lz, e.rl * sc, 0, 2 * Math.PI); ctx.stroke(); }
+    const cols = ['250,204,89', '115,217,191', '242,140,140'];
+    [0, 0.5, 0.95].forEach((frac, ci) => {
+      const t = frac * e.cap; const x0 = [e.R * Math.sin(t), e.R - e.R * Math.cos(t)]; const nr = [-Math.sin(t), Math.cos(t)];
+      const rAim = Math.max(e.a, e.rl) * 0.98; const zAim = (e.rl === 0 || Math.abs(e.zl - e.z_rim) > e.rl) ? e.z_rim : e.zl;
+      for (let j = 0; j < 9; j++) {
+        const q = [-rAim + 2 * rAim * (j + 0.5) / 9, zAim]; const d = [q[0] - x0[0], q[1] - x0[1]]; if (d[0] * nr[0] + d[1] * nr[1] <= 0) continue;
+        const [path, ok] = trace2d(e, [x0[0] + 1e-5 * nr[0], x0[1] + 1e-5 * nr[1]], d);
+        ctx.strokeStyle = `rgba(${cols[ci]},${ok ? 0.85 : 0.25})`; ctx.lineWidth = ok ? 1.3 : 0.8; ctx.beginPath(); ctx.moveTo(...P(...path[0])); for (const p of path.slice(1)) ctx.lineTo(...P(...p)); ctx.stroke();
+      }
+    });
+  }
+  // ---- photon dice
+  function poisson(lam) {
+    if (lam > 60) { let u = 0, v = 0; while (u === 0) u = Math.random(); v = Math.random(); return Math.max(0, lam + Math.sqrt(lam) * Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v)); }
+    const L = Math.exp(-lam); let k = 0, p = 1; do { k++; p *= Math.random(); } while (p > L); return k - 1;
+  }
+  function gauss() { let u = 0; while (u === 0) u = Math.random(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * Math.random()); }
+  const counts = new Float32Array(N);
+  function drawRetina(lam, size) {
+    const ctx = retC.getContext('2d'); const S = window.devicePixelRatio || 1;
+    ctx.setTransform(S, 0, 0, S, 0, 0); ctx.fillStyle = '#000'; ctx.fillRect(0, 0, size, size);
+    let mean = 0;
+    for (let i = 0; i < N; i++) { let c = poisson(lam[i]) + poisson(meta.dark) - meta.dark; c *= 1 + meta.gain * gauss(); counts[i] = Math.max(0, c); mean += counts[i]; }
+    mean = Math.max(mean / N, 1e-9);
+    const cx = size / 2, cy = size / 2, r = size * 0.48;
+    ctx.strokeStyle = 'rgba(0,0,0,.6)'; ctx.lineWidth = 0.8;
+    for (let i = 0; i < N; i++) {
+      const v = Math.sqrt(Math.min(1, counts[i] / (mean * 2.2))); const g = Math.round(v * 255);
+      ctx.fillStyle = `rgb(${g},${g},${g})`; const p = polys[i]; if (p.length < 3) continue;
+      ctx.beginPath(); ctx.moveTo(cx + p[0][0] * r, cy - p[0][1] * r); for (let k = 1; k < p.length; k++) ctx.lineTo(cx + p[k][0] * r, cy - p[k][1] * r); ctx.closePath(); ctx.fill(); ctx.stroke();
+    }
+  }
+  // ---- state
+  let world = 'day', ki = 0, playing = false, bin = null, lam = new Float32Array(N), size = 400, timer = null;
+  const slider = $('#gen');
+  function keys() { return meta.worlds[world].keys; }
+  function layout() {
+    const w = Math.min(document.documentElement.clientWidth, 1100); const narrow = w < 720;
+    document.getElementById('panes').style.flexDirection = narrow ? 'column' : 'row';
+    document.getElementById('panes').style.alignItems = narrow ? 'center' : 'stretch';
+    size = narrow ? Math.min(w, 520) : Math.floor(Math.min(w / 2, 520));
+    const S = window.devicePixelRatio || 1;
+    for (const c of [eyeC, retC]) { const h = (c === eyeC && narrow) ? Math.round(size * 0.78) : size; c.width = Math.round(size * S); c.height = Math.round(h * S); c.style.width = size + 'px'; c.style.height = h + 'px'; }
+    render(true);
+  }
+  function render(newGlance) {
+    const K = keys(); if (!bin) return; const k = K[ki]; const e = decode(k.genome);
+    drawSection(e, size);
+    if (newGlance) { for (let i = 0; i < N; i++) lam[i] = Math.pow(10, bin[ki * N + i] / 65535 * 8) - 1; }
+    drawRetina(lam, size);
+    $('#lab').firstChild.nodeValue = k.gen.toLocaleString();
+    $('#nbits').textContent = Math.round(k.bits).toLocaleString();
+    $('#ncup').textContent = k.cap_deg.toFixed(0) + '°';
+    $('#niris').textContent = (2 * k.iris).toFixed(2) + ' mm';
+    $('#nlens').textContent = k.lens > 0 ? `r ${k.lens.toFixed(2)} mm, n ${k.n.map(x => x.toFixed(2)).join('/')}` : 'none';
+    $('#nlight').textContent = meta.worlds[world].line;
+  }
+  async function setWorld(w) {
+    world = w; bin = await loadWorld(w); document.querySelectorAll('#worlds button').forEach(b => b.classList.toggle('on', b.dataset.w === w));
+    slider.max = keys().length - 1; ki = Math.min(ki, keys().length - 1); slider.value = ki; render(true);
+  }
+  slider.addEventListener('input', () => { ki = +slider.value; render(true); });
+  document.querySelectorAll('#worlds button').forEach(b => { b.addEventListener('click', () => setWorld(b.dataset.w)); b.addEventListener('touchend', ev => { ev.preventDefault(); setWorld(b.dataset.w); }); });
+  $('#glance').addEventListener('click', () => render(true)); $('#glance').addEventListener('touchend', ev => { ev.preventDefault(); render(true); });
+  retC.addEventListener('pointerdown', () => render(true));
+  $('#play').addEventListener('click', () => {
+    playing = !playing; $('#play').textContent = playing ? '❚❚' : '▶';
+    if (playing) { if (ki >= keys().length - 1) ki = 0; timer = setInterval(() => { ki++; if (ki >= keys().length) { ki = keys().length - 1; playing = false; $('#play').textContent = '▶'; clearInterval(timer); } slider.value = ki; render(true); }, 120); }
+    else clearInterval(timer);
+  });
+  // idle: re-roll the photons a few times a second so the noise is alive
+  setInterval(() => { if (!playing && bin) { render(true); } }, 350);
+  window.addEventListener('resize', layout); window.addEventListener('orientationchange', layout);
+  // results table
+  const rows = Object.entries(meta.worlds).map(([w, m]) => { const k = m.keys[m.keys.length - 1]; return `<tr><td>${m.title}</td><td>${m.photons.toExponential(0).replace('e+', '×10^')}</td><td>${Math.round(k.bits).toLocaleString()}</td><td>${k.cap_deg.toFixed(0)}°</td><td>${(2 * k.iris).toFixed(2)} mm</td><td>${k.lens > 0 ? k.lens.toFixed(2) + ' mm, n ' + k.n.map(x => x.toFixed(2)).join(' / ') : 'none'}</td><td>${m.G.toLocaleString()}</td></tr>`; }).join('');
+  $('#results').innerHTML = `<table><tr><th>light</th><th>photons per open cell</th><th>bits per glance</th><th>cup</th><th>iris</th><th>lens radius, index out/mid/core</th><th>generations</th></tr>${rows}</table>`;
+  await setWorld('day'); layout();
+})();
+</script>
+</body>
+</html>
