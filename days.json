@@ -1,5 +1,5 @@
 {
- "count": 43,
+ "count": 44,
  "base": "https://booyaka101.github.io/thedailyfable",
  "days": [
   {
@@ -1007,6 +1007,30 @@
     {
      "label": "the short",
      "url": "https://youtube.com/shorts/Aby8BxaS5Ss"
+    }
+   ]
+  },
+  {
+   "day": 44,
+   "title": "CAN YOU HEAR THE SHAPE OF A DRUM?",
+   "date": "",
+   "blurb": "Kac asked in 1966 whether the notes of a drum pin down its shape. Three answers, all of them simulated skins: a round drum; the two drums of Gordon, Webb and Wolpert, different shapes with exactly the same notes; and a drum stretched over the Bolza surface, a hyperbolic two-holed surface no space of ours can hold, drawn in the Poincaré disk where every octagon is the same drum again. Tap all five on the page. The film ends with a short piece for five drums, one of which does not exist.",
+   "page": "https://booyaka101.github.io/thedailyfable/day44/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day44/poster.jpg",
+   "video": "https://youtu.be/2jisX9_26b8",
+   "short": "https://youtube.com/shorts/2XY5ljsEbio",
+   "links": [
+    {
+     "label": "strike the drums (one of them cannot exist)",
+     "url": "https://booyaka101.github.io/thedailyfable/day44/"
+    },
+    {
+     "label": "the film",
+     "url": "https://youtu.be/2jisX9_26b8"
+    },
+    {
+     "label": "the short",
+     "url": "https://youtube.com/shorts/2XY5ljsEbio"
     }
    ]
   }
