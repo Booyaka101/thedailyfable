@@ -1,0 +1,457 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title>SLOW LIGHT: a puzzle where the only tool is slowness</title>
+<meta name="description" content="A wave-optics puzzle. The picture is a real electromagnetic wave. You cannot bend light or block it; you can only paint glass, where it travels slower. Light the eyes.">
+<meta property="og:title" content="SLOW LIGHT">
+<meta property="og:description" content="A puzzle in real wave optics. You cannot bend light. You can only slow it down.">
+<meta property="og:image" content="https://booyaka101.github.io/thedailyfable/day45/poster.jpg">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://booyaka101.github.io/thedailyfable/day45/">
+<meta name="twitter:card" content="summary_large_image">
+<style>
+  :root { --bg:#07080c; --fg:#e8e6df; --dim:#8a8f9a; --acc:#ffd48a; --glass:#9fe3ff; }
+  html,body { margin:0; height:100%; background:var(--bg); color:var(--fg); font:15px/1.4 ui-monospace,Menlo,Consolas,monospace; overflow:hidden; -webkit-user-select:none; user-select:none; }
+  #wrap { position:fixed; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; padding:env(safe-area-inset-top) 8px env(safe-area-inset-bottom); box-sizing:border-box; }
+  #top { width:min(100vw - 16px, 720px); display:flex; justify-content:space-between; align-items:baseline; gap:12px; }
+  #title { letter-spacing:.18em; font-weight:700; }
+  #lvl { color:var(--dim); }
+  #hint { width:min(100vw - 16px, 720px); color:var(--dim); min-height:2.8em; }
+  #hint b { color:var(--fg); font-weight:600; }
+  #cv { display:block; touch-action:none; border-radius:4px; background:#000; }
+  #bar { width:min(100vw - 16px, 720px); display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+  button { background:#14161d; color:var(--fg); border:1px solid #2a2e3a; border-radius:6px; padding:8px 12px; font:inherit; cursor:pointer; }
+  button.on { border-color:var(--glass); color:var(--glass); }
+  button:disabled { opacity:.35; cursor:default; }
+  #budget { flex:1; min-width:120px; height:10px; background:#14161d; border:1px solid #2a2e3a; border-radius:5px; overflow:hidden; }
+  #budget i { display:block; height:100%; background:var(--glass); width:0%; transition:width .1s; }
+  #bud { color:var(--dim); min-width:6ch; text-align:right; }
+  #win { position:fixed; left:50%; top:10px; transform:translateX(-50%); background:rgba(7,8,12,.9); border:1px solid #6a5a3a; padding:8px 14px; border-radius:8px; display:none; align-items:center; gap:12px; backdrop-filter:blur(6px); white-space:nowrap; z-index:5; }
+  #win h2 { margin:0; letter-spacing:.12em; color:var(--acc); font-size:15px; display:inline; }
+  #win p { margin:0; color:var(--dim); display:inline; }
+  #intro { position:fixed; inset:0; background:rgba(7,8,12,.93); display:flex; align-items:center; justify-content:center; z-index:10; padding:20px; box-sizing:border-box; }
+  #intro div { max-width:520px; }
+  #intro h1 { letter-spacing:.2em; font-size:22px; margin:0 0 14px; }
+  #intro p { color:var(--dim); margin:0 0 12px; }
+  #intro p b { color:var(--fg); }
+  #bsz { display:flex; gap:2px; }
+  #bsz button { padding:8px 9px; }
+  #dots { display:flex; gap:6px; }
+  #dots i { width:8px; height:8px; border-radius:50%; background:#2a2e3a; display:block; }
+  #dots i.done { background:var(--acc); }
+  #dots i.cur { outline:2px solid var(--fg); outline-offset:1px; }
+  a { color:var(--glass); }
+  #foot { color:#555a66; font-size:12px; }
+</style>
+</head>
+<body>
+<div id="wrap">
+  <div id="top"><span id="title">SLOW LIGHT</span><span id="dots"></span><span id="lvl"></span></div>
+  <div id="hint"></div>
+  <canvas id="cv"></canvas>
+  <div id="bar">
+    <button id="bPaint" class="on">glass</button>
+    <button id="bErase">erase</button>
+    <span id="bsz"><button data-r="3.5" title="fine">·</button><button data-r="7" class="on" title="brush">●</button><button data-r="12" title="broad">⬤</button></span>
+    <button id="bUndo">undo</button>
+    <button id="bClear">clear</button>
+    <div id="budget"><i></i></div><span id="bud"></span>
+    <button id="bPrev">&lt;</button><button id="bNext">&gt;</button>
+  </div>
+  <div id="foot">you cannot bend light. you can only slow it down. · <a href="../">the daily fable</a>, day 45</div>
+</div>
+<div id="win"><h2>LIT</h2><p id="winp"></p><button id="bGo">next</button></div>
+<div id="intro"><div><h1>SLOW LIGHT</h1><p>The picture is a <b>real electromagnetic wave</b>, solved live from Maxwell's equations while you watch.</p><p>You cannot bend light. You cannot block it, and there are no mirrors. You can only <b>paint glass</b>, where light travels at half speed. That is enough to make lenses, prisms, mirrors and fibres. Everything else follows.</p><p>Light the amber eyes. Keep the grey ones dark. Each level has a glass budget.</p><button id="bStart">play</button></div></div>
+<script>
+'use strict';
+const N = 320;                 // grid
+const LAMBDA = 14;             // wavelength in cells (vacuum)
+const DT = 0.5;                // Courant-safe (< 1/sqrt2)
+const OMEGA = 2*Math.PI/LAMBDA;
+const NMAX = 2.0;              // painted glass index
+const STEPS = 6;               // sim steps per frame
+const MAXDET = 8;
+
+// ---------- levels ----------
+// coordinates in grid cells, origin bottom-left; y up.
+const LEVELS = [
+ { name:'FIRST LIGHT', hint:'The beam spreads as it goes. <b>Gather it</b> onto the target. Paint glass: light travels slower inside, and a bulge of slow is a lens.',
+   budget:2400, src:{x:34,y:160,dir:0,w:60},
+   walls:[], targets:[{x:280,y:160,r:9,need:1.0}], darks:[] },
+ { name:'CORNER', hint:'The target is above. Light will not turn for you. But at a steep enough surface inside glass, it <b>cannot get out</b>, and it bounces.',
+   budget:3200, src:{x:34,y:80,dir:0,w:60},
+   walls:[{rect:[0,140,200,150]}], targets:[{x:240,y:290,r:9,need:0.4}], darks:[] },
+ { name:'TWO', hint:'One beam, two targets. A wedge sends light two ways.',
+   budget:3000, src:{x:34,y:160,dir:0,w:60},
+   walls:[{rect:[290,135,320,185]}], targets:[{x:295,y:220,r:9,need:0.1},{x:295,y:100,r:9,need:0.1}], darks:[] },
+ { name:'SHADOW', hint:'The middle eye must stay <b>dark</b>, the far one must light up. Go around.',
+   budget:5000, src:{x:34,y:160,dir:0,w:60},
+   walls:[], targets:[{x:295,y:95,r:9,need:0.15}], darks:[{x:185,y:160,r:12,max:0.08}] },
+ { name:'KEYHOLE', hint:'A slit narrower than the wave. Whatever gets through spreads everywhere. Catch it.',
+   budget:2400, src:{x:34,y:160,dir:0,w:60},
+   walls:[{rect:[150,0,158,152]},{rect:[150,168,158,320]}], targets:[{x:290,y:250,r:9,need:0.045}], darks:[] },
+ { name:'RETURN', hint:'The target sits beside the lamp. Send the light <b>back</b> with nothing but glass.',
+   budget:7000, src:{x:34,y:200,dir:0,w:60},
+   walls:[{rect:[0,150,60,170]}], targets:[{x:40,y:110,r:9,need:0.3}], darks:[] },
+ { name:'FIBRE', hint:'Thread the light through the corridor. A thin thread of glass carries it, if the bends are gentle.',
+   budget:9000, src:{x:34,y:60,dir:0,w:28},
+   walls:[{rect:[100,0,112,200]},{rect:[200,120,212,320]}], targets:[{x:290,y:40,r:9,need:0.035}], darks:[] },
+ { name:'SILENCE', hint:'Two lamps in step. Where their waves meet in time they add; half a wave late, they <b>cancel</b>. Make the eye dark without blocking anything.',
+   budget:1200, src:{x:34,y:120,dir:0,w:60}, src2:{x:34,y:200,dir:0,w:60},
+   walls:[], targets:[], darks:[{x:250,y:160,r:8,max:0.15}] },
+ { name:'STUDIO', hint:'No goal. Two lamps, all the glass you like. Paint.',
+   budget:30000, src:{x:34,y:120,dir:0,w:60}, src2:{x:170,y:34,dir:90,w:50},
+   walls:[], targets:[], darks:[] },
+];
+
+// ---------- gl ----------
+const cv = document.getElementById('cv');
+const gl = cv.getContext('webgl2', {antialias:false, alpha:false, preserveDrawingBuffer:true});
+if (!gl) { document.body.innerHTML = '<p style="padding:20px">needs WebGL2</p>'; throw 0; }
+const extF = gl.getExtension('EXT_color_buffer_float');
+const halfOnly = !extF;
+if (halfOnly) gl.getExtension('EXT_color_buffer_half_float');
+gl.getExtension('OES_texture_float_linear');
+
+const VS = `#version 300 es
+in vec2 p; out vec2 uv; void main(){ uv = p*0.5+0.5; gl_Position = vec4(p,0,1); }`;
+
+const FS_STEP = `#version 300 es
+precision highp float; precision highp sampler2D;
+uniform sampler2D uS, uM, uP;
+uniform float uT, uAmp, uNmax, uDt, uOmega;
+in vec2 uv; out vec4 o;
+const int N = ${N};
+vec4 S(ivec2 q){ q = clamp(q, ivec2(0), ivec2(N-1)); return texelFetch(uS, q, 0); }
+float sig(ivec2 q){
+  q = clamp(q, ivec2(0), ivec2(N-1));
+  float w = texelFetch(uM, q, 0).r;
+  float d = float(min(min(q.x, q.y), min(N-1-q.x, N-1-q.y)));
+  float b = clamp((22.0-d)/22.0, 0.0, 1.0);
+  return min(0.6, w*0.35 + 0.30*b*b);
+}
+vec2 hnew(ivec2 q){
+  vec4 s = S(q);
+  float ez = s.r;
+  float hx = s.g - uDt*(S(q+ivec2(0,1)).r - ez);
+  float hy = s.b + uDt*(S(q+ivec2(1,0)).r - ez);
+  float k = 1.0 - sig(q);
+  return vec2(hx,hy)*k;
+}
+void main(){
+  ivec2 q = ivec2(gl_FragCoord.xy);
+  vec4 s = S(q);
+  vec4 m = texelFetch(uM, q, 0);
+  float g = texelFetch(uP, q, 0).r;
+  float n = 1.0 + (uNmax-1.0)*g;
+  float eps = n*n;
+  vec2 h = hnew(q);
+  vec2 hl = hnew(q-ivec2(1,0));
+  vec2 hd = hnew(q-ivec2(0,1));
+  float ez = s.r + uDt/eps*((h.y - hl.y) - (h.x - hd.x));
+  ez *= 1.0 - sig(q);
+  float env = min(1.0, uT/60.0);
+  ez += uAmp*env*(m.g*sin(uOmega*uT) + m.b*sin(uOmega*uT - 1.5707963));
+  float I = mix(s.a, ez*ez, 0.02);
+  o = vec4(ez, h.x, h.y, I);
+}`;
+
+const FS_SHOW = `#version 300 es
+precision highp float; precision highp sampler2D;
+uniform sampler2D uS, uM, uP;
+uniform vec4 uDet[${MAXDET}];   // x,y,r,type(1 bright / -1 dark)
+uniform float uDetV[${MAXDET}]; // 0..1 progress toward need/max
+uniform int uNdet;
+uniform float uTime;
+uniform vec4 uCur; // x,y,r,on
+in vec2 uv; out vec4 o;
+const float N = ${N}.0;
+void main(){
+  vec2 g = uv*N;
+  vec4 s = texture(uS, uv);
+  vec4 m = texture(uM, uv);
+  float p = texture(uP, uv).r;
+  float ez = s.r;
+  float I = s.a;
+  vec3 bg = vec3(0.028,0.032,0.048);
+  vec3 col = bg;
+  // field
+  float a = pow(min(1.0, abs(ez)*0.85), 2.2);
+  vec3 warm = vec3(1.0,0.78,0.42), cool = vec3(0.30,0.55,1.0);
+  col += (ez>0.0?warm:cool)*a*0.95;
+  col += vec3(0.9,0.9,1.0)*tanh(I*2.0)*0.30;
+  // glass
+  float e = 0.0;
+  {
+    float px = 1.0/N;
+    float gx = texture(uP, uv+vec2(px,0)).r - texture(uP, uv-vec2(px,0)).r;
+    float gy = texture(uP, uv+vec2(0,px)).r - texture(uP, uv-vec2(0,px)).r;
+    e = clamp(length(vec2(gx,gy))*1.2, 0.0, 1.0);
+  }
+  col = mix(col, col*0.75 + vec3(0.55,0.85,1.0)*0.22, p*0.9);
+  col += vec3(0.6,0.9,1.0)*e*0.6;
+  // walls
+  float w = m.r;
+  col = mix(col, vec3(0.16,0.165,0.19), smoothstep(0.0,0.5,w));
+  // source glow
+  float src = m.g + m.b;
+  col += vec3(1.0,0.9,0.7)*src*0.8;
+  // detectors
+  for (int i=0;i<${MAXDET};i++){
+    if (i>=uNdet) break;
+    vec4 d = uDet[i];
+    float dist = length(g - d.xy);
+    float ring = smoothstep(1.6,0.6,abs(dist-d.z));
+    float fill = smoothstep(d.z, d.z-1.5, dist);
+    float v = uDetV[i];
+    vec3 rc = d.w>0.0 ? vec3(1.0,0.83,0.5) : vec3(0.55,0.62,0.75);
+    if (d.w>0.0){
+      col = mix(col, rc, fill*0.25*v);
+      col += rc*ring*(0.55+0.45*v);
+      if (v>=1.0) col += rc*ring*0.5*(0.5+0.5*sin(uTime*6.0));
+    } else {
+      // dark eye: red fill grows with light leaking in
+      col = mix(col, vec3(1.0,0.25,0.2), fill*0.7*pow(min(1.0,v),2.0));
+      col += rc*ring*0.8;
+      if (v>=1.0) col += vec3(1.0,0.3,0.2)*ring*0.6;
+    }
+  }
+  // brush cursor
+  if (uCur.w>0.5){ float cd = abs(length(g-uCur.xy)-uCur.z); col += vec3(0.7,0.9,1.0)*smoothstep(1.2,0.3,cd)*0.7; }
+  // vignette
+  float vg = smoothstep(0.0, 0.08, min(min(uv.x,uv.y), min(1.0-uv.x,1.0-uv.y)));
+  col *= mix(0.55, 1.0, vg);
+  o = vec4(pow(clamp(col,0.0,1.0), vec3(1.0/1.35)), 1.0);
+}`;
+
+const FS_MEAS = `#version 300 es
+precision highp float; precision highp sampler2D;
+uniform sampler2D uS;
+uniform vec4 uDet[${MAXDET}];
+in vec2 uv; out vec4 o;
+void main(){
+  int i = int(gl_FragCoord.x);
+  vec4 d = uDet[i];
+  int r = int(d.z);
+  float sum = 0.0; float cnt = 0.0;
+  for (int y=-16;y<=16;y++) for (int x=-16;x<=16;x++){
+    if (abs(x)>r||abs(y)>r) continue;
+    if (float(x*x+y*y) > d.z*d.z) continue;
+    ivec2 q = ivec2(d.xy) + ivec2(x,y);
+    sum += texelFetch(uS, q, 0).a; cnt += 1.0;
+  }
+  float v = sum/max(cnt,1.0);
+  // pack 0..4 into two bytes
+  float u = clamp(v/4.0, 0.0, 0.99999);
+  float hi = floor(u*255.0)/255.0;
+  float lo = fract(u*255.0);
+  o = vec4(hi, lo, 0.0, 1.0);
+}`;
+
+function prog(fs){
+  const p = gl.createProgram();
+  for (const [t,src] of [[gl.VERTEX_SHADER,VS],[gl.FRAGMENT_SHADER,fs]]){
+    const s = gl.createShader(t); gl.shaderSource(s,src); gl.compileShader(s);
+    if (!gl.getShaderParameter(s,gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(s));
+    gl.attachShader(p,s);
+  }
+  gl.linkProgram(p);
+  if (!gl.getProgramParameter(p,gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(p));
+  return p;
+}
+const P_STEP = prog(FS_STEP), P_SHOW = prog(FS_SHOW), P_MEAS = prog(FS_MEAS);
+const quad = gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER, quad);
+gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1,1,-1,-1,1,1,1]), gl.STATIC_DRAW);
+const vao = gl.createVertexArray(); gl.bindVertexArray(vao);
+for (const p of [P_STEP,P_SHOW,P_MEAS]){ const loc = gl.getAttribLocation(p,'p'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc,2,gl.FLOAT,false,0,0); }
+const U = {}; for (const [k,p] of Object.entries({STEP:P_STEP,SHOW:P_SHOW,MEAS:P_MEAS})){ U[k]={}; const n=gl.getProgramParameter(p,gl.ACTIVE_UNIFORMS); for(let i=0;i<n;i++){ const u=gl.getActiveUniform(p,i); U[k][u.name.replace('[0]','')]=gl.getUniformLocation(p,u.name);} }
+
+function tex(w,h,internal,format,type,data,filter){
+  const t = gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D,t);
+  gl.texImage2D(gl.TEXTURE_2D,0,internal,w,h,0,format,type,data);
+  gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,filter); gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,filter);
+  gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
+  return t;
+}
+const FI = halfOnly ? gl.RGBA16F : gl.RGBA32F, FT = halfOnly ? gl.HALF_FLOAT : gl.FLOAT;
+const stateT = [0,1].map(()=>tex(N,N,FI,gl.RGBA,FT,null,gl.LINEAR));
+const stateFB = stateT.map(t=>{ const f=gl.createFramebuffer(); gl.bindFramebuffer(gl.FRAMEBUFFER,f); gl.framebufferTexture2D(gl.FRAMEBUFFER,gl.COLOR_ATTACHMENT0,gl.TEXTURE_2D,t,0); return f; });
+const matT = tex(N,N,gl.RGBA8,gl.RGBA,gl.UNSIGNED_BYTE,null,gl.LINEAR);
+const paintT = tex(N,N,gl.R8,gl.RED,gl.UNSIGNED_BYTE,null,gl.LINEAR);
+const measT = tex(MAXDET,1,gl.RGBA8,gl.RGBA,gl.UNSIGNED_BYTE,null,gl.NEAREST);
+const measFB = gl.createFramebuffer(); gl.bindFramebuffer(gl.FRAMEBUFFER,measFB); gl.framebufferTexture2D(gl.FRAMEBUFFER,gl.COLOR_ATTACHMENT0,gl.TEXTURE_2D,measT,0);
+gl.pixelStorei(gl.UNPACK_ALIGNMENT,1);
+
+// ---------- level build ----------
+const mat = new Uint8Array(N*N*4);
+const paint = new Uint8Array(N*N);
+const mask = new Uint8Array(N*N);  // 1 = paintable
+let cur = 0, T = 0, sIdx = 0, dets = [], detVals = new Float32Array(MAXDET), detProg = new Float32Array(MAXDET);
+let holdFrames = 0, solved = false, undo = [];
+
+function inWall(L,x,y){
+  for (const w of L.walls){
+    if (w.rect){ const [a,b,c,d]=w.rect; if (x>=a&&x<c&&y>=b&&y<d) return true; }
+    if (w.circle){ const [cx,cy,r]=w.circle; if ((x-cx)**2+(y-cy)**2<r*r) return true; }
+  }
+  return false;
+}
+function stampSource(L,s,chG,chB){
+  const th = s.dir*Math.PI/180, dx=Math.cos(th), dy=Math.sin(th);   // beam direction
+  const px=-dy, py=dx;                                               // across
+  const q = LAMBDA/4;
+  for (let y=0;y<N;y++) for (let x=0;x<N;x++){
+    const rx=x-s.x, ry=y-s.y;
+    const along = rx*dx+ry*dy, across = rx*px+ry*py;
+    const prof = Math.exp(-Math.pow(across/(s.w*0.5),4)) * (Math.abs(across)<s.w*0.75?1:0);
+    if (prof<0.01) continue;
+    const g1 = Math.exp(-along*along/0.6), g2 = Math.exp(-(along-q)*(along-q)/0.6);
+    const i=(y*N+x)*4;
+    mat[i+chG] = Math.max(mat[i+chG], Math.round(255*Math.min(1,prof*g1)));
+    mat[i+chB] = Math.max(mat[i+chB], Math.round(255*Math.min(1,prof*g2)));
+    // backstop wall behind the source
+    if (along < -3 && along > -14 && Math.abs(across) < s.w*0.75+6){ mat[i] = 255; }
+  }
+}
+function buildLevel(idx){
+  cur = idx; const L = LEVELS[idx];
+  mat.fill(0); paint.fill(0); mask.fill(1); T = 0; holdFrames = 0; solved = false; undo = [];
+  for (let y=0;y<N;y++) for (let x=0;x<N;x++){
+    const i=y*N+x;
+    if (inWall(L,x,y)){ mat[i*4]=255; mask[i]=0; }
+  }
+  // soften wall edges (graded absorber): 3-cell ramp
+  const w0 = new Uint8Array(N*N); for (let i=0;i<N*N;i++) w0[i]=mat[i*4];
+  for (let y=0;y<N;y++) for (let x=0;x<N;x++){
+    const i=y*N+x; if (w0[i]) continue;
+    let near=0; for (let dy=-2;dy<=2;dy++) for (let dx=-2;dx<=2;dx++){ const xx=x+dx,yy=y+dy; if (xx<0||yy<0||xx>=N||yy>=N) continue; if (w0[yy*N+xx]) near=Math.max(near, 1-(Math.hypot(dx,dy)-1)/2.2); }
+    if (near>0){ mat[i*4]=Math.round(255*Math.min(1,near)*0.6); }
+  }
+  stampSource(L,L.src,1,2);
+  if (L.src2) stampSource(L,L.src2,1,2);
+  for (let i=0;i<N*N;i++){ if (mat[i*4]) mask[i]=0; if (mat[i*4+1]||mat[i*4+2]) mask[i]=0; }
+  dets = [...L.targets.map(t=>({...t,type:1})), ...L.darks.map(t=>({...t,type:-1}))];
+  for (const d of dets) for (let y=-d.r-2;y<=d.r+2;y++) for (let x=-d.r-2;x<=d.r+2;x++){ const xx=d.x+x,yy=d.y+y; if (xx>=0&&yy>=0&&xx<N&&yy<N&&x*x+y*y<=(d.r+2)**2) mask[yy*N+xx]=0; }
+  const saved = localStorage.getItem('sl.paint.'+idx);
+  if (saved) { try { const b = atob(saved); for (let i=0;i<N*N;i++) paint[i]=b.charCodeAt(i); } catch(e){} }
+  uploadMat(); uploadPaint(); resetField();
+  detVals.fill(0); detProg.fill(0);
+  document.getElementById('lvl').textContent = (idx+1)+' / '+LEVELS.length;
+  document.getElementById('hint').innerHTML = '<b>'+L.name+'</b> · '+L.hint;
+  document.getElementById('win').style.display='none';
+  renderDots(); updateBudget();
+  location.hash = '#'+(idx+1);
+}
+function uploadMat(){ gl.bindTexture(gl.TEXTURE_2D,matT); gl.texSubImage2D(gl.TEXTURE_2D,0,0,0,N,N,gl.RGBA,gl.UNSIGNED_BYTE,mat); }
+let paintDirty=false;
+function uploadPaint(){ gl.bindTexture(gl.TEXTURE_2D,paintT); gl.texSubImage2D(gl.TEXTURE_2D,0,0,0,N,N,gl.RED,gl.UNSIGNED_BYTE,paint); paintDirty=false; }
+function resetField(){ for (const f of stateFB){ gl.bindFramebuffer(gl.FRAMEBUFFER,f); gl.clearColor(0,0,0,0); gl.clear(gl.COLOR_BUFFER_BIT);} T=0; holdFrames=0; }
+
+// ---------- paint ----------
+let BR = 7;
+let mode = 'paint', painting=false, last=null;
+function budgetUsed(){ let s=0; for (let i=0;i<N*N;i++) s+=paint[i]; return s/255; }
+function stamp(gx,gy){
+  const L = LEVELS[cur]; const used = budgetUsed(); const add = mode==='paint';
+  if (add && used >= L.budget) return;
+  let remain = L.budget-used;
+  const r=BR; const soft=Math.min(1.5, r*0.4);
+  for (let y=Math.floor(gy-r-1);y<=Math.ceil(gy+r+1);y++) for (let x=Math.floor(gx-r-1);x<=Math.ceil(gx+r+1);x++){
+    if (x<0||y<0||x>=N||y>=N) continue; const i=y*N+x; if (!mask[i]) continue;
+    const d=Math.hypot(x-gx,y-gy); const v=Math.max(0,Math.min(1,(r-d)/soft));
+    if (v<=0) continue;
+    if (add){ const nv=Math.max(paint[i], Math.round(255*v)); const delta=(nv-paint[i])/255; if (delta>remain) continue; remain-=delta; paint[i]=nv; }
+    else paint[i]=Math.min(paint[i], Math.round(255*(1-v)));
+  }
+  paintDirty=true;
+}
+function line(a,b){ const d=Math.hypot(b[0]-a[0],b[1]-a[1]); const n=Math.max(1,Math.ceil(d/2)); for (let i=0;i<=n;i++) stamp(a[0]+(b[0]-a[0])*i/n, a[1]+(b[1]-a[1])*i/n); }
+function toGrid(ev){ const r=cv.getBoundingClientRect(); return [ (ev.clientX-r.left)/r.width*N, (1-(ev.clientY-r.top)/r.height)*N ]; }
+cv.addEventListener('pointerdown', ev=>{ ev.preventDefault(); cv.setPointerCapture(ev.pointerId); audioStart(); pushUndo(); painting=true; last=toGrid(ev); stamp(...last); holdFrames=0; });
+let cursor=[-100,-100], cursorOn=false;
+cv.addEventListener('pointermove', ev=>{ cursor=toGrid(ev); cursorOn = ev.pointerType!=='touch'; if(!painting) return; const g=toGrid(ev); line(last,g); last=g; });
+cv.addEventListener('pointerleave', ()=>{ cursorOn=false; });
+const endP = ev=>{ if(!painting) return; painting=false; savePaint(); updateBudget(); };
+cv.addEventListener('pointerup', endP); cv.addEventListener('pointercancel', endP);
+function pushUndo(){ undo.push(paint.slice()); if (undo.length>40) undo.shift(); }
+function savePaint(){ try { let s=''; for (let i=0;i<N*N;i+=4096) s+=String.fromCharCode.apply(null, paint.subarray(i,i+4096)); localStorage.setItem('sl.paint.'+cur, btoa(s)); } catch(e){} }
+function updateBudget(){ const L=LEVELS[cur]; const u=budgetUsed(); document.querySelector('#budget i').style.width=(100*u/L.budget)+'%'; document.getElementById('bud').textContent=Math.round(100*u/L.budget)+'%'; }
+document.getElementById('bPaint').onclick=()=>{mode='paint'; setMode();};
+document.getElementById('bErase').onclick=()=>{mode='erase'; setMode();};
+function setMode(){ document.getElementById('bPaint').classList.toggle('on',mode==='paint'); document.getElementById('bErase').classList.toggle('on',mode==='erase'); }
+document.getElementById('bUndo').onclick=()=>{ if(undo.length){ paint.set(undo.pop()); paintDirty=true; savePaint(); updateBudget(); holdFrames=0; } };
+document.getElementById('bClear').onclick=()=>{ pushUndo(); paint.fill(0); paintDirty=true; savePaint(); updateBudget(); holdFrames=0; };
+document.getElementById('bPrev').onclick=()=>buildLevel((cur+LEVELS.length-1)%LEVELS.length);
+document.getElementById('bNext').onclick=()=>buildLevel((cur+1)%LEVELS.length);
+document.getElementById('bGo').onclick=()=>buildLevel((cur+1)%LEVELS.length);
+for (const b of document.querySelectorAll('#bsz button')) b.onclick=()=>{ BR=+b.dataset.r; for (const o of document.querySelectorAll('#bsz button')) o.classList.toggle('on', o===b); };
+document.getElementById('bStart').onclick=()=>{ document.getElementById('intro').style.display='none'; localStorage.setItem('sl.intro','1'); audioStart(); };
+if (localStorage.getItem('sl.intro')) document.getElementById('intro').style.display='none';
+window.addEventListener('keydown', ev=>{ if (ev.key==='e') document.getElementById('bErase').click(); if (ev.key==='g') document.getElementById('bPaint').click(); if (ev.key==='z' && (ev.ctrlKey||ev.metaKey)) document.getElementById('bUndo').click(); if (ev.key==='1'||ev.key==='2'||ev.key==='3') document.querySelectorAll('#bsz button')[+ev.key-1].click(); });
+function renderDots(){ const d=document.getElementById('dots'); d.innerHTML=''; LEVELS.forEach((L,i)=>{ const e=document.createElement('i'); if(localStorage.getItem('sl.done.'+i)) e.classList.add('done'); if(i===cur) e.classList.add('cur'); e.onclick=()=>buildLevel(i); d.appendChild(e); }); }
+
+// ---------- audio ----------
+let AC=null, oscs=[];
+function audioStart(){ if (AC) return; try { AC = new (window.AudioContext||window.webkitAudioContext)(); } catch(e){ return; }
+  const comp = AC.createDynamicsCompressor(); comp.connect(AC.destination);
+  const master = AC.createGain(); master.gain.value=0.5; master.connect(comp);
+  const notes=[0,7,12,16,19,24,28,31];
+  for (let i=0;i<MAXDET;i++){ const o=AC.createOscillator(); o.type='sine'; o.frequency.value=220*Math.pow(2,notes[i]/12); const g=AC.createGain(); g.gain.value=0; o.connect(g); g.connect(master); o.start(); oscs.push(g); }
+}
+function audioUpdate(){ if(!AC) return; const t=AC.currentTime; for (let i=0;i<MAXDET;i++){ const g=oscs[i]; if(!g) continue; let v=0; if (i<dets.length){ const d=dets[i]; v = d.type>0 ? Math.min(1,detProg[i])*0.12 : Math.min(1,detProg[i])*0.06; if (d.type<0) v = Math.min(1,detProg[i])*0.08; } g.gain.setTargetAtTime(v, t, 0.08); } }
+
+// ---------- loop ----------
+const detArr = new Float32Array(MAXDET*4), detVArr = new Float32Array(MAXDET);
+const measBuf = new Uint8Array(MAXDET*4);
+let lastNow=0;
+function frame(now){
+  const el = lastNow ? Math.min(50, now-lastNow) : 16.7; lastNow = now;
+  const steps = Math.max(1, Math.round(STEPS*el/16.7));   // time-based, so 120 Hz screens run at the same speed
+  if (paintDirty) uploadPaint();
+  gl.viewport(0,0,N,N);
+  gl.useProgram(P_STEP);
+  gl.uniform1i(U.STEP.uS,0); gl.uniform1i(U.STEP.uM,1); gl.uniform1i(U.STEP.uP,2);
+  gl.uniform1f(U.STEP.uAmp,0.55); gl.uniform1f(U.STEP.uNmax,NMAX); gl.uniform1f(U.STEP.uDt,DT); gl.uniform1f(U.STEP.uOmega,OMEGA);
+  gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D,matT);
+  gl.activeTexture(gl.TEXTURE2); gl.bindTexture(gl.TEXTURE_2D,paintT);
+  for (let k=0;k<steps;k++){
+    gl.bindFramebuffer(gl.FRAMEBUFFER, stateFB[1-sIdx]);
+    gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D,stateT[sIdx]);
+    gl.uniform1f(U.STEP.uT,T);
+    gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
+    sIdx=1-sIdx; T+=DT;
+  }
+  // measure
+  for (let i=0;i<MAXDET;i++){ const d=dets[i]; if(d){ detArr.set([d.x,d.y,d.r,d.type],i*4);} else detArr.set([0,0,0,0],i*4); }
+  gl.useProgram(P_MEAS); gl.bindFramebuffer(gl.FRAMEBUFFER,measFB); gl.viewport(0,0,MAXDET,1);
+  gl.uniform1i(U.MEAS.uS,0); gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D,stateT[sIdx]);
+  gl.uniform4fv(U.MEAS.uDet,detArr); gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
+  gl.readPixels(0,0,MAXDET,1,gl.RGBA,gl.UNSIGNED_BYTE,measBuf);
+  let allOk = dets.length>0;
+  for (let i=0;i<MAXDET;i++){ const v=(measBuf[i*4]*255+measBuf[i*4+1])/65535*4; detVals[i]=v; const d=dets[i]; if(!d){detProg[i]=0;continue;}
+    if (d.type>0){ detProg[i]=v/d.need; if (v<d.need) allOk=false; } else { detProg[i]=v/d.max; if (v>d.max) allOk=false; } }
+  if (T>200 && allOk && !painting) holdFrames++; else holdFrames=0;
+  if (holdFrames>90 && !solved){ solved=true; localStorage.setItem('sl.done.'+cur,'1'); renderDots(); document.getElementById('winp').textContent=LEVELS[cur].name+' · '+Math.round(100*budgetUsed()/LEVELS[cur].budget)+'% of the glass'; document.getElementById('win').style.display='flex'; }
+  for (let i=0;i<MAXDET;i++) detVArr[i]=detProg[i];
+  // show
+  gl.bindFramebuffer(gl.FRAMEBUFFER,null); gl.viewport(0,0,cv.width,cv.height);
+  gl.useProgram(P_SHOW);
+  gl.uniform1i(U.SHOW.uS,0); gl.uniform1i(U.SHOW.uM,1); gl.uniform1i(U.SHOW.uP,2);
+  gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D,stateT[sIdx]);
+  gl.uniform4fv(U.SHOW.uDet,detArr); gl.uniform1fv(U.SHOW.uDetV,detVArr); gl.uniform1i(U.SHOW.uNdet,dets.length); gl.uniform1f(U.SHOW.uTime,performance.now()/1000); gl.uniform4f(U.SHOW.uCur,cursor[0],cursor[1],BR,(cursorOn||painting)?1:0);
+  gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
+  audioUpdate();
+  requestAnimationFrame(frame);
+}
+function resize(){ const top=document.getElementById('top').offsetHeight+document.getElementById('hint').offsetHeight+document.getElementById('bar').offsetHeight+document.getElementById('foot').offsetHeight+40; const s=Math.floor(Math.min(window.innerWidth-16, window.innerHeight-top, 720)); cv.style.width=cv.style.height=s+'px'; const dpr=Math.min(2,window.devicePixelRatio||1); cv.width=cv.height=Math.round(s*dpr); }
+window.addEventListener('resize',resize);
+const startLvl = Math.max(0, Math.min(LEVELS.length-1, (parseInt(location.hash.slice(1))||1)-1));
+buildLevel(startLvl); resize(); requestAnimationFrame(frame);
+function fillFn(fn, val=255){ for (let y=0;y<N;y++) for (let x=0;x<N;x++){ const i=y*N+x; if (mask[i] && fn(x+0.5,y+0.5)) paint[i]=val; } paintDirty=true; }
+window.SL = { LEVELS, fillFn, setBrush:r=>{BR=r;}, get BR(){return BR;}, buildLevel, stamp, line, paint, detVals, detProg, get cur(){return cur;}, get T(){return T;}, setMode:m=>{mode=m;setMode();}, savePaint, updateBudget, resetField, budgetUsed, get mask(){return mask;} };
+</script>
+</body>
+</html>

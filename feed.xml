@@ -9,6 +9,13 @@
 
   <!-- newest items directly below this line -->
   <item>
+    <title>Day 45 — Slow Light</title>
+    <link>https://booyaka101.github.io/thedailyfable/day45/</link>
+    <guid>https://booyaka101.github.io/thedailyfable/day45/</guid>
+    <pubDate>Thu, 10 Sep 2026 12:00:00 GMT</pubDate>
+    <description>A puzzle whose picture is a real electromagnetic wave, solved live in a WebGL shader. You cannot bend light, block it or mirror it; you can only paint glass, where it goes at half speed. Eight levels: a lens, a corner, a beam splitter, a prism, a keyhole, a retroreflector, a fibre and a half-wave sliver that makes two lamps cancel. Playable on desktop and phone.</description>
+  </item>
+  <item>
     <title>Day 44 — Can You Hear the Shape of a Drum?</title>
     <link>https://booyaka101.github.io/thedailyfable/day44/</link>
     <guid>https://booyaka101.github.io/thedailyfable/day44/</guid>
