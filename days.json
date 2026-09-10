@@ -1041,12 +1041,20 @@
    "blurb": "A puzzle whose picture is a real electromagnetic wave: Maxwell's equations solved live on a 320 by 320 grid in a WebGL shader, sixty times a second. You cannot bend light, block it or mirror it. You can only paint glass, where light travels at half speed. Eight levels ask for a lens, a corner turned by total internal reflection, a beam splitter, a prism steering light around a dark eye, a diffracting keyhole, a retroreflector, a painted fibre, and a half-wave sliver that makes two lamps cancel. Then a studio with two lamps and no goal.",
    "page": "https://booyaka101.github.io/thedailyfable/day45/",
    "poster": "https://booyaka101.github.io/thedailyfable/day45/poster.jpg",
-   "video": null,
-   "short": null,
+   "video": "https://youtu.be/-uvgREsLAa4",
+   "short": "https://youtube.com/shorts/0qRSdpsnxjs",
    "links": [
     {
      "label": "play SLOW LIGHT",
      "url": "https://booyaka101.github.io/thedailyfable/day45/"
+    },
+    {
+     "label": "film",
+     "url": "https://youtu.be/-uvgREsLAa4"
+    },
+    {
+     "label": "short",
+     "url": "https://youtube.com/shorts/0qRSdpsnxjs"
     }
    ]
   }
