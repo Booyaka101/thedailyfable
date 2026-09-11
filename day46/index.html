@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>UNDERHAND. How much elbow does handwriting need?</title>
+<meta property="og:title" content="UNDERHAND. How much elbow does handwriting need?">
+<meta property="og:description" content="A two-link arm on a sliding carriage writes what you type. The shoulder motor is fixed at 20 N·m. Pick the elbow budget, 20 down to zero, and watch the letters melt. At zero it cannot write, and the page shows you why.">
+<meta property="og:image" content="https://booyaka101.github.io/thedailyfable/day46/poster.jpg">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<style>
+  html, body { margin: 0; height: 100%; background: #14120f; color: #e9e2d3; font-family: ui-monospace, Menlo, Consolas, monospace; overflow: hidden; }
+  canvas { display: block; width: 100vw; height: 100vh; touch-action: none; }
+  #ui { position: fixed; left: 0; right: 0; bottom: 0; padding: 10px 12px calc(10px + env(safe-area-inset-bottom)); display: flex; gap: 8px; align-items: center; background: linear-gradient(transparent, rgba(20,18,15,.92) 30%); }
+  #txt { flex: 1; min-width: 0; font: inherit; font-size: 16px; padding: 10px 12px; border-radius: 6px; border: 1px solid #5a5244; background: #1e1b17; color: #f4efe3; outline: none; }
+  #txt:focus { border-color: #d9a441; }
+  button { font: inherit; font-size: 14px; padding: 10px 12px; border-radius: 6px; border: 1px solid #5a5244; background: #26221c; color: #e9e2d3; cursor: pointer; }
+  button.on { border-color: #d9a441; color: #ffd27a; }
+  #top { position: fixed; left: 12px; right: 12px; top: 10px; display: flex; flex-direction: column; gap: 6px; pointer-events: none; }
+  #hud, .hud { font-size: 12px; line-height: 1.5; color: #b9b0a0; max-width: 78vw; }
+  #hud b { color: #f4efe3; font-weight: 600; }
+  #hud .amber { color: #d9a441; }
+  #links { position: fixed; right: 12px; top: 10px; font-size: 12px; }
+  #links a { color: #b9b0a0; text-decoration: underline; margin-left: 10px; }
+  #rungs { display: flex; gap: 6px; flex-wrap: wrap; pointer-events: auto; }
+  #rungs button { font-size: 12px; padding: 6px 9px; }
+  #why { position: fixed; left: 12px; bottom: 78px; font-size: 12px; color: #6b6355; max-width: 46ch; line-height: 1.45; display: none; }
+  #why.show { display: block; }
+  #rungs button.on { border-color: #d9a441; color: #ffd27a; }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="top">
+<div id="hud"><b>UNDERHAND</b> <span class="amber">day 46</span> · how much elbow does handwriting need?<br>shoulder motor 20 N·m · carriage 0.25 m/s · elbow budget:</div>
+<div id="rungs"></div>
+<div class="hud"><span id="stat"></span></div>
+
+</div>
+<div id="links"><a href="fonts/Underhand.zip">fonts</a> <a href="../diary/#day46">how</a></div>
+<div id="why">With no elbow motor the forearm can only pull the pen along its own length, so at writing speed the pen hangs under the elbow and every stroke is an arc around the carriage. Letters come out as loops. The optimizer had 1200 iterations and a differentiable simulator. This is the best it found.</div>
+<div id="ui">
+  <input id="txt" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="type here, it writes in lowercase" maxlength="80">
+  <button id="speed">1×</button>
+  <button id="clear">clear</button>
+</div>
+<script type="module">
+import { Machine, Writer } from './machine.js';
+const RUNGS = [['20 N·m', 'e20'], ['6 N·m', 'e6'], ['3 N·m', 'e3'], ['1.5 N·m', 'e1_5'], ['free', 'e0']];
+const cache = {};
+async function load(id) { return cache[id] ??= await (await fetch(`ladder/${id}.json`)).json(); }
+const inkSegs = [];  // [x0,y0,x1,y1,w]
+let data, mc, wr, rung = 0;
+function onInk(p0, p1, qd) {
+  const { L1, L2 } = data.machine;
+  const v = Math.hypot(L1 * qd[0] + L2 * qd[1], 0);   // rough tip speed scale
+  const w = 0.012 / (0.6 + v);                          // faster = thinner
+  inkSegs.push([p0[0], p0[1], p1[0], p1[1], w]);
+  if (inkSegs.length > 40000) inkSegs.splice(0, 5000);
+}
+const rungsEl = document.getElementById('rungs'), why = document.getElementById('why');
+async function setRung(i) {
+  rung = i; data = await load(RUNGS[i][1]);
+  const cx = mc ? mc.cx + 0.3 : 0;
+  mc = new Machine(data.machine); mc.cx = cx;
+  const pending = wr ? wr.queue.slice() : [];
+  wr = new Writer(mc, data.glyphs, { onInk }); wr.type(pending.join(''));
+  for (const b of rungsEl.children) b.classList.toggle('on', +b.dataset.i === i);
+  why.classList.toggle('show', data.machine.elbow_max === 0);
+}
+RUNGS.forEach(([label, id], i) => {
+  const b = document.createElement('button'); b.textContent = label; b.dataset.i = i;
+  b.onclick = () => setRung(i); rungsEl.appendChild(b);
+});
+await setRung(0);
+
+const cv = document.getElementById('c'), ctx = cv.getContext('2d');
+const txt = document.getElementById('txt'), stat = document.getElementById('stat');
+let speed = 1, W = 0, H = 0, dpr = 1;
+function resize() {
+  dpr = Math.min(2, window.devicePixelRatio || 1);
+  W = window.innerWidth; H = window.innerHeight;
+  cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+}
+window.addEventListener('resize', resize); resize();
+
+let typed = '';
+txt.addEventListener('input', () => {
+  const v = txt.value.toLowerCase();
+  if (v.startsWith(typed)) wr.type(v.slice(typed.length));
+  else { wr.clear(); wr.type(v); }
+  typed = v;
+});
+txt.addEventListener('keydown', e => { if (e.key === 'Enter') { txt.value = ''; typed = ''; txt.blur(); } });
+document.getElementById('speed').onclick = e => { speed = speed === 1 ? 4 : 1; e.target.textContent = speed + '×'; e.target.classList.toggle('on', speed > 1); };
+document.getElementById('clear').onclick = () => { inkSegs.length = 0; wr.clear(); txt.value = ''; typed = ''; };
+// tap anywhere focuses the field on phones
+cv.addEventListener('pointerdown', () => txt.focus());
+
+const REST_Y = data.machine.REST_Y, BASE_Y = data.machine.BASE_Y;
+let last = performance.now(), acc = 0;
+function frame(now) {
+  const dt = Math.min(0.1, (now - last) / 1000); last = now;
+  acc += dt * speed;
+  const DT = data.machine.DT;
+  let n = 0;
+  while (acc >= DT && n < 4000) { wr.step(); acc -= DT; n++; }
+  draw();
+  requestAnimationFrame(frame);
+}
+function draw() {
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.fillStyle = '#14120f'; ctx.fillRect(0, 0, W, H);
+  // world → screen: scale so the rail (y=0) sits near the top and the paper band near the bottom
+  const top = document.getElementById('top').offsetHeight + 34;
+  const s = Math.min(W / 2.4, (H - top - 80) / 2.3);
+  const camX = mc.cx + 0.15;
+  const X = x => W * 0.55 + (x - camX) * s;
+  const Y = y => top + (0 - y) * s;
+  // paper
+  ctx.fillStyle = '#efe6d2';
+  ctx.fillRect(0, Y(BASE_Y + 0.75), W, H);
+  ctx.strokeStyle = '#d6cbb2'; ctx.lineWidth = 1; ctx.setLineDash([4, 6]);
+  ctx.beginPath(); ctx.moveTo(0, Y(BASE_Y)); ctx.lineTo(W, Y(BASE_Y)); ctx.stroke(); ctx.setLineDash([]);
+  // ink
+  ctx.strokeStyle = '#1b1a2e'; ctx.lineCap = 'round';
+  const x0 = camX - W / s, x1 = camX + W / s;
+  for (const g of inkSegs) {
+    if (g[2] < x0 || g[0] > x1) continue;
+    ctx.lineWidth = Math.max(1.2, g[4] * s);
+    ctx.beginPath(); ctx.moveTo(X(g[0]), Y(g[1])); ctx.lineTo(X(g[2]), Y(g[3])); ctx.stroke();
+  }
+  // rail + carriage
+  ctx.strokeStyle = '#6e6656'; ctx.lineWidth = 3;
+  ctx.beginPath(); ctx.moveTo(0, Y(0)); ctx.lineTo(W, Y(0)); ctx.stroke();
+  const e = mc.elbow(), t = mc.tip();
+  ctx.fillStyle = '#c9bfa8';
+  ctx.fillRect(X(mc.cx) - 22, Y(0) - 10, 44, 20);
+  // links
+  ctx.lineCap = 'round';
+  ctx.strokeStyle = '#d9a441'; ctx.lineWidth = 7;
+  ctx.beginPath(); ctx.moveTo(X(mc.cx), Y(0)); ctx.lineTo(X(e[0]), Y(e[1])); ctx.stroke();
+  ctx.strokeStyle = '#8f8676'; ctx.lineWidth = 5;
+  ctx.beginPath(); ctx.moveTo(X(e[0]), Y(e[1])); ctx.lineTo(X(t[0]), Y(t[1])); ctx.stroke();
+  // joints: motor (amber ring) and free elbow (plain pin)
+  ctx.fillStyle = '#14120f'; ctx.strokeStyle = '#d9a441'; ctx.lineWidth = 3;
+  ctx.beginPath(); ctx.arc(X(mc.cx), Y(0), 9, 0, 7); ctx.fill(); ctx.stroke();
+  // torque arc on the motor
+  const tq = wr.lastTau / data.machine.TAU_MAX;
+  if (Math.abs(tq) > 0.01) {
+    ctx.strokeStyle = '#ffd27a'; ctx.lineWidth = 4;
+    ctx.beginPath(); ctx.arc(X(mc.cx), Y(0), 16, -Math.PI / 2, -Math.PI / 2 + tq * Math.PI, tq < 0); ctx.stroke();
+  }
+  ctx.fillStyle = '#e9e2d3'; ctx.beginPath(); ctx.arc(X(e[0]), Y(e[1]), 5, 0, 7); ctx.fill();
+  if (data.machine.elbow_max > 0) {
+    ctx.strokeStyle = '#d9a441'; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(X(e[0]), Y(e[1]), 9, 0, 7); ctx.stroke();
+    const t2 = wr.lastTau2 / data.machine.TAU_MAX;
+    if (Math.abs(t2) > 0.01) {
+      ctx.strokeStyle = '#ffd27a'; ctx.lineWidth = 3;
+      ctx.beginPath(); ctx.arc(X(e[0]), Y(e[1]), 14, -Math.PI / 2, -Math.PI / 2 + t2 * Math.PI, t2 < 0); ctx.stroke();
+    }
+  }
+  // pen
+  ctx.fillStyle = wr.penDown ? '#1b1a2e' : '#8a8172';
+  ctx.beginPath(); ctx.arc(X(t[0]), Y(t[1]), wr.penDown ? 5 : 4, 0, 7); ctx.fill();
+  stat.textContent = `shoulder ${wr.lastTau.toFixed(1).padStart(5)} N·m   elbow ${wr.lastTau2.toFixed(1).padStart(5)} N·m   bend ${(mc.q[1] - mc.q[0]).toFixed(2)} rad   pen ${wr.penDown ? 'down' : 'up'}   queue ${wr.queue.length}`;
+}
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>
