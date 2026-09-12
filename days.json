@@ -1,5 +1,5 @@
 {
- "count": 46,
+ "count": 47,
  "base": "https://booyaka101.github.io/thedailyfable",
  "days": [
   {
@@ -1079,6 +1079,30 @@
     {
      "label": "short",
      "url": "https://youtube.com/shorts/9fP5DdQ2srA"
+    }
+   ]
+  },
+  {
+   "day": 47,
+   "title": "A FUGUE NO ONE WROTE",
+   "date": "",
+   "blurb": "A fugue in D minor for string quartet. The subject is eleven notes; a constraint solver found the other three voices under the rules of counterpoint, with the entries, a countersubject, two strettos, a pedal and a Picardy third pinned. The quartet is sixteen simulated bowed strings: stiff string, stick-slip bow, a soft finger, a body. Every note was tuned by playing it in simulation. The film scrolls the score while the strings themselves vibrate underneath.",
+   "page": "https://booyaka101.github.io/thedailyfable/day47/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day47/poster.jpg",
+   "video": "https://youtu.be/343DdHNCC14",
+   "short": "https://youtube.com/shorts/k4e4bywhh0c",
+   "links": [
+    {
+     "label": "hear the fugue and read the score",
+     "url": "https://booyaka101.github.io/thedailyfable/day47/"
+    },
+    {
+     "label": "film",
+     "url": "https://youtu.be/343DdHNCC14"
+    },
+    {
+     "label": "short",
+     "url": "https://youtube.com/shorts/k4e4bywhh0c"
     }
    ]
   }
