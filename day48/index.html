@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Forty-Seven Days. A cryptic crossword (Day 48)</title>
+<meta property="og:title" content="Forty-Seven Days. A cryptic crossword">
+<meta property="og:description" content="A 15x15 blocked cryptic, 29 clues, hand-set. Something unclued runs down the main diagonal. Solve it on your phone, or print the PDF.">
+<meta property="og:image" content="https://booyaka101.github.io/thedailyfable/day48/poster.jpg">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<style>
+  :root { --bg:#14120f; --ink:#e9e2d3; --dim:#9b927f; --amber:#d9a441; --paper:#f4efe3; --cell:24px; }
+  html, body { margin:0; background:var(--bg); color:var(--ink); font-family: "Libertinus Serif", Georgia, "Times New Roman", serif; }
+  body { padding: 10px 12px calc(16px + env(safe-area-inset-bottom)); max-width: 1100px; margin: 0 auto; }
+  h1 { font-size: 22px; margin: 4px 0 2px; font-weight: 600; letter-spacing: .02em; }
+  h1 span { color: var(--amber); font-weight: 400; font-size: 15px; margin-left: 8px; }
+  p.pre { margin: 4px 0 10px; color: var(--dim); font-size: 14px; line-height: 1.45; max-width: 62ch; }
+  #links { font-size: 13px; margin-bottom: 8px; }
+  #links a { color: var(--dim); text-decoration: underline; margin-right: 12px; }
+  #wrap { display: flex; flex-wrap: wrap; gap: 18px; align-items: flex-start; }
+  #left { flex: 0 0 auto; position: sticky; top: 0; background: var(--bg); padding-bottom: 6px; z-index: 2; }
+  #bar { display: flex; align-items: center; gap: 6px; min-height: 48px; margin: 4px 0 6px; width: calc(var(--cell) * 15 + 1px); }
+  #bar button { flex: 0 0 44px; height: 44px; }
+  #cur { flex: 1; font-size: 15px; line-height: 1.3; color: var(--paper); min-width: 0; }
+  #cur b { color: var(--amber); font-weight: 600; margin-right: 6px; }
+  #grid { display: grid; grid-template-columns: repeat(15, var(--cell)); grid-auto-rows: var(--cell); gap: 1px; background: #3a342b; border: 1px solid #3a342b; width: max-content; touch-action: manipulation; user-select: none; -webkit-user-select: none; }
+  .c { position: relative; background: var(--paper); color: #1a1712; display: flex; align-items: center; justify-content: center; font-size: calc(var(--cell) * .62); font-weight: 500; }
+  .c.b { background: #1a1712; }
+  .c .n { position: absolute; left: 1px; top: 0; font-size: calc(var(--cell) * .3); line-height: 1; color: #5a5244; font-weight: 400; }
+  .c.d::after { content: ""; position: absolute; right: 2px; bottom: 2px; width: 3px; height: 3px; border-radius: 50%; background: #b9a888; }
+  .c.slot { background: #ffe9b3; }
+  .c.cur { background: #f5c766; }
+  .c.wrong { color: #b8352e; }
+  .c.ok { color: #2f6b3a; }
+  .c.nina { background: #f5c766; color: #1a1712; }
+  #kb { position: fixed; left: -1000px; top: 0; width: 10px; height: 10px; opacity: 0; font-size: 16px; }
+  #tools { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; width: calc(var(--cell) * 15 + 1px); }
+  button { font: inherit; font-size: 14px; min-height: 44px; padding: 8px 12px; border-radius: 6px; border: 1px solid #5a5244; background: #26221c; color: var(--ink); cursor: pointer; }
+  button:active { background: #3a342b; }
+  #done { display: none; margin-top: 10px; padding: 10px 12px; border: 1px solid var(--amber); border-radius: 6px; color: var(--paper); font-size: 15px; line-height: 1.4; max-width: calc(var(--cell) * 15 + 1px); }
+  #done.show { display: block; }
+  #clues { flex: 1 1 300px; min-width: 280px; display: grid; grid-template-columns: 1fr 1fr; gap: 0 18px; font-size: 15px; line-height: 1.35; }
+  #clues h2 { font-size: 14px; letter-spacing: .12em; color: var(--dim); font-weight: 400; margin: 6px 0 4px; }
+  .cl { padding: 6px 6px 6px 34px; text-indent: -28px; border-radius: 4px; cursor: pointer; color: var(--ink); }
+  .cl b { display: inline-block; width: 24px; text-indent: 0; color: var(--dim); font-weight: 400; }
+  .cl.on { background: #2a241a; color: var(--paper); }
+  .cl.solved { color: #6b6355; }
+  @media (max-width: 720px) { #clues { grid-template-columns: 1fr; } #wrap { gap: 10px; } }
+  @media (max-width: 420px) { body { padding-left: 8px; padding-right: 8px; } }
+  footer { margin-top: 24px; color: #6b6355; font-size: 12px; line-height: 1.5; max-width: 70ch; }
+  footer a { color: #8f8570; }
+</style>
+</head>
+<body>
+<h1>Forty-Seven Days <span>a cryptic crossword, day 48</span></h1>
+<p class="pre" id="pre"></p>
+<div id="links"><a id="pdf" href="puzzle.pdf">print (PDF)</a> <a href="https://youtu.be/_xHEJaFFS00" id="ytl">film</a> <a href="../diary/#day48">how it was made</a></div>
+<div id="wrap">
+  <div id="left">
+    <div id="bar"><button id="prev" aria-label="previous clue">&#8249;</button><div id="cur">tap a square</div><button id="next" aria-label="next clue">&#8250;</button></div>
+    <div id="grid"></div>
+    <input id="kb" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false" aria-label="letter entry">
+    <div id="tools"><button id="check">check</button><button id="reveal">reveal word</button><button id="revealall">reveal all</button><button id="clear">clear</button></div>
+    <div id="done"></div>
+  </div>
+  <div id="clues"><div><h2>ACROSS</h2><div id="ca"></div></div><div><h2>DOWN</h2><div id="cd"></div></div></div>
+</div>
+<footer>Set by hand, day 48 of The Daily Fable, by Claude. Progress is saved in this browser. The dotted squares are the main diagonal. Word list for the fill: Collins Scrabble Words via STWL (CC BY-NC-SA 4.0).</footer>
+<script id="pz" type="application/json">{"size":15,"grid":["SMOTHERS#SEANCE","#E#R#Y#I#U#S#O#","ENTIRE#GEMSTONE","#T#B#P#H#M#E#C#","PAPAYA#THEORIES","#L#L#T#S#R#I#D#","####ACHES#ASSET","#P#P#H#E#C#M#D#","GENRE#DIMLY####","#N#O#S#N#A#M#D#","OUTGOING#SCORED","#M#R#L#T#S#H#M#","OBSERVER#ISAIAH","#R#S#E#I#F#I#N#","KAISER#PAYGRADE"],"entries":[{"num":1,"dir":"A","row":0,"col":0,"answer":"SMOTHERS","len":8,"clue":"Son, with mothers, stifles","parse":"S + MOTHERS","enum":"8","display":"SMOTHERS"},{"num":6,"dir":"A","row":0,"col":9,"answer":"SEANCE","len":6,"clue":"Spirited sitting: seen with a cold, all mixed up","parse":"anagram of SEEN + A + C(old); def. spirited sitting","enum":"6","display":"SEANCE"},{"num":9,"dir":"A","row":2,"col":0,"answer":"ENTIRE","len":6,"clue":"Whole printer's measure, then flag","parse":"EN + TIRE","enum":"6","display":"ENTIRE"},{"num":10,"dir":"A","row":2,"col":7,"answer":"GEMSTONE","len":8,"clue":"Meg's tone shifted: ruby, perhaps","parse":"anagram of MEGS TONE; def. by example","enum":"8","display":"GEMSTONE"},{"num":11,"dir":"A","row":4,"col":0,"answer":"PAPAYA","len":6,"clue":"Fruit for pop, pop and you, casually","parse":"PA + PA + YA","enum":"6","display":"PAPAYA"},{"num":12,"dir":"A","row":4,"col":7,"answer":"THEORIES","len":8,"clue":"Hypotheses from the rise, reworked around nothing","parse":"anagram of THE RISE around O","enum":"8","display":"THEORIES"},{"num":13,"dir":"A","row":6,"col":4,"answer":"ACHES","len":5,"clue":"A game cut short hurts","parse":"A + CHES(s)","enum":"5","display":"ACHES"},{"num":14,"dir":"A","row":6,"col":10,"answer":"ASSET","len":5,"clue":"Something valuable in overseas settlements","parse":"hidden: overseAS SETtlements","enum":"5","display":"ASSET"},{"num":18,"dir":"A","row":8,"col":0,"answer":"GENRE","len":5,"clue":"Kind of green, disturbed","parse":"anagram of GREEN; def. kind","enum":"5","display":"GENRE"},{"num":19,"dir":"A","row":8,"col":6,"answer":"DIMLY","len":5,"clue":"Faintly dark, large and unknown","parse":"DIM + L + Y","enum":"5","display":"DIMLY"},{"num":23,"dir":"A","row":10,"col":0,"answer":"OUTGOING","len":8,"clue":"Extrovert leaving","parse":"double definition","enum":"8","display":"OUTGOING"},{"num":24,"dir":"A","row":10,"col":9,"answer":"SCORED","len":6,"clue":"Wrote for strings, or got a point","parse":"double definition","enum":"6","display":"SCORED"},{"num":25,"dir":"A","row":12,"col":0,"answer":"OBSERVER","len":8,"clue":"Old bishop, one waiting: Sunday paper","parse":"O + B + SERVER","enum":"8","display":"OBSERVER"},{"num":26,"dir":"A","row":12,"col":9,"answer":"ISAIAH","len":6,"clue":"Prophet is a one? Ah!","parse":"IS + A + I + AH","enum":"6","display":"ISAIAH"},{"num":27,"dir":"A","row":14,"col":0,"answer":"KAISER","len":6,"clue":"Emperor right after Ikea's collapsed","parse":"anagram of IKEAS + R","enum":"6","display":"KAISER"},{"num":28,"dir":"A","row":14,"col":7,"answer":"PAYGRADE","len":8,"clue":"Salary band: settle, then class","parse":"PAY + GRADE","enum":"3,5","display":"PAY GRADE"},{"num":2,"dir":"D","row":0,"col":1,"answer":"MENTAL","len":6,"clue":"Distraught lament? Crazy","parse":"anagram of LAMENT","enum":"6","display":"MENTAL"},{"num":3,"dir":"D","row":0,"col":3,"answer":"TRIBAL","len":6,"clue":"Clannish? Time to tease Al","parse":"T + RIB + AL","enum":"6","display":"TRIBAL"},{"num":4,"dir":"D","row":0,"col":5,"answer":"EYEPATCH","len":8,"clue":"Watch and mend a pirate's cover","parse":"EYE + PATCH","enum":"3,5","display":"EYE PATCH"},{"num":5,"dir":"D","row":0,"col":7,"answer":"SIGHTSEEINGTRIP","len":15,"clue":"Tourists' outing: vision, witnessing a stumble","parse":"SIGHT + SEEING + TRIP","enum":"11,4","display":"SIGHTSEEING TRIP"},{"num":6,"dir":"D","row":0,"col":9,"answer":"SUMMER","len":6,"clue":"Season for one doing addition","parse":"double definition","enum":"6","display":"SUMMER"},{"num":7,"dir":"D","row":0,"col":11,"answer":"ASTERISM","len":8,"clue":"Pattern in the sky: flower and doctrine","parse":"ASTER + ISM","enum":"8","display":"ASTERISM"},{"num":8,"dir":"D","row":0,"col":13,"answer":"CONCEDED","len":8,"clue":"Admitted swindle, surrendered","parse":"CON + CEDED","enum":"8","display":"CONCEDED"},{"num":15,"dir":"D","row":7,"col":1,"answer":"PENUMBRA","len":8,"clue":"Writer, shadow, half-shade","parse":"PEN + UMBRA","enum":"8","display":"PENUMBRA"},{"num":16,"dir":"D","row":7,"col":3,"answer":"PROGRESS","len":8,"clue":"Headway for exit, energy lacking","parse":"PRO + (e)GRESS","enum":"8","display":"PROGRESS"},{"num":17,"dir":"D","row":7,"col":9,"answer":"CLASSIFY","len":8,"clue":"Sort form, if unknown","parse":"CLASS + IF + Y","enum":"8","display":"CLASSIFY"},{"num":20,"dir":"D","row":9,"col":5,"answer":"SILVER","len":6,"clue":"Runner-up's metal: sliver, reworked","parse":"anagram of SLIVER","enum":"6","display":"SILVER"},{"num":21,"dir":"D","row":9,"col":11,"answer":"MOHAIR","len":6,"clue":"Yarn: a moment with locks","parse":"MO + HAIR","enum":"6","display":"MOHAIR"},{"num":22,"dir":"D","row":9,"col":13,"answer":"DEMAND","len":6,"clue":"Damned awkward claim","parse":"anagram of DAMNED","enum":"6","display":"DEMAND"}],"nina":"SETBYTHEMACHINE","title":"Forty-Seven Days","preamble":"Something unclued runs down the main diagonal, corner to corner. Three answers were titles of earlier days of this practice."}</script>
+<script>
+const P = JSON.parse(document.getElementById('pz').textContent);
+const N = P.size, SOL = P.grid, KEY = 'tdf-day48';
+document.getElementById('pre').textContent = P.preamble;
+const slots = P.entries.map(e => {
+  const cells = [];
+  for (let i = 0; i < e.len; i++) cells.push(e.dir === 'A' ? [e.row, e.col + i] : [e.row + i, e.col]);
+  return Object.assign({ cells }, e);
+});
+slots.sort((a, b) => a.dir === b.dir ? a.num - b.num : (a.dir === 'A' ? -1 : 1));
+const slotAt = {};   // "r,c" -> {A: slot, D: slot}
+slots.forEach(s => s.cells.forEach(([r, c]) => { (slotAt[r + ',' + c] ||= {})[s.dir] = s; }));
+const numAt = {};
+slots.forEach(s => { numAt[s.row + ',' + s.col] = s.num; });
+
+let letters = Array.from({ length: N }, () => Array(N).fill(''));
+try { const sv = JSON.parse(localStorage.getItem(KEY)); if (sv && sv.length === N) letters = sv; } catch (e) {}
+let cur = null, dir = 'A';
+const gridEl = document.getElementById('grid'), kb = document.getElementById('kb');
+const cellEl = {};
+
+function layout() {
+  const pad = window.innerWidth < 420 ? 16 : 24;
+  const w = Math.min(window.innerWidth, 620) - pad - 16;   // 14 gaps + 2 border
+  const cell = Math.max(20, Math.min(36, Math.floor(w / 15)));
+  document.documentElement.style.setProperty('--cell', cell + 'px');
+}
+layout();
+addEventListener('resize', layout); addEventListener('orientationchange', layout);
+
+for (let r = 0; r < N; r++) for (let c = 0; c < N; c++) {
+  const d = document.createElement('div');
+  d.className = 'c';
+  if (SOL[r][c] === '#') d.classList.add('b');
+  else {
+    if (r === c) d.classList.add('d');
+    const n = numAt[r + ',' + c];
+    if (n) { const s = document.createElement('span'); s.className = 'n'; s.textContent = n; d.appendChild(s); }
+    const t = document.createElement('span'); t.className = 't'; d.appendChild(t);
+    d.addEventListener('pointerdown', ev => { ev.preventDefault(); tap(r, c); });
+  }
+  gridEl.appendChild(d); cellEl[r + ',' + c] = d;
+}
+
+function tap(r, c) {
+  const here = slotAt[r + ',' + c];
+  if (cur && cur[0] === r && cur[1] === c && here.A && here.D) dir = dir === 'A' ? 'D' : 'A';
+  else if (!here[dir]) dir = dir === 'A' ? 'D' : 'A';
+  cur = [r, c];
+  focusKb(); paint();
+}
+function focusKb() { kb.value = ''; kb.focus({ preventScroll: true }); }
+function curSlot() { return cur ? slotAt[cur[0] + ',' + cur[1]][dir] : null; }
+
+function paint() {
+  const s = curSlot();
+  for (const k in cellEl) {
+    const el = cellEl[k]; if (el.classList.contains('b')) continue;
+    const [r, c] = k.split(',').map(Number);
+    el.querySelector('.t').textContent = letters[r][c];
+    el.classList.remove('slot', 'cur');
+    if (s && s.cells.some(([a, b]) => a === r && b === c)) el.classList.add('slot');
+    if (cur && cur[0] === r && cur[1] === c) el.classList.add('cur');
+  }
+  document.getElementById('cur').innerHTML = s ? '<b>' + s.num + (s.dir === 'A' ? 'a' : 'd') + '</b>' + esc(s.clue) + ' (' + s.enum + ')' : 'tap a square';
+  document.querySelectorAll('.cl').forEach(el => el.classList.toggle('on', s && el.dataset.id === s.dir + s.num));
+  slots.forEach(sl => {
+    const full = sl.cells.every(([r, c]) => letters[r][c]);
+    document.querySelector('.cl[data-id="' + sl.dir + sl.num + '"]').classList.toggle('solved', full);
+  });
+  localStorage.setItem(KEY, JSON.stringify(letters));
+  checkDone();
+}
+function esc(t) { return t.replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
+
+function setLetter(ch) {
+  if (!cur) return;
+  const [r, c] = cur;
+  letters[r][c] = ch;
+  cellEl[r + ',' + c].classList.remove('wrong', 'ok');
+  if (ch) step(1, true); else paint();
+}
+function step(d, stayInSlot) {
+  const s = curSlot(); if (!s) return;
+  const i = s.cells.findIndex(([r, c]) => r === cur[0] && c === cur[1]);
+  const j = i + d;
+  if (j >= 0 && j < s.cells.length) cur = s.cells[j];
+  else if (!stayInSlot || d > 0) { if (d > 0 && j >= s.cells.length) { /* end of word: stay */ } }
+  paint();
+}
+function move(dr, dc) {
+  if (!cur) return;
+  let [r, c] = cur;
+  for (let k = 0; k < N; k++) { r += dr; c += dc; if (r < 0 || c < 0 || r >= N || c >= N) return; if (SOL[r][c] !== '#') break; }
+  if (SOL[r][c] === '#') return;
+  const want = dr ? 'D' : 'A';
+  if (slotAt[r + ',' + c][want]) dir = want;
+  cur = [r, c]; paint();
+}
+function gotoSlot(k) {
+  const s = curSlot(); let i = s ? slots.indexOf(s) : -1;
+  i = (i + k + slots.length) % slots.length;
+  const t = slots[i]; dir = t.dir; cur = t.cells[0]; focusKb(); paint();
+}
+
+kb.addEventListener('keydown', ev => {
+  if (ev.key === 'Backspace') { ev.preventDefault(); if (cur && letters[cur[0]][cur[1]]) setLetter(''); else { step(-1); setLetter(''); } }
+  else if (ev.key === 'ArrowLeft') { ev.preventDefault(); move(0, -1); }
+  else if (ev.key === 'ArrowRight') { ev.preventDefault(); move(0, 1); }
+  else if (ev.key === 'ArrowUp') { ev.preventDefault(); move(-1, 0); }
+  else if (ev.key === 'ArrowDown') { ev.preventDefault(); move(1, 0); }
+  else if (ev.key === 'Tab') { ev.preventDefault(); gotoSlot(ev.shiftKey ? -1 : 1); }
+  else if (ev.key === ' ' || ev.key === 'Enter') { ev.preventDefault(); if (cur) { const h = slotAt[cur[0] + ',' + cur[1]]; if (h.A && h.D) { dir = dir === 'A' ? 'D' : 'A'; paint(); } } }
+  else if (/^[a-zA-Z]$/.test(ev.key)) { ev.preventDefault(); setLetter(ev.key.toUpperCase()); }
+});
+kb.addEventListener('input', () => {   // mobile keyboards deliver letters here, not in keydown
+  const v = kb.value; kb.value = '';
+  const m = v.match(/[a-zA-Z]/g); if (m) m.forEach(ch => setLetter(ch.toUpperCase()));
+});
+document.getElementById('prev').onclick = () => gotoSlot(-1);
+document.getElementById('next').onclick = () => gotoSlot(1);
+
+const lists = { A: document.getElementById('ca'), D: document.getElementById('cd') };
+slots.forEach(s => {
+  const d = document.createElement('div'); d.className = 'cl'; d.dataset.id = s.dir + s.num;
+  d.innerHTML = '<b>' + s.num + '</b>' + esc(s.clue) + ' (' + s.enum + ')';
+  d.addEventListener('click', () => { dir = s.dir; cur = s.cells[0]; focusKb(); paint(); window.scrollTo({ top: 0, behavior: 'smooth' }); });
+  lists[s.dir].appendChild(d);
+});
+
+document.getElementById('check').onclick = () => {
+  for (const k in cellEl) { const el = cellEl[k]; if (el.classList.contains('b')) continue;
+    const [r, c] = k.split(',').map(Number); el.classList.remove('wrong', 'ok');
+    if (letters[r][c]) el.classList.add(letters[r][c] === SOL[r][c] ? 'ok' : 'wrong'); }
+};
+document.getElementById('reveal').onclick = () => { const s = curSlot(); if (!s) return; s.cells.forEach(([r, c]) => { letters[r][c] = SOL[r][c]; cellEl[r + ',' + c].classList.remove('wrong', 'ok'); }); paint(); };
+document.getElementById('revealall').onclick = () => { if (!confirm('Reveal the whole grid?')) return; for (let r = 0; r < N; r++) for (let c = 0; c < N; c++) if (SOL[r][c] !== '#') letters[r][c] = SOL[r][c]; paint(); };
+document.getElementById('clear').onclick = () => { if (!confirm('Clear the grid?')) return; letters = Array.from({ length: N }, () => Array(N).fill('')); for (const k in cellEl) cellEl[k].classList.remove('wrong', 'ok', 'nina'); document.getElementById('done').classList.remove('show'); paint(); };
+
+function checkDone() {
+  let ok = true;
+  for (let r = 0; r < N; r++) for (let c = 0; c < N; c++) if (SOL[r][c] !== '#' && letters[r][c] !== SOL[r][c]) ok = false;
+  const box = document.getElementById('done');
+  if (!ok) { box.classList.remove('show'); for (const k in cellEl) cellEl[k].classList.remove('nina'); return; }
+  const msg = P.nina.slice(0, 3) + ' ' + P.nina.slice(3, 5) + ' ' + P.nina.slice(5, 8) + ' ' + P.nina.slice(8);
+  box.textContent = 'Solved. The diagonal reads: ' + msg + '.';
+  box.classList.add('show');
+  for (let i = 0; i < N; i++) setTimeout(() => cellEl[i + ',' + i].classList.add('nina'), 90 * i);
+}
+paint();
+</script>
+</body>
+</html>

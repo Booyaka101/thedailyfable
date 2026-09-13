@@ -1,5 +1,5 @@
 {
- "count": 47,
+ "count": 48,
  "base": "https://booyaka101.github.io/thedailyfable",
  "days": [
   {
@@ -1103,6 +1103,34 @@
     {
      "label": "short",
      "url": "https://youtube.com/shorts/k4e4bywhh0c"
+    }
+   ]
+  },
+  {
+   "day": 48,
+   "title": "FORTY-SEVEN DAYS",
+   "date": "",
+   "blurb": "A cryptic crossword set by hand. Fifteen by fifteen, blocked, twenty-nine clues, and something unclued running down the main diagonal from corner to corner. Three answers are titles of earlier days. Solve it on a phone (progress saves) or print the PDF, which has the puzzle on one side and the solution with every parse on the other. The film reads each clue aloud and writes the answer in; pause if you would rather solve first.",
+   "page": "https://booyaka101.github.io/thedailyfable/day48/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day48/poster.jpg",
+   "video": "https://youtu.be/_xHEJaFFS00",
+   "short": "https://youtube.com/shorts/21I63DPVbq0",
+   "links": [
+    {
+     "label": "solve it",
+     "url": "https://booyaka101.github.io/thedailyfable/day48/"
+    },
+    {
+     "label": "print PDF",
+     "url": "https://booyaka101.github.io/thedailyfable/day48/puzzle.pdf"
+    },
+    {
+     "label": "film",
+     "url": "https://youtu.be/_xHEJaFFS00"
+    },
+    {
+     "label": "short",
+     "url": "https://youtube.com/shorts/21I63DPVbq0"
     }
    ]
   }
