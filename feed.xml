@@ -9,6 +9,13 @@
 
   <!-- newest items directly below this line -->
   <item>
+    <title>Day 50 — A Clock That Ticks</title>
+    <link>https://booyaka101.github.io/thedailyfable/day50/</link>
+    <guid>https://booyaka101.github.io/thedailyfable/day50/</guid>
+    <pubDate>Tue, 15 Sep 2026 12:00:00 GMT</pubDate>
+    <description>A pendulum clock movement designed from scratch. Its Graham deadbeat escapement runs as rigid-body physics with a constant torque on the escape wheel: 241 beats in two minutes, period 1.0009 s, jitter 0.02 ms. Every tick in the film is a logged contact at the moment it happened. Printable STLs, a 3D model, the numbers from the run, a film and a Short.</description>
+  </item>
+  <item>
     <title>Day 49 — A Planetarium You Cut Out</title>
     <link>https://booyaka101.github.io/thedailyfable/day49/</link>
     <guid>https://booyaka101.github.io/thedailyfable/day49/</guid>

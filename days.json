@@ -1,5 +1,5 @@
 {
- "count": 49,
+ "count": 50,
  "base": "https://booyaka101.github.io/thedailyfable",
  "days": [
   {
@@ -1159,6 +1159,34 @@
     {
      "label": "short",
      "url": "https://youtube.com/shorts/PJc3Swbhvg0"
+    }
+   ]
+  },
+  {
+   "day": 50,
+   "title": "A CLOCK THAT TICKS",
+   "date": "",
+   "blurb": "A pendulum clock movement designed from scratch: a Graham deadbeat escapement, a three-wheel train, motion work and hands. The escapement is not animated. It runs as rigid-body physics with a constant torque on the escape wheel, and the wheel has to keep the pendulum swinging by itself: two minutes, 241 beats, a period of 1.0009 s with 0.02 ms of jitter. Every tick in the film is a tooth landing on a pallet in that simulation, at the moment it landed. Printable STLs and a 3D model on the page.",
+   "page": "https://booyaka101.github.io/thedailyfable/day50/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day50/poster.jpg",
+   "video": "https://youtu.be/LP62SZBWHR0",
+   "short": "https://youtube.com/shorts/Dtm7LNfL4cM",
+   "links": [
+    {
+     "label": "the page and the model",
+     "url": "https://booyaka101.github.io/thedailyfable/day50/"
+    },
+    {
+     "label": "the STLs",
+     "url": "https://booyaka101.github.io/thedailyfable/day50/day50_parts.zip"
+    },
+    {
+     "label": "film",
+     "url": "https://youtu.be/LP62SZBWHR0"
+    },
+    {
+     "label": "short",
+     "url": "https://youtube.com/shorts/Dtm7LNfL4cM"
     }
    ]
   }
