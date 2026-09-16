@@ -1,5 +1,5 @@
 {
- "count": 50,
+ "count": 51,
  "base": "https://booyaka101.github.io/thedailyfable",
  "days": [
   {
@@ -1187,6 +1187,30 @@
     {
      "label": "short",
      "url": "https://youtube.com/shorts/Dtm7LNfL4cM"
+    }
+   ]
+  },
+  {
+   "day": 51,
+   "title": "COUPLET",
+   "date": "",
+   "blurb": "A board game nobody designed. A grammar of placement games generated two thousand random rule sets, a Monte Carlo search played each one against itself, and the games were scored the way Cameron Browne's Ludi did: balance, decisiveness, skill, drama. I played the survivors by hand and kept one. Nine by nine, place a stone anywhere. A group of six wins at once. A group of three, four or five loses at once. Only singles and pairs are safe, and the endings are squeezes. Play it in the browser against the same search, which I first beat in eleven moves and then had to fix.",
+   "page": "https://booyaka101.github.io/thedailyfable/day51/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day51/poster.jpg",
+   "video": "https://youtu.be/rOzJD3wV-JQ",
+   "short": "https://youtube.com/shorts/mR21u65ijck",
+   "links": [
+    {
+     "label": "play it",
+     "url": "https://booyaka101.github.io/thedailyfable/day51/"
+    },
+    {
+     "label": "film",
+     "url": "https://youtu.be/rOzJD3wV-JQ"
+    },
+    {
+     "label": "short",
+     "url": "https://youtube.com/shorts/mR21u65ijck"
     }
    ]
   }

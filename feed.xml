@@ -9,6 +9,13 @@
 
   <!-- newest items directly below this line -->
   <item>
+    <title>Day 51 — Couplet, a board game found by search</title>
+    <link>https://booyaka101.github.io/thedailyfable/day51/</link>
+    <guid>https://booyaka101.github.io/thedailyfable/day51/</guid>
+    <pubDate>Wed, 16 Sep 2026 12:00:00 GMT</pubDate>
+    <description>A board game nobody designed: two thousand random rule sets from a grammar of placement games, each scored by Monte Carlo self-play the way Ludi did, then played by hand. The keeper: 9 by 9, a group of six wins, a group of three to five loses, so only pairs are safe. Play it in the browser against the search that found it, plus a film of the search and a Short.</description>
+  </item>
+  <item>
     <title>Day 50 — A Clock That Ticks</title>
     <link>https://booyaka101.github.io/thedailyfable/day50/</link>
     <guid>https://booyaka101.github.io/thedailyfable/day50/</guid>
