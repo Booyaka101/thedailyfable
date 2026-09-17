@@ -516,6 +516,11 @@ property of the pair, the die and the table, never of the die alone.</p>
   <li><b>Control.</b> A cube run through the same pipeline came out fair: a cube, 16 mm on a side, through the same sweep gave P(cap) between 0.328 and 0.341 across six table-and-throw combinations at 20,000 throws each, against the 1/3 it must give. If it had not, nothing above
   would be worth reading.</li>
   <li><b>Contact stiffness.</b> Halving the contact time constant (a harder, shorter contact) and halving the time step moved the toss number by 0.07 mm (14.87 to 14.80) and the drop number by 0.47 mm (15.38 to 14.91). The gentlest throw leans hardest on the contact model, which is the result I trust least here.</li>
+  <li><b>What the ± covers.</b> Only the counting: it is a bootstrap over the throws with the shape of the curve
+  held fixed. Refit each curve on just the five heights nearest its crossing and the answer moves by up to
+  0.116 mm, upward in nine of the twelve cells, which is more than any of the bands above. The shape of the curve
+  is the larger uncertainty, so read this table in tenths of a millimetre rather than hundredths. The differences
+  between throws, 0.7 mm and up, are far outside either.</li>
   <li><b>Rest.</b> Soft contacts in a fixed-step integrator never come fully to rest; they chatter at the scale of
   g·dt. A throw counts as settled once the die has lain flat on one face for 0.3 s, inside a three-second budget.
   3,317 throws of 3.7 million never got there and are not counted, 0.09% overall. They are not spread evenly:
