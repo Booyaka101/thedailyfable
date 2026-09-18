@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang=en><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1">
+<title>Which knots hold. Eight knots tied in a simulated rope and loaded until they slip (Day 53)</title>
+<meta property="og:title" content="Which knots hold: eight knots in a simulated rope, one number each">
+<meta property="og:description" content="A rope simulated segment by segment, tied into a reef, granny, thief, grief, two sheet bends, a bowline and a clove hitch, then loaded to find the friction coefficient below which each one feeds its tail through.">
+<meta property="og:image" content="https://booyaka101.github.io/thedailyfable/day53/poster.jpg">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<style>
+body{margin:0;background:#15161a;color:#e8e4da;font:17px/1.55 Georgia,serif}
+main{max-width:860px;margin:0 auto;padding:40px 22px 80px}
+h1{font-size:2.3em;margin:.2em 0 .1em;letter-spacing:-.01em}
+h2{font-size:1.35em;margin:1.8em 0 .4em}
+.lede{color:#b8b3a6;font-size:1.1em}
+video,.vid iframe{width:100%;aspect-ratio:16/9;border:0;background:#000;border-radius:6px;margin:1em 0}
+table{border-collapse:collapse;width:100%;margin:1em 0;font-size:.95em}
+td,th{padding:.45em .6em;border-bottom:1px solid #2c2e35;text-align:left;vertical-align:top}
+th{color:#b8b3a6;font-weight:normal;font-size:.85em;text-transform:uppercase;letter-spacing:.06em}
+td.mu{font-family:Consolas,monospace;white-space:nowrap}
+td.n{text-align:right;color:#8a877e}
+td.note{color:#b8b3a6;font-size:.9em}
+.pm{color:#8a877e}
+.held{color:#7fc97f}.slid{color:#e57373}
+img{max-width:100%;border-radius:6px}
+code{font-family:Consolas,monospace;font-size:.9em;color:#d9c9a0}
+p.small{color:#8a877e;font-size:.85em}
+a{color:#e0b36a}
+</style></head><body><main>
+<h1>Which knots hold</h1>
+<p class=lede>A rope simulated segment by segment, tied into knots by pulling loose sketches tight, then loaded to see which knots
+grip and which feed their tails through. Every knot gets one number: the friction coefficient below which it fails.</p>
+<div class=vid><iframe src="https://www.youtube.com/embed/M6U1nXdJOhM" allowfullscreen></iframe></div>
+<h2>The number</h2>
+<p>Each knot was tied from a hand-drawn topological sketch by pulling all its ends until it stopped compacting: at least five
+contacts, the points where the rope enters the knot steady, and the loaded ends still for half a second. Then the tails were
+let go, the standing parts were held at load, and the travel of each loaded standing end along its pull direction was measured
+for five seconds. If the knot grips, the ends stop; if the tails feed through, the ends keep going. A knot <em>holds</em> at a
+friction coefficient &mu; if the ends creep at less than 0.4 diameters per second over the last three seconds; it <em>slips</em>
+if they run six diameters, the knot comes apart, or the creep stays above that rate. Bisection on &mu; gives the critical value
+&mu;* below, with the bracket from the last two runs as its uncertainty.</p>
+<table><tr><th>Knot</th><th>Form</th><th>&mu;* (critical friction)</th><th>runs</th></tr><tr><td>Reef knot</td><td class=note>two overhands, opposite handedness</td><td class=mu>0.54 <span class=pm>&plusmn; 0.015</span></td><td class=n>7</td></tr><tr><td>Granny knot</td><td class=note>two overhands, same handedness</td><td class=mu>0.45 <span class=pm>&plusmn; 0.015</span></td><td class=n>7</td></tr><tr><td>Thief knot</td><td class=note>reef with the tails on opposite sides</td><td class=mu>0.60 <span class=pm>&plusmn; 0.015</span></td><td class=n>7</td></tr><tr><td>Grief knot</td><td class=note>granny with the tails on opposite sides</td><td class=mu>&gt; 1.0 (never held)</td><td class=n>1</td></tr><tr><td>Sheet bend</td><td class=note>tails on the same side</td><td class=mu>0.27 <span class=pm>&plusmn; 0.015</span></td><td class=n>7</td></tr><tr><td>Left-handed sheet bend</td><td class=note>tails on opposite sides</td><td class=mu>0.66 <span class=pm>&plusmn; 0.015</span></td><td class=n>7</td></tr><tr><td>Bowline</td><td class=note>loop held at its far side, standing part loaded</td><td class=mu>0.46 <span class=pm>&plusmn; 0.015</span></td><td class=n>10</td></tr><tr><td>Clove hitch</td><td class=note>on a post of 5 rope diameters</td><td class=mu>0.24 <span class=pm>&plusmn; 0.015</span></td><td class=n>7</td></tr></table>
+<p>The grief knot never held and the thief needs more friction than the reef, which matches the ordering Patil, Sandt, Kolle
+and Dunkel found with colour-changing fibres in 2020. The reef against the granny is not settled by this model: the protocol was
+revised twice during the day (the feed measure, then the settle test), and across the three variants the granny read 0.60, 0.57
+and 0.45 while the reef read 0.54 every time and the thief moved between 0.54 and 0.60. Treat differences under about 0.1 in
+this table as protocol, not physics. The clove hitch and the ordinary sheet bend are the easiest holds in the set; the
+left-handed sheet bend needs twice the friction of the right-handed one, which is the usual advice about it.</p>
+<h2>The friction gate</h2>
+<p>Before any knot was trusted, the rope had to pass a capstan test: 1.5 turns round a post, one end held at T<sub>1</sub>,
+the other pulled at T<sub>2</sub>. Theory says it slides once T<sub>2</sub>/T<sub>1</sub> exceeds e<sup>&mu;&theta;</sup> with
+&theta; = 3&pi;. Each &mu; was tested at 0.8&times; and 1.25&times; that ratio.</p>
+<img src="capstan_gate.png" alt="capstan gate plot">
+<table><tr><th>&mu;</th><th>e<sup>&mu;&theta;</sup></th><th>T<sub>2</sub>/T<sub>1</sub> applied</th><th>slide rate (D/s)</th><th></th></tr><tr><td>0.05</td><td>1.60</td><td>1.28</td><td>0.00</td><td class=held>held</td></tr><tr><td>0.05</td><td>1.60</td><td>2.00</td><td>0.48</td><td class=slid>slid</td></tr><tr><td>0.10</td><td>2.57</td><td>2.05</td><td>0.00</td><td class=held>held</td></tr><tr><td>0.10</td><td>2.57</td><td>3.21</td><td>0.80</td><td class=slid>slid</td></tr><tr><td>0.15</td><td>4.11</td><td>3.29</td><td>0.18</td><td class=held>held</td></tr><tr><td>0.15</td><td>4.11</td><td>5.14</td><td>1.24</td><td class=slid>slid</td></tr><tr><td>0.20</td><td>6.59</td><td>5.27</td><td>0.41</td><td class=slid>slid</td></tr><tr><td>0.20</td><td>6.59</td><td>8.23</td><td>1.89</td><td class=slid>slid</td></tr><tr><td>0.25</td><td>10.55</td><td>8.44</td><td>0.78</td><td class=slid>slid</td></tr><tr><td>0.25</td><td>10.55</td><td>13.19</td><td>2.92</td><td class=slid>slid</td></tr></table>
+<p>Above &mu; = 0.15 the simulated rope slides a little early: its effective friction runs 10 to 25 percent below the nominal
+coefficient. The knot numbers above are in the simulator's &mu;, so real-rope equivalents sit somewhat higher.</p>
+<h2>How the rope works</h2>
+<p>The rope is a chain of capsules in MuJoCo, 8 mm across and 6 mm long, joined by position constraints and excluded from
+colliding with their two nearest neighbours. Contacts use Coulomb friction with an elliptic cone. There is no gravity: at this
+scale the tension is thousands of times the bending stiffness, so the only parameter that matters is &mu;. Two things cost most
+of the day. Constraint stiffness in MuJoCo scales with body mass, so the documented minimum time constant of two timesteps rang
+and exploded a rope this light; four timesteps was stable. And joint damping on free bodies also brakes their rotation, which
+froze every knot mid-tie regardless of how hard it was pulled; the drag had to be applied to translation only.</p>
+<p>A second feed measure, the arc length from the standing end to the first contact of the knot cluster, was the day's first
+criterion and is still logged. On the saved runs at the bracket edges the two measures rank every hold below its slip; they
+disagree only where a run sits right on the 0.4 D/s line, which moves &mu;* by one bisection step. The cluster measure failed on
+the bowline twice over: its entry point jumped by several diameters between readings, and it reported the knot as settled
+while the big loop was still drawing out fifty diameters of slack, so the tails were released mid-compaction. That is why
+the verdict is the travel of the ends and why the settle test watches them too.</p>
+<p>Every run also records the deepest contact penetration and the closest approach of any two non-neighbouring segments, because
+a soft contact solver can let one strand pass through another under enough load. In every run in the table the deepest
+penetration is under a hundredth of a diameter and the closest approach is one diameter: the rope never crossed itself. The Fox
+colouring determinant of the closed-up rope is logged too, but it turned out to be a weaker check than I had hoped: closing a
+loose rope means running a line from each free end, and when a tail feeds several diameters into the knot the closure crosses
+different strands and the determinant changes without any strand passing through another. It does catch the knot falling apart
+(the determinant drops to 1 at &mu; = 0.05 for the reef, granny and thief).</p>
+<h2>What did not work</h2>
+<p>The bowline refused to form for most of the day. Two sketches were tried, one with a post inside the loop and one with the
+loop held at its far side; the first put the collar in the wrong part of the rope, so loading it pulled the bight straight out
+of the collar. The third sketch, tied the way the knot is actually taught, forms and holds, but its loop carries about fifty
+diameters of slack that takes eighteen seconds of simulated pulling to draw out, and until the settle test watched the loaded
+end it was released mid-compaction and failed at every &mu;. Its number comes from two rounds of parallel runs rather than a
+bisection, and one run at &mu; = 0.57 crept at 0.42 diameters per second against the 0.40 line while 0.48, 0.51 and 0.54 held,
+which is what noise at the threshold looks like.</p>
+<p class=small>Day 53 of a daily practice of making one real thing. Sources: <code>sim/</code> (rope, knots, experiment,
+sweep, capstan, invariant), <code>film/</code> (Blender renderer). Numbers are from one rope model with one set of contact
+parameters; they are an ordering, not a material property.</p>
+</main></body></html>
