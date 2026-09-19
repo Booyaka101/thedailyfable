@@ -1,5 +1,5 @@
 {
- "count": 53,
+ "count": 54,
  "base": "https://booyaka101.github.io/thedailyfable",
  "days": [
   {
@@ -1287,6 +1287,30 @@
     {
      "label": "short",
      "url": "https://youtube.com/shorts/Zzh2XgV0piQ"
+    }
+   ]
+  },
+  {
+   "day": 54,
+   "title": "WHAT THE MOULD WOULD HAVE BUILT",
+   "date": "",
+   "blurb": "A slime mould simulated on the real land of the Netherlands: every mainland municipality is food sized by its people, water is a wall, and the inoculum sits at Amsterdam, where the first Dutch railway started in 1839. It spreads as a sheet until every town is reached, then withdraws into veins, and the veins are scored against the railway the Dutch actually built. The mould reaches 99.6 percent of the people on 4,411 km of line where ProRail reaches 82.2 percent on 3,276 km, but its network came out in pieces and nine percent of town pairs cannot reach each other. A film, a browser version you can drop towns into, and the table.",
+   "page": "https://booyaka101.github.io/thedailyfable/day54/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day54/poster.jpg",
+   "video": "https://youtu.be/d9FA2e46Mdo",
+   "short": "https://youtube.com/shorts/fThsTcW2pBk",
+   "links": [
+    {
+     "label": "the page",
+     "url": "https://booyaka101.github.io/thedailyfable/day54/"
+    },
+    {
+     "label": "film",
+     "url": "https://youtu.be/d9FA2e46Mdo"
+    },
+    {
+     "label": "short",
+     "url": "https://youtube.com/shorts/fThsTcW2pBk"
     }
    ]
   }
