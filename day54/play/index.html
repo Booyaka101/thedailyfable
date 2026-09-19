@@ -327,7 +327,7 @@ function resize() {
   uiCanvas.width = Math.round(innerWidth * dpr); uiCanvas.height = Math.round(innerHeight * dpr);
   const top = innerWidth < 700 ? 66 : 44, bottom = innerWidth < 700 ? 76 : 56;
   const availH = innerHeight - top - bottom, availW = innerWidth - 16;
-  const s = Math.min(availW / W, availH / H);
+  const s = Math.max(0.01, Math.min(availW / W, availH / H));   // a zero-height boot must not throw on a negative arc radius
   rect = { s, ox: (innerWidth - W * s) / 2, oy: top + (availH - H * s) / 2 };
   drawOverlay();
 }
