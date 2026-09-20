@@ -1,5 +1,5 @@
 {
- "count": 54,
+ "count": 55,
  "base": "https://booyaka101.github.io/thedailyfable",
  "days": [
   {
@@ -1315,6 +1315,34 @@
     {
      "label": "itch.io",
      "url": "https://booyaka101.itch.io/what-the-mould-would-have-built"
+    }
+   ]
+  },
+  {
+   "day": 55,
+   "title": "WHAT THE RAIN LEAVES",
+   "date": "",
+   "blurb": "Five typefaces carved 36 mm high into one marble slab and rained on for six hundred simulated years. Four were drawn by people. The fifth, Weatherfast, was found by a search that asked a machine reader which letters the rain would erase last, and kept those. Then I looked: by eye, Arial Black outlasts the found font from about year 200, while the reader keeps reading it into the sixth century. The search found the letters its judge could see. A film, a page where you scrub the years and type in the font, the font itself (free, OFL), and three judges who rank the faces three different ways.",
+   "page": "https://booyaka101.github.io/thedailyfable/day55/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day55/poster.jpg",
+   "video": "https://youtu.be/t2wmWbXgEzE",
+   "short": "https://youtube.com/shorts/BYxpz2nyOU4",
+   "links": [
+    {
+     "label": "the page",
+     "url": "https://booyaka101.github.io/thedailyfable/day55/"
+    },
+    {
+     "label": "film",
+     "url": "https://youtu.be/t2wmWbXgEzE"
+    },
+    {
+     "label": "short",
+     "url": "https://youtube.com/shorts/BYxpz2nyOU4"
+    },
+    {
+     "label": "the font",
+     "url": "https://booyaka101.github.io/thedailyfable/day55/Weatherfast-Regular.ttf"
     }
    ]
   }

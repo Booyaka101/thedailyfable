@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What the rain leaves. A typeface found by six hundred years of simulated rain.</title>
+<meta name="description" content="Five typefaces carved into one marble slab and rained on for six centuries. The last one was not drawn: a search kept the letters a machine reader read longest, and by eye the machine was wrong. Free font, OFL.">
+<meta property="og:title" content="What the rain leaves">
+<meta property="og:description" content="A typeface found by six hundred years of simulated rain on carved marble. Scrub the years, type in it, download it.">
+<meta property="og:image" content="https://booyaka101.github.io/thedailyfable/day55/poster.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://booyaka101.github.io/thedailyfable/day55/poster.jpg">
+<style>
+  @font-face { font-family: "Weatherfast"; src: url("Weatherfast-Regular.ttf") format("truetype"); }
+  :root { --bg:#151412; --fg:#d9d2c5; --dim:#8f887c; --line:#2a2825; --accent:#e9c77a; --bad:#e0755a; }
+  html, body { margin:0; background:var(--bg); color:var(--fg); }
+  body { font-family: Georgia, "Times New Roman", serif; font-size:17px; line-height:1.55; }
+  main { max-width: 1120px; margin: 0 auto; padding: 28px 18px 80px; }
+  h1 { font-family:"Weatherfast", Georgia, serif; font-weight:normal; font-size: clamp(34px, 6vw, 72px); letter-spacing:0.04em; margin:10px 0 4px; color:#f3ecdf; }
+  h2 { font-weight:normal; font-size:22px; letter-spacing:0.08em; text-transform:uppercase; color:var(--dim); margin:48px 0 14px; border-top:1px solid var(--line); padding-top:22px; }
+  p.lead { font-size:19px; color:#e7e0d3; max-width:820px; }
+  a { color:var(--accent); }
+  .kicker { font-family: system-ui, sans-serif; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:var(--dim); }
+  .viewer { position:relative; width:100%; aspect-ratio:16/9; background:#222; border-radius:4px; overflow:hidden; }
+  .viewer img { position:absolute; inset:0; width:100%; height:100%; display:block; }
+  .viewer canvas { position:absolute; inset:0; width:100%; height:100%; }
+  .bar { display:flex; align-items:center; gap:14px; margin:10px 0 0; font-family: system-ui, sans-serif; font-size:14px; color:var(--dim); flex-wrap:wrap; }
+  .bar input[type=range] { flex:1; min-width:200px; accent-color: var(--accent); }
+  .bar .year { font-variant-numeric: tabular-nums; color:#f3ecdf; font-size:22px; min-width:120px; }
+  .bar button { font:13px system-ui, sans-serif; color:var(--fg); background:#242220; border:1px solid #3a3733; border-radius:4px; padding:6px 12px; cursor:pointer; }
+  .tally { display:grid; grid-template-columns: repeat(5, 1fr); gap:8px; margin-top:12px; font-family: system-ui, sans-serif; font-size:13px; color:var(--dim); }
+  .tally div b { display:block; color:#f3ecdf; font-size:20px; font-weight:normal; font-variant-numeric: tabular-nums; }
+  .tester textarea { width:100%; box-sizing:border-box; font: 16px system-ui, sans-serif; background:#1d1b19; color:var(--fg); border:1px solid #3a3733; border-radius:4px; padding:10px; resize:vertical; }
+  .tester .out { font-family:"Weatherfast", Georgia, serif; font-size: clamp(40px, 8vw, 110px); line-height:1.05; letter-spacing:0.06em; color:#f3ecdf; padding:28px 0 8px; word-wrap:break-word; overflow-wrap:anywhere; text-transform:uppercase; }
+  .stone { background: url("frames/000.webp") center/cover; color:#2a2622; text-shadow: 0 1px 0 rgba(255,255,255,0.35), 0 -1px 1px rgba(0,0,0,0.5); padding: 30px 24px; border-radius:4px; }
+  svg text { font-family: system-ui, sans-serif; font-size:12px; fill:var(--dim); }
+  .legend { display:flex; flex-wrap:wrap; gap:6px 18px; font-family: system-ui, sans-serif; font-size:13px; color:var(--dim); margin-top:8px; }
+  .legend span::before { content:""; display:inline-block; width:14px; height:3px; margin-right:6px; vertical-align:middle; background:currentColor; }
+  .cols { display:grid; grid-template-columns: 1fr 1fr; gap:28px; }
+  @media (max-width:760px) { .cols { grid-template-columns:1fr; } .tally { grid-template-columns: repeat(3,1fr); } }
+  .small { font-size:14px; color:var(--dim); }
+  table.sv { border-collapse:collapse; font-family: system-ui, sans-serif; font-size:14px; margin-top:8px; }
+  table.sv th, table.sv td { text-align:right; padding:4px 12px; border-bottom:1px solid var(--line); font-variant-numeric: tabular-nums; }
+  table.sv td:first-child, table.sv th:first-child { text-align:left; }
+  table.sv tr.me td { color:var(--accent); }
+  .dl { display:inline-block; font-family: system-ui, sans-serif; font-size:15px; background:var(--accent); color:#1a1710; padding:10px 18px; border-radius:4px; text-decoration:none; margin:8px 10px 8px 0; }
+  .dl.alt { background:#2a2825; color:var(--fg); }
+  footer { margin-top:60px; border-top:1px solid var(--line); padding-top:18px; font-size:14px; color:var(--dim); }
+</style>
+</head>
+<body>
+<main>
+  <div class="kicker">The Daily Fable, day 55, 20 September 2026</div>
+  <h1>WHAT THE RAIN LEAVES</h1>
+  <p class="lead">Five typefaces carved 36 mm high into one marble slab, then rained on for six hundred simulated years. Four of them were drawn by people. The last one, <b>Weatherfast</b>, was not drawn at all. A search asked a machine reader which letterforms the rain would erase last, and kept those. Then I looked at the slab myself. By eye, Arial Black outlasts Weatherfast from about year 200. The reader keeps reading Weatherfast into the sixth century. The search found the letters its judge could see. That gap is the piece.</p>
+
+  <div class="viewer" id="viewer">
+    <img id="frame" src="frames/000.webp" alt="marble slab with five carved lines">
+    <canvas id="dots"></canvas>
+  </div>
+  <div class="bar">
+    <span class="year" id="year">Year 0</span>
+    <input type="range" id="scrub" min="0" max="600" step="20" value="0">
+    <button id="play">Play</button>
+    <span id="hint">drag to weather the stone. dots: what a machine reader still makes of each letter. it reads faint relief a person cannot; trust your own eye over the dots</span>
+  </div>
+  <div class="tally" id="tally"></div>
+
+  <h2>Type in it</h2>
+  <div class="tester">
+    <textarea id="txt" rows="2">Not forgotten</textarea>
+    <div class="out" id="out">Not forgotten</div>
+    <p class="small">Weatherfast is capitals only; lowercase maps to the same capital, like an inscription. <a id="dl1" class="dl" href="Weatherfast-Regular.ttf" download>Download Weatherfast (TTF, OFL)</a> <a class="dl alt" href="https://github.com/Booyaka101/thedailyfable/tree/main/day55">source</a></p>
+  </div>
+
+  <h2>Legibility over the centuries</h2>
+  <p>Every alphabet was carved the same way, rained on with three fresh grain realisations, lit from two raking angles at each age, and read by the same reader. The curve is the reader's mean probability of the true letter.</p>
+  <div id="chart"></div>
+  <div class="legend" id="legend"></div>
+
+  <h2>How the rain was made</h2>
+  <div class="cols">
+    <div>
+      <p>The stone is a heightfield. Rain dissolves it as a level set: every point of the surface recedes along its normal at a speed set by the local grain of the marble, times a curvature term that makes sharp lips dissolve faster and rounded hollows slower. The face recedes 2 mm a century, the urban marble rate Meierding measured on American tombstones; rural stones lose about half that. Letters are V cuts, 60 degrees included, 4.5 mm deep at most, which is roughly what a letter cutter does at this size.</p>
+      <p>One thing the maths insisted on, and I checked against the exact solution: uniform dissolution on its own never erases an incised letter. It rounds the groove bottom but the groove keeps its depth, and the ridge between two grooves stays sharp. What kills an inscription is the edge term: the lips of the cut go first, the groove widens and shallows, and one day it is a dent. So the letters that survive are the ones whose edges matter least.</p>
+    </div>
+    <div>
+      <p>The reader is an ensemble of three small convolutional networks trained on 249 real fonts (Windows plus Google Fonts) carved, rained on for up to 600 years, and rendered in raking light. It was validated on fonts it never saw. It is a machine, not an eye. It reads faint relief a person would give up on, and it is the same machine for every face, which is what a fair ranking needs.</p>
+      <p>The search runs in two stages with CMA-ES. First six shared parameters of a skeleton alphabet (stroke weight, contrast, cut angle, serif length and weight, width) are searched with all 26 letters scored together. Then each letter gets its own search over a smooth warp of its skeleton and per-stroke weights, every letter on the same grain so candidates compare fairly. The final alphabet was re-scored on grain it had never been rained with, and the shapes were traced into a TrueType font from the mouths of the cuts.</p>
+    </div>
+  </div>
+  <p class="small">Caveats, plainly. This is a model of rain on marble, not marble. The recession rate comes from measurements; the edge sensitivity and grain scatter were tuned so that a Times New Roman inscription fades over three or four centuries, which is what old churchyards show. The judge is a neural network trained on renders from this same simulator. It normalises each tile and reads relief a few tenths of a millimetre deep under raking light, which a person looking at the slab cannot, and the search found exactly that blind spot: Weatherfast beats every baseline for the reader and loses to Arial Black for the eye. Arial Black wins by eye because its strokes are so wide that the rain cannot close them; the cuts flatten into broad shallow troughs that still cast a shadow. The dots on this page are the reader's opinion, not a claim about what you can read. The font file scores lower again: run back through the same judge, the traced TrueType outlines read 0.84 on average against 0.96 for the search's own carved masks, below Arial Black at 0.94, so the outline conversion lost part of what the search found (the I and X in particular) and I have not yet found where. The table below is a third opinion, two ordinary OCR engines that never saw this simulator, and they rank the found face mid-table, below Roboto Slab, Verdana, Arial and Times. Three judges, three rankings. The letters are also uneven in weight (B, F, G, N, U, V heavy; C, M, O, Q, W, X, Z light) because each was optimised alone and nothing asked for consistency; the font ships as found, not tidied. Lineage: day 25 (<a href="../day25/">Pluvial</a>) eroded a font with the rain and watched letters die. Today asks the opposite question.</p>
+
+  <h2>Sources</h2>
+  <p class="small">T. C. Meierding, <a href="https://www.researchgate.net/publication/261652938_Marble_tombstone_weathering_rates_A_transect_of_the_United_States">Marble tombstone weathering rates: a transect of the United States</a> (1981) and <a href="https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1467-8306.1993.tb01954.x">Marble tombstone weathering and air pollution in North America</a> (1993). Skeleton letters start from the Hershey fonts (public domain, 1967). Google Fonts under their respective licences were used only to train the reader.</p>
+
+  <footer>
+    <a href="../">The Daily Fable</a> · <a id="film" href="https://youtu.be/t2wmWbXgEzE">the film</a> · <a href="../diary/">diary</a>
+  </footer>
+</main>
+
+<script>
+(async function () {
+  const data = await (await fetch('data.json')).json();
+  const frame = document.getElementById('frame');
+  const cv = document.getElementById('dots');
+  const ctx = cv.getContext('2d');
+  const scrub = document.getElementById('scrub');
+  const yearEl = document.getElementById('year');
+  const tally = document.getElementById('tally');
+  const FW = 1600, FH = 900;
+  cv.width = FW; cv.height = FH;
+  const imgs = {};
+  for (const a of data.ages) { const im = new Image(); im.src = `frames/${String(a).padStart(3, '0')}.webp`; imgs[a] = im; }
+
+  function show(age) {
+    const i = data.ages.indexOf(age);
+    frame.src = imgs[age].src;
+    yearEl.textContent = 'Year ' + age;
+    ctx.clearRect(0, 0, FW, FH);
+    let html = '';
+    data.boxes.forEach((boxes, li) => {
+      let alive = 0;
+      boxes.forEach((b, bi) => {
+        const p = data.p[i][li][bi];
+        if (p > 0.5) alive++;
+        const cx = (b[1] + b[2]) / 2, cy = data.rows[li][1] + 22;
+        ctx.beginPath(); ctx.arc(cx, cy, 6, 0, Math.PI * 2);
+        ctx.fillStyle = p > 0.5 ? `rgba(255,232,170,${0.2 + 0.8 * p})` : `rgba(255,120,90,${0.25 + 0.75 * p})`;
+        ctx.fill();
+      });
+      ctx.font = '22px system-ui, sans-serif'; ctx.fillStyle = 'rgba(245,238,225,0.85)';
+      ctx.fillText(data.faces[li].toUpperCase(), 24, data.rows[li][0] - 22);
+      html += `<div>${data.faces[li]}<b>${alive}/${boxes.length}</b></div>`;
+    });
+    tally.innerHTML = html;
+  }
+  scrub.addEventListener('input', () => show(+scrub.value));
+  let timer = null;
+  document.getElementById('play').addEventListener('click', (e) => {
+    if (timer) { clearInterval(timer); timer = null; e.target.textContent = 'Play'; return; }
+    e.target.textContent = 'Pause';
+    if (+scrub.value >= 600) scrub.value = 0;
+    timer = setInterval(() => { let v = +scrub.value + 20; if (v > 600) { clearInterval(timer); timer = null; e.target.textContent = 'Play'; return; } scrub.value = v; show(v); }, 350);
+  });
+  show(0);
+
+  const txt = document.getElementById('txt'), out = document.getElementById('out');
+  txt.addEventListener('input', () => { out.textContent = txt.value || ' '; });
+
+
+  // held-out OCR survey
+  if (data.survey) {
+    const sv = data.survey, sa = sv.ages;
+    let t = '<h2>Two judges that never saw the training data</h2><p>Tesseract and EasyOCR read each letter from a depth threshold of the surface (0.4 mm below the median face), one letter at a time, no language model. Fraction of the 26 letters read correctly, taking either engine, by year.</p>';
+    t += '<table class="sv"><tr><th>face</th>' + sa.map(a => `<th>${a}</th>`).join('') + '</tr>';
+    const order = Object.keys(sv.fonts).sort((x, y) => sv.fonts[y].either.reduce((a, b) => a + b) - sv.fonts[x].either.reduce((a, b) => a + b));
+    for (const n of order) t += `<tr${n === 'Weatherfast' ? ' class="me"' : ''}><td>${n}</td>` + sv.fonts[n].either.map(v => `<td>${v.toFixed(2)}</td>`).join('') + '</tr>';
+    t += '</table>';
+    document.getElementById('survey').innerHTML = t;
+  }
+
+  // legibility chart
+  const c = data.curves, W = 1000, H = 380, L = 50, R = 20, T = 16, B = 40;
+  const ages = c.ages, amax = ages[ages.length - 1];
+  const x = a => L + (W - L - R) * a / amax, y = p => T + (H - T - B) * (1 - p);
+  const names = Object.keys(c.fonts);
+  const pal = { 'Weatherfast': '#e9c77a', 'shared style only': '#b09a5e', 'Times New Roman': '#d9d2c5', 'Arial Black': '#9fb7d9', 'Cinzel': '#d99f9f', 'Impact': '#a9c9a0', 'Courier New': '#c7a3d6', 'UnifrakturMaguntia': '#8f887c' };
+  let s = `<svg viewBox="0 0 ${W} ${H}" width="100%" style="display:block">`;
+  for (let p = 0; p <= 1.0001; p += 0.25) s += `<line x1="${L}" x2="${W - R}" y1="${y(p)}" y2="${y(p)}" stroke="#2a2825"/><text x="${L - 8}" y="${y(p) + 4}" text-anchor="end">${p.toFixed(2)}</text>`;
+  for (const a of ages) s += `<text x="${x(a)}" y="${H - 14}" text-anchor="middle">year ${a}</text>`;
+  let leg = '';
+  for (const n of names) {
+    const col = pal[n] || '#5e5953', wide = n === 'Weatherfast' ? 4 : 2;
+    const pts = c.fonts[n].map((p, i) => `${x(ages[i])},${y(p)}`).join(' ');
+    s += `<polyline points="${pts}" fill="none" stroke="${col}" stroke-width="${wide}" opacity="${pal[n] ? 1 : 0.7}"/>`;
+    leg += `<span style="color:${col}">${n}</span>`;
+  }
+  s += '</svg>';
+  document.getElementById('chart').innerHTML = s;
+  document.getElementById('legend').innerHTML = leg;
+})();
+</script>
+</body>
+</html>
