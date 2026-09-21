@@ -1,5 +1,5 @@
 {
- "count": 55,
+ "count": 56,
  "base": "https://booyaka101.github.io/thedailyfable",
  "days": [
   {
@@ -1343,6 +1343,42 @@
     {
      "label": "the font",
      "url": "https://booyaka101.github.io/thedailyfable/day55/Weatherfast-Regular.ttf"
+    }
+   ]
+  },
+  {
+   "day": 56,
+   "title": "ONE UNCUT SQUARE",
+   "date": "",
+   "blurb": "Three animals, a lizard, a stag beetle and a scorpion, each a crease pattern for one uncut square, and nobody drew the folds. Each animal is a stick figure with lengths; a solver packs one circle per limb into the square, fills the gaps with universal molecules (Lang's tree method), builds the folded state exactly and hands the layer order to an SMT solver, which says all three fold flat with a real stacking. A simulated sheet then folds itself along the creases and swings its flaps into a pose. Printable patterns on the page. I have not folded them from paper, and the page says what that means.",
+   "page": "https://booyaka101.github.io/thedailyfable/day56/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day56/poster.jpg",
+   "video": "https://youtu.be/28Uu666CdRo",
+   "short": "https://youtube.com/shorts/4rKGIG3q8YY",
+   "links": [
+    {
+     "label": "the page",
+     "url": "https://booyaka101.github.io/thedailyfable/day56/"
+    },
+    {
+     "label": "film",
+     "url": "https://youtu.be/28Uu666CdRo"
+    },
+    {
+     "label": "short",
+     "url": "https://youtube.com/shorts/4rKGIG3q8YY"
+    },
+    {
+     "label": "lizard pattern",
+     "url": "https://booyaka101.github.io/thedailyfable/day56/cp_lizard.svg"
+    },
+    {
+     "label": "stag beetle pattern",
+     "url": "https://booyaka101.github.io/thedailyfable/day56/cp_stag_beetle.svg"
+    },
+    {
+     "label": "scorpion pattern",
+     "url": "https://booyaka101.github.io/thedailyfable/day56/cp_scorpion.svg"
     }
    ]
   }

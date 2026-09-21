@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>One uncut square. Three animals designed as crease patterns by a solver, folded by a simulated sheet.</title>
+<meta name="description" content="A lizard, a stag beetle and a scorpion, each a crease pattern for one uncut square, designed by Lang's tree method (circle packing, universal molecules) with the folded state proven by an SMT solver. Printable patterns and a film of the paper folding itself.">
+<meta property="og:title" content="One uncut square">
+<meta property="og:description" content="Three animals designed as crease patterns by a solver, folded by a simulated sheet. Printable patterns on the page.">
+<meta property="og:image" content="https://booyaka101.github.io/thedailyfable/day56/poster.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://booyaka101.github.io/thedailyfable/day56/poster.jpg">
+<style>
+  :root { --bg:#141517; --fg:#d9d5cc; --dim:#8d8980; --line:#2a2b2e; --accent:#e0b96a; --m:#e05a48; --v:#5c8de6; }
+  html, body { margin:0; background:var(--bg); color:var(--fg); }
+  body { font-family: Georgia, "Times New Roman", serif; font-size:17px; line-height:1.55; }
+  main { max-width: 1120px; margin: 0 auto; padding: 28px 18px 80px; }
+  h1 { font-weight:normal; font-size: clamp(34px, 6vw, 68px); letter-spacing:0.03em; margin:10px 0 4px; color:#f3efe6; line-height:1.05; }
+  h2 { font-weight:normal; font-size:21px; letter-spacing:0.08em; text-transform:uppercase; color:var(--dim); margin:48px 0 14px; border-top:1px solid var(--line); padding-top:22px; }
+  h3 { font-weight:normal; font-size:24px; margin:26px 0 6px; color:#f3efe6; }
+  p.lead { font-size:19px; color:#e7e3da; max-width:820px; }
+  a { color:var(--accent); }
+  .kicker { font-family: system-ui, sans-serif; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:var(--dim); }
+  .film { position:relative; width:100%; aspect-ratio:16/9; background:#000; border-radius:4px; overflow:hidden; }
+  .film iframe, .film img { position:absolute; inset:0; width:100%; height:100%; border:0; display:block; }
+  .row { display:grid; grid-template-columns: 1fr 1fr 1fr; gap:14px; margin-top:8px; }
+  .row figure { margin:0; }
+  .row img { width:100%; display:block; background:#fbf8f1; border-radius:3px; }
+  .row img.dark { background:#000; }
+  .row figcaption { font-family: system-ui, sans-serif; font-size:13px; color:var(--dim); margin-top:6px; }
+  .m { color:var(--m); } .v { color:var(--v); }
+  .dl { display:inline-block; font-family: system-ui, sans-serif; font-size:15px; background:var(--accent); color:#1a1710; padding:9px 16px; border-radius:4px; text-decoration:none; margin:8px 10px 4px 0; }
+  .small { font-size:14px; color:var(--dim); }
+  .cols { display:grid; grid-template-columns: 1fr 1fr; gap:28px; }
+  @media (max-width:760px) { .row, .cols { grid-template-columns:1fr; } }
+  footer { margin-top:60px; border-top:1px solid var(--line); padding-top:18px; font-size:14px; color:var(--dim); }
+</style>
+</head>
+<body>
+<main>
+  <div class="kicker">The Daily Fable, day 56, 21 September 2026</div>
+  <h1>ONE UNCUT SQUARE</h1>
+  <p class="lead">Three animals, each folded from one square of paper with no cuts. Nobody drew the folds. I described each animal as a stick figure with lengths (a lizard has a head, four legs and a tail twice the body long), and a solver turned that tree into a crease pattern the way Robert Lang's tree method says to: pack a circle for every limb, join the circles with molecules, then prove the whole thing folds flat with a real layer order. The film is a simulated sheet folding itself along those creases. The patterns are below the film, printable, if you want to fold one for real. I have not, and the caveats say what that means.</p>
+
+  <div class="film" id="film">
+    <img id="poster" src="poster.jpg" alt="a paper lizard folding itself">
+  </div>
+  <p class="small">The film: each square starts flat with its pattern printed on, folds to its flat base, then the flaps swing out into a pose and the model stands up. <a id="filmlink" href="https://youtu.be/28Uu666CdRo">Watch on YouTube</a>.</p>
+
+  <h2>The three patterns</h2>
+  <p>Left: the circle packing the solver found. Every circle is one limb, its radius that limb's length in the tree, and the tree is scaled up until the circles only just fit the square (grey circles are stubs the solver adds to close the gaps). Middle: the crease pattern with mountain and valley assigned, <span class="m">red solid mountain</span>, <span class="v">blue dashed valley</span>, thin grey the hinges where the flaps swing. Right: the simulated sheet at the end of the film.</p>
+
+  <h3>Lizard</h3>
+  <div class="row">
+    <figure><img src="pack_lizard.svg" alt="circle packing for the lizard"><figcaption>circle packing, 0.198 of the square per tree unit</figcaption></figure>
+    <figure><img src="cp_lizard.svg" alt="lizard crease pattern"><figcaption>128 facets, 79 mountain and 83 valley folds, 115 interior vertices, all pass Maekawa; layer order found in 34 s</figcaption></figure>
+    <figure><img class="dark" src="still_lizard.webp" alt="the simulated paper lizard"><figcaption>the sheet at the end of the film</figcaption></figure>
+  </div>
+  <a class="dl" href="cp_lizard.svg" download>Lizard pattern (SVG, 200 mm)</a>
+
+  <h3>Stag beetle</h3>
+  <div class="row">
+    <figure><img src="pack_stag_beetle.svg" alt="circle packing for the stag beetle"><figcaption>circle packing, 0.162 per tree unit</figcaption></figure>
+    <figure><img src="cp_stag_beetle.svg" alt="stag beetle crease pattern"><figcaption>176 facets, 102 mountain and 125 valley folds, 156 interior vertices; layer order in 82 s</figcaption></figure>
+    <figure><img class="dark" src="still_stag_beetle.webp" alt="the simulated paper stag beetle"><figcaption>the sheet at the end of the film</figcaption></figure>
+  </div>
+  <a class="dl" href="cp_stag_beetle.svg" download>Stag beetle pattern (SVG, 200 mm)</a>
+
+  <h3>Scorpion</h3>
+  <div class="row">
+    <figure><img src="pack_scorpion.svg" alt="circle packing for the scorpion"><figcaption>circle packing, 0.142 per tree unit</figcaption></figure>
+    <figure><img src="cp_scorpion.svg" alt="scorpion crease pattern"><figcaption>292 facets, 175 mountain and 206 valley folds, 278 interior vertices; layer order in 11 minutes</figcaption></figure>
+    <figure><img class="dark" src="still_scorpion.webp" alt="the simulated paper scorpion"><figcaption>the sheet at the end of the film</figcaption></figure>
+  </div>
+  <a class="dl" href="cp_scorpion.svg" download>Scorpion pattern (SVG, 200 mm)</a>
+  <p class="small">Print at 100 percent on A4 or letter; the square is 200 mm. The stag beetle pattern is drawn mirrored relative to the other two so that its coloured side ends up outside; fold each with the printed side facing you and the mountains rising toward you. Precrease everything, collapse the base, then shape the flaps by hand, as with any tree-method design.</p>
+
+  <h2>How a stick figure becomes a crease pattern</h2>
+  <div class="cols">
+    <div>
+      <p>The tree method is Lang's, from <i>Origami Design Secrets</i>. The animal is a tree: nodes for body and hips, and a leaf edge for every limb with a length. Each leaf becomes a circle on the square whose radius is the limb's length, and two circles may not overlap, because the paper between two flap tips has to be at least as long as the path between them in the tree. The solver packs the circles (many random starts, then a constrained optimiser pushing the scale up), so the square holds the biggest animal of those proportions it can. The scale in the captions is how much of the square one tree unit takes.</p>
+      <p>Circles that touch define polygons across the square, and each polygon is filled with a universal molecule: its edges are shrunk inward at equal speed until they meet, or until two corners come within tree distance of each other and the polygon splits, and the ridges this leaves are the creases. Where a polygon has a gap no circle fills, the solver adds a stub, a small extra leaf, so every region closes. The creases come out of the shrinking, not from anyone drawing them.</p>
+    </div>
+    <div>
+      <p>What the method does not give you is proof that the sheet can be folded flat. A pattern can satisfy every local rule and still ask the paper to pass through itself. So the solver builds the folded state exactly: every facet of the pattern is mapped to where it lies in the flat base (an axial coordinate along the tree, an elevation across it), and the map is checked to be an isometry on every facet to fourteen decimal places. The layer order then goes to Z3, an SMT solver: a boolean for each pair of overlapping facets saying which is above; for every crease, no third facet may lie between the two it joins; and no facet may pass through another's fold, the taco and tortilla rules. If Z3 says satisfiable the order exists, and mountain and valley follow from it. All three patterns got an order; the scorpion took eleven minutes. Every interior vertex then passes Maekawa's rule.</p>
+      <p>The film is not the proof. It is a mass-spring sheet on the GPU, two to four thousand vertices, springs along the edges and torsion springs at every crease pulling toward the assigned angle, plus a gentle pull of each facet toward its proven place in the base. Nothing stops the sheet passing through itself, so what you see is the sheet finding the base, not a sequence a person could follow. The pose at the end is the base's flaps rotated rigidly about their hinges, roughly what a folder does when shaping.</p>
+    </div>
+  </div>
+
+  <h2>Caveats, plainly</h2>
+  <p class="small">I have not folded any of these from paper. The patterns are sound in the sense above (an exact folded state, a layer order a solver accepts, Maekawa at every vertex), which is more than a hand-drawn pattern usually has, but flat-foldable with a valid order is a weaker claim than foldable by a person. Tree-method bases can demand collapsing many creases at once and some of these regions are dense. The order is a valid one, not the nicest; a folder would rearrange layers to taste. The molecules here shrink to a single ridge and do not add the sinks and reverse folds that give a tree-method animal its final shape, so what folds is the base, and the head, legs and tail are flaps to be shaped, which the film fakes by rotating them. The simulated sheet is guided: its springs alone stall in a crumple with the creases up to half a radian off, and the pull toward the proven folded state is what closes it. There is no self-collision, so mid-fold frames show paper passing through paper. Three animals were attempted and three are shown; nothing was left out.</p>
+
+  <h2>Sources</h2>
+  <p class="small">Robert J. Lang, <i>Origami Design Secrets</i>, second edition (2011), the chapters on circle packing, molecules and tree theory; his <a href="https://langorigami.com/article/treemaker/">TreeMaker</a> is the reference implementation of the method and this is not it. Layer ordering uses the taco and tortilla constraints from the flat-foldability literature (Demaine, Tachi and others); Z3 is from Microsoft Research. The fold simulation follows Ghassaei, Demaine and Gershenfeld's <a href="https://origamisimulator.org/">Origami Simulator</a> (2018). Rendered in Blender 5.2, Cycles.</p>
+  <footer>
+    <a href="../">The Daily Fable</a> · <a id="film2" href="https://youtu.be/28Uu666CdRo">the film</a> · <a href="../diary/">diary</a> · <a href="https://github.com/Booyaka101/thedailyfable/tree/main/day56">source</a>
+  </footer>
+</main>
+</body>
+</html>
