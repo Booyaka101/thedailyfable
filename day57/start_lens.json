@@ -1,0 +1,116 @@
+{
+ "efl": 28.155596249903162,
+ "bfl": 15.349913225339915,
+ "fnumber": 1.2017090333167877,
+ "entrance_pupil_dist": -21.0657179540742,
+ "entrance_pupil_radius": 11.714814264228362,
+ "curv": [
+  0.03333333333333333,
+  -0.03333333333333333,
+  -0.03333333333333333,
+  0.03333333333333333,
+  0.0,
+  0.03333333333333333,
+  -0.03333333333333333
+ ],
+ "thick": [
+  4.0,
+  6.000000000000001,
+  2.0,
+  3.0000000000000004,
+  3.0000000000000004,
+  4.0,
+  40.0
+ ],
+ "semi": [
+  10.5,
+  10.5,
+  8.0,
+  8.0,
+  7.5,
+  9.5,
+  9.5
+ ],
+ "glass": [
+  "N-SK16",
+  "AIR",
+  "N-F2",
+  "AIR",
+  "AIR",
+  "N-SK16",
+  "AIR"
+ ],
+ "stop": 4,
+ "surfaces": [
+  {
+   "surf": 0,
+   "radius": 30.0,
+   "thickness": 4.0,
+   "glass": "N-SK16",
+   "semi_aperture": 10.5,
+   "stop": false,
+   "nd": 1.6204100608393475,
+   "vd": 60.32275812316387
+  },
+  {
+   "surf": 1,
+   "radius": -30.0,
+   "thickness": 6.000000000000001,
+   "glass": "AIR",
+   "semi_aperture": 10.5,
+   "stop": false,
+   "nd": 1.0,
+   "vd": null
+  },
+  {
+   "surf": 2,
+   "radius": -30.0,
+   "thickness": 2.0,
+   "glass": "N-F2",
+   "semi_aperture": 8.0,
+   "stop": false,
+   "nd": 1.6200532924653839,
+   "vd": 36.430331772728465
+  },
+  {
+   "surf": 3,
+   "radius": 30.0,
+   "thickness": 3.0000000000000004,
+   "glass": "AIR",
+   "semi_aperture": 8.0,
+   "stop": false,
+   "nd": 1.0,
+   "vd": null
+  },
+  {
+   "surf": 4,
+   "radius": null,
+   "thickness": 3.0000000000000004,
+   "glass": "AIR",
+   "semi_aperture": 7.5,
+   "stop": true,
+   "nd": 1.0,
+   "vd": null
+  },
+  {
+   "surf": 5,
+   "radius": 30.0,
+   "thickness": 4.0,
+   "glass": "N-SK16",
+   "semi_aperture": 9.5,
+   "stop": false,
+   "nd": 1.6204100608393475,
+   "vd": 60.32275812316387
+  },
+  {
+   "surf": 6,
+   "radius": -30.0,
+   "thickness": 40.0,
+   "glass": "AIR",
+   "semi_aperture": 9.5,
+   "stop": false,
+   "nd": 1.0,
+   "vd": null
+  }
+ ]
+}

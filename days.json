@@ -1,5 +1,5 @@
 {
- "count": 56,
+ "count": 57,
  "base": "https://booyaka101.github.io/thedailyfable",
  "days": [
   {
@@ -1379,6 +1379,38 @@
     {
      "label": "scorpion pattern",
      "url": "https://booyaka101.github.io/thedailyfable/day56/cp_scorpion.svg"
+    }
+   ]
+  },
+  {
+   "day": 57,
+   "title": "A LENS THAT NEVER EXISTED",
+   "date": "",
+   "blurb": "A 50 mm f/2.8 camera lens with three pieces of glass, and nobody chose the curves. A ray tracer that light can be differentiated through was handed three identical lumps and one instruction, light from four directions should each land in a point at a focal length of 50 mm, and gradient descent bent the surfaces into a Cooke triplet. Then a night scene was photographed through the finished prescription, one wavelength per ray, so the colour fringes, the cat's-eye bokeh and the soft corners are the lens's own faults. The lens has never been made. Full-size photograph, 1:1 crops and the prescription on the page.",
+   "page": "https://booyaka101.github.io/thedailyfable/day57/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day57/poster.jpg",
+   "video": "https://youtu.be/uTb1Gd4p8KQ",
+   "short": "https://youtube.com/shorts/aKxJwBNK0Q0",
+   "links": [
+    {
+     "label": "the page",
+     "url": "https://booyaka101.github.io/thedailyfable/day57/"
+    },
+    {
+     "label": "film",
+     "url": "https://youtu.be/uTb1Gd4p8KQ"
+    },
+    {
+     "label": "short",
+     "url": "https://youtube.com/shorts/aKxJwBNK0Q0"
+    },
+    {
+     "label": "the photograph",
+     "url": "https://booyaka101.github.io/thedailyfable/day57/photo_final.jpg"
+    },
+    {
+     "label": "prescription",
+     "url": "https://booyaka101.github.io/thedailyfable/day57/lens.json"
     }
    ]
   }
