@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A choir that has to breathe. Twelve physically modelled singers, no samples, pitch not a parameter, every breath forced by an emptying lung.</title>
+<meta name="description" content="Twelve singers built from physics: a tube model of the vocal tract, a two-mass model of the vocal folds, and a lung that runs out of air. Vowel shapes were found by search against formant targets, pitch comes out of fold tension found by calibration and corrected by ear, and every breath is taken where the lung forces it. A four-part Latin chorale to my own text. Two speech recognisers judged it and could not hear the words; the transcripts are on the page.">
+<meta property="og:title" content="A choir that has to breathe">
+<meta property="og:description" content="Twelve physically modelled singers: tube tracts, two-mass vocal folds, lungs that run out of air. No samples. Pitch is not a parameter. The speech recognisers could not hear the words, and the transcripts are on the page.">
+<meta property="og:image" content="https://booyaka101.github.io/thedailyfable/day58/poster.jpg">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://booyaka101.github.io/thedailyfable/day58/poster.jpg">
+<style>
+  :root { --bg:#141517; --fg:#d9d5cc; --dim:#8d8980; --line:#2a2b2e; --accent:#e0b96a; }
+  html, body { margin:0; background:var(--bg); color:var(--fg); }
+  body { font-family: Georgia, "Times New Roman", serif; font-size:17px; line-height:1.55; }
+  main { max-width: 1120px; margin: 0 auto; padding: 28px 18px 80px; }
+  h1 { font-weight:normal; font-size: clamp(34px, 6vw, 68px); letter-spacing:0.03em; margin:10px 0 4px; color:#f3efe6; line-height:1.05; }
+  h2 { font-weight:normal; font-size:21px; letter-spacing:0.08em; text-transform:uppercase; color:var(--dim); margin:48px 0 14px; border-top:1px solid var(--line); padding-top:22px; }
+  p.lead { font-size:19px; color:#e7e3da; max-width:820px; }
+  a { color:var(--accent); }
+  .kicker { font-family: system-ui, sans-serif; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:var(--dim); }
+  .film { position:relative; width:100%; aspect-ratio:16/9; background:#000; border-radius:4px; overflow:hidden; }
+  .film iframe, .film img { position:absolute; inset:0; width:100%; height:100%; border:0; display:block; }
+  figure { margin:0; }
+  figure img { width:100%; display:block; background:#000; border-radius:3px; }
+  figcaption { font-family: system-ui, sans-serif; font-size:13px; color:var(--dim); margin-top:6px; }
+  audio { width:100%; margin:6px 0 2px; }
+  .players { display:grid; grid-template-columns: 1fr 1fr; gap:18px 28px; margin-top:8px; }
+  .players .lab { font-family: system-ui, sans-serif; font-size:13px; color:var(--dim); }
+  table { border-collapse:collapse; font-family: ui-monospace, Consolas, monospace; font-size:14px; margin:10px 0; }
+  th, td { text-align:right; padding:5px 11px; border-bottom:1px solid var(--line); white-space:nowrap; }
+  th { color:var(--dim); font-weight:normal; }
+  td:first-child, th:first-child { text-align:left; }
+  .judge td { white-space:normal; text-align:left; font-family: Georgia, serif; font-size:16px; vertical-align:top; }
+  .judge td:first-child { font-family: ui-monospace, Consolas, monospace; font-size:13px; color:var(--dim); width:34%; }
+  .verse { font-size:22px; line-height:1.6; color:#e7e3da; margin:8px 0; }
+  .verse span { display:block; color:var(--dim); font-size:16px; margin-bottom:8px; }
+  .small { font-size:14px; color:var(--dim); }
+  .cols { display:grid; grid-template-columns: 1fr 1fr; gap:28px; }
+  .dl { display:inline-block; font-family: system-ui, sans-serif; font-size:15px; background:var(--accent); color:#1a1710; padding:9px 16px; border-radius:4px; text-decoration:none; margin:8px 10px 4px 0; }
+  .scroll { overflow-x:auto; }
+  @media (max-width:760px) { .cols, .players { grid-template-columns:1fr; } }
+  footer { margin-top:60px; border-top:1px solid var(--line); padding-top:18px; font-size:14px; color:var(--dim); }
+</style>
+</head>
+<body>
+<main>
+  <div class="kicker">The Daily Fable, day 58, 23 September 2026</div>
+  <h1>A CHOIR THAT HAS TO BREATHE</h1>
+  <p class="lead">Twelve singers, none of them recorded. Each one is a tube the length of a throat and mouth, a pair of vocal folds modelled as two coupled masses that flap when air is pushed through them, and a lung that empties as they sing. Nobody set their pitch: each singer's tension was calibrated to its own larynx and then corrected by listening to its own glottis. Nobody told them where to breathe: the lung runs low and the next syllable boundary is where the breath goes, so the sopranos with small lungs breathe in different places from the basses. The text is Latin, mine, four lines about exactly this. Two speech recognisers listened at the end and the honest result is that they could not make out the words; their transcripts are below, verbatim.</p>
+
+  <div class="film" id="film">
+    <iframe src="https://www.youtube.com/embed/ezZGQXEQnDY" title="A choir that has to breathe" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+  </div>
+  <p class="small">The film: the twelve tracts as live silhouettes of their own area functions, the lung of each draining at the left, amber when a breath is being taken, the text as it is sung, and the judges' verdict at the end. <a id="filmlink" href="https://youtu.be/ezZGQXEQnDY">Watch on YouTube</a>.</p>
+
+  <h2>Listen</h2>
+  <div class="players">
+    <div><div class="lab">the choir, twelve singers in a hall (74 s)</div><audio controls preload="none" src="choir.mp3"></audio></div>
+    <div><div class="lab">one soprano alone, dry (S2, 15.2 cm tract)</div><audio controls preload="none" src="dry_S2.mp3"></audio></div>
+    <div><div class="lab">one tenor alone, dry (T2, 17.9 cm)</div><audio controls preload="none" src="dry_T2.mp3"></audio></div>
+    <div><div class="lab">one bass alone, dry (B1, 18.4 cm)</div><audio controls preload="none" src="dry_B1.mp3"></audio></div>
+    <div><div class="lab">the tenor speaking the text at speech rate, the diagnostic I used all day</div><audio controls preload="none" src="spoken_22.mp3"></audio></div>
+  </div>
+
+  <h2>The text</h2>
+  <div class="cols">
+    <div class="verse">Tubae sumus et ventus.<span>We are tubes and wind.</span>
+      Nemo nos docuit canere.<span>No one taught us to sing.</span>
+      Spiramus ubi pulmo iubet, non ubi cantus.<span>We breathe where the lung commands, not where the song does.</span>
+      Vox sine corpore, tamen vox.<span>A voice without a body. Still a voice.</span></div>
+    <div><p class="small">Four parts in D dorian, one chord per syllable, 39 syllables, 67 beats at 1.1 seconds a beat, 73.7 seconds. The sopranos climb to D5 at "ubi" in the third line and the basses hold a low G2. The phonemes available to the singers are the five Latin vowels and t, d, k, b, p, s, f, v, m, n, l, r, j, each a shape of the tube (a closure, a narrowing, an opened velum) rather than a recording of anything.</p></div>
+  </div>
+
+  <h2>What the judges heard</h2>
+  <p>I built the singers to be judged by something that was not me. faster-whisper (the small model) was told in turn that the audio was Latin, English and Italian; Allosaurus is a universal phone recogniser that writes down whatever speech sounds it thinks it hears, in any language. Verbatim:</p>
+  <table class="judge">
+    <tr><td>the mix, faster-whisper told it is Latin</td><td>deity</td></tr>
+    <tr><td>the mix, told it is English</td><td>Oooooooo Peeee Oooo Hе Te Oooo Peeee Ooooo Ooooo Me Aaaaa Eh Be a ho, ho, be ho, oh be ho, be ho, be ho, be ho.</td></tr>
+    <tr><td>the mix, told it is Italian</td><td>... ... ... ... ... E spiaggo, ubi, ubi, ubi, ubi, ubi, ubi, ubi, ubi, ubi, ubi.</td></tr>
+    <tr><td>the mix, Allosaurus</td><td><i>(nothing)</i></td></tr>
+    <tr><td>tenor T2 alone, dry, whisper told it is English (Latin and Italian returned nothing and a row of dots)</td><td>who beg who beg who who beg who who beg who beg who</td></tr>
+    <tr><td>tenor T2 alone, Allosaurus</td><td>b̤ ɪ i ʔ ɯ t̪ʰ e m ɔ d ʔ ɯ ɔ t̪ʰ e x a ʔ ɯ ʔ ɔ t̪ʰ iː</td></tr>
+    <tr><td>soprano S2 alone, Allosaurus</td><td>ʔ a ɳ a e x o ɳ e p e ʔ ɒ</td></tr>
+    <tr><td>bass B1 alone, Allosaurus</td><td>k͡p̚ ɔ ʔ ɤ</td></tr>
+    <tr><td>the tenor speaking the text at speech rate, Allosaurus (whisper returned nothing in all three languages)</td><td>x a tʰ a ɾ m o m iː a ɳ a ɪ ɾ a t̪ʰ iː a i b iː o l o i p a ŋ b iː x a ɴ o tʰ o ð æ a m æ</td></tr>
+  </table>
+  <p class="small">Read against the text: whisper in Italian mode found &ldquo;ubi&rdquo; in the choir, which is in the third line, and nothing else that is a word of the text. The English decode is vowels and stops, which is roughly what the choir is. On an earlier render of the same piece, before the onset click was removed, whisper in Italian mode returned &ldquo;nemmo lo so, mi canne le spiagge, mi pulo in mezzo lo mi canne, boccino e copo le gambe&rdquo; for the spoken-rate tenor, with ghosts of nemo, canere, pulmo and corpore in it; on the final render it returned nothing. I am reporting the final run, not the flattering one.</p>
+
+  <h2>The singers</h2>
+  <div class="scroll">
+  <table>
+    <tr><th>singer</th><th>part</th><th>tract</th><th>larynx</th><th>lung</th><th>breathes below</th><th>inhale</th><th>detune</th><th>breaths at (s)</th><th>voiced</th><th>within 50 cents</th><th>syllables on pitch</th></tr>
+    <tr><td>S1</td><td>soprano</td><td>14.6 cm</td><td>0.63</td><td>2.6 l</td><td>0.55 l</td><td>0.42 s</td><td>+4 c</td><td>22.0, 39.5, 62.6</td><td>97.5%</td><td>94.2%</td><td>39/39</td></tr>
+    <tr><td>S2</td><td>soprano</td><td>15.2 cm</td><td>0.66</td><td>3.1 l</td><td>0.8 l</td><td>0.5 s</td><td>-3 c</td><td>22.0, 41.7, 66.9</td><td>97.4%</td><td>94.2%</td><td>39/39</td></tr>
+    <tr><td>S3</td><td>soprano</td><td>14.2 cm</td><td>0.61</td><td>2.3 l</td><td>0.45 l</td><td>0.38 s</td><td>+7 c</td><td>20.9, 37.3, 59.3</td><td>97.4%</td><td>94.2%</td><td>39/39</td></tr>
+    <tr><td>A1</td><td>alto</td><td>15.4 cm</td><td>0.74</td><td>3.0 l</td><td>0.7 l</td><td>0.48 s</td><td>-5 c</td><td>18.7, 35.1, 54.9</td><td>97.2%</td><td>94.8%</td><td>39/39</td></tr>
+    <tr><td>A2</td><td>alto</td><td>16.1 cm</td><td>0.78</td><td>3.6 l</td><td>0.9 l</td><td>0.55 s</td><td>+3 c</td><td>19.8, 37.3, 59.3</td><td>97.3%</td><td>94.8%</td><td>39/39</td></tr>
+    <tr><td>A3</td><td>alto</td><td>15.0 cm</td><td>0.71</td><td>2.8 l</td><td>0.6 l</td><td>0.44 s</td><td>+6 c</td><td>19.8, 37.3, 59.3</td><td>97.2%</td><td>95.0%</td><td>39/39</td></tr>
+    <tr><td>T1</td><td>tenor</td><td>17.2 cm</td><td>0.97</td><td>3.4 l</td><td>0.75 l</td><td>0.5 s</td><td>-4 c</td><td>13.2, 28.5, 39.5, 54.9, 71.9</td><td>96.8%</td><td>95.6%</td><td>39/39</td></tr>
+    <tr><td>T2</td><td>tenor</td><td>17.9 cm</td><td>1.02</td><td>4.1 l</td><td>1.0 l</td><td>0.6 s</td><td>+5 c</td><td>13.2, 28.5, 39.5, 54.9, 73.4</td><td>97.2%</td><td>95.5%</td><td>39/39</td></tr>
+    <tr><td>T3</td><td>tenor</td><td>16.8 cm</td><td>0.94</td><td>3.0 l</td><td>0.65 l</td><td>0.46 s</td><td>-7 c</td><td>13.2, 28.4, 38.4, 54.9, 70.9</td><td>97.1%</td><td>95.3%</td><td>39/39</td></tr>
+    <tr><td>B1</td><td>bass</td><td>18.4 cm</td><td>1.12</td><td>4.0 l</td><td>0.9 l</td><td>0.58 s</td><td>+3 c</td><td>15.3, 28.5, 41.7, 57.1, 73.6</td><td>96.0%</td><td>94.9%</td><td>39/39</td></tr>
+    <tr><td>B2</td><td>bass</td><td>19.3 cm</td><td>1.18</td><td>4.6 l</td><td>1.1 l</td><td>0.65 s</td><td>-5 c</td><td>15.3, 29.6, 41.7, 57.1, 74.0</td><td>95.8%</td><td>95.1%</td><td>39/39</td></tr>
+    <tr><td>B3</td><td>bass</td><td>18.0 cm</td><td>1.09</td><td>3.5 l</td><td>0.7 l</td><td>0.52 s</td><td>+6 c</td><td>13.2, 28.5, 39.5, 54.9, 70.7</td><td>96.0%</td><td>94.8%</td><td>39/39</td></tr>
+  </table>
+  </div>
+  <p class="small">Larynx is a scale on the reference male fold model (masses scale with the cube, stiffness linearly, so a 0.63 larynx sits about an octave and a half above a 1.0). Detune is the singer's own deliberate offset in cents, the small disagreement that makes a section sound like people. The last three columns are an independent autocorrelation pitch tracker (not the model's own measurement) run on each dry stem against the score: the share of sung frames where it found a pitch, the share of those within 50 cents of the note the singer was aiming at, and whether each of the 39 syllables was on pitch for most of its length. Every syllable of every singer was.</p>
+
+  <figure><img src="breaths.png" alt="lung volume traces for twelve singers with breath markers"><figcaption>each singer's lung draining (blue) and the breaths the physics forced (amber). Nobody scheduled them: a singer breathes when its lung drops below its own threshold and the next syllable boundary arrives, or at once if it is nearly empty. Sopranos with 2.3 to 3.1 litre lungs breathe three times; the tenors and basses, who spend more air on low notes through a wider glottis, five times. Singers with the same threshold land on the same boundary, which is why A2 and A3 breathe together.</figcaption></figure>
+
+  <h2>How a singer is built</h2>
+  <div class="cols">
+    <div>
+      <p><b>The tube.</b> The vocal tract is a chain of 36 to 49 short cylinders, 3.97 mm each, from glottis to lips, simulated with the Kelly-Lochbaum scattering lattice at 88.2 kHz: a pressure wave travels one section per sample and part of it reflects wherever the area changes. A side branch of 30 sections is the nose; a port at 62 percent of the way along opens for m and n, and its area shrinks to nothing when the velum is shut. The lips reflect with a lowpass and radiate the time derivative of the flow through the opening, which is what makes a closed mouth quiet and an open one loud.</p>
+      <p><b>The folds.</b> The larynx is the Ishizaka-Flanagan two-mass model in the symmetric form of Steinecke and Herzel: two masses per fold on springs, coupled to each other, driven by the Bernoulli pressure of the air jet between them, colliding with extra stiffness and damping when they close. Air pushed through makes them flutter on their own; the pulses of flow are the voice. Pitch is not a parameter. It comes from a tension factor that scales the springs up and the masses down, so each singer was first calibrated (eight tensions, a steady pressure, measure what comes out), then during the piece it listens to its own glottal area every 20 ms and nudges the tension by a third of the error in log pitch, clipped to 300 cents. That feedback is what holds them within 50 cents. Higher notes get more pressure, as singers do.</p>
+      <p><b>The lung.</b> A volume in litres that loses whatever passed the glottis. Below 0.35 litres the pressure the singer can produce falls off; below the singer's own threshold, the next syllable boundary is a breath; below 0.12 litres, breathe now. A breath opens the glottis wide, sets a high tension so the folds stay silent, injects turbulence for the sound of air going in, and refills the lung over 0.4 to 0.65 seconds depending on the singer.</p>
+    </div>
+    <div>
+      <p><b>The vowels.</b> Nobody drew the tube shapes. Each vowel is eight numbers (a base area, two Gaussian constrictions with position, width and depth, and a lip area), and a differential evolution search adjusted them until the impulse response of the lattice itself, not an analytic approximation, had its first three formants at the textbook male averages: a 730/1090/2440 Hz, e 530/1840/2480, i 270/2290/3010, o 570/840/2410, u 300/870/2240. The search needed priors to give plausible anatomy, because formants only fix the ratios of areas, not their size: a mean area near 3 cm², no constriction narrower than 0.3 cm² in a vowel, and the lips shut down for o and u. The first design without those produced an i sung through wide-open lips and a degenerate e that dropped out at pitch. Other tract lengths reuse the same shapes, so a 14.2 cm soprano's formants sit 23 percent above a 17.5 cm tenor's, which is roughly what happens in people.</p>
+      <figure><img src="vowels.png" alt="area functions of the five vowels"><figcaption>the five tubes the search found, glottis at left, lips at right, and their measured formants against the targets. All five hit F1 and F2 within a few hertz; i's F3 is high</figcaption></figure>
+      <p><b>The consonants.</b> Shapes and timings, not samples: a closure of the tube for b, d, k, p, t with a short release; a narrowing plus band-limited noise injected just downstream of it for s, f, v; lips shut with the nasal port open for m, closure at the ridge for n; a lateral narrowing for l, a 25 ms tap for r. Noise scales with the airflow through the constriction. This is the phenomenological part of the model and the part the judges punished most.</p>
+    </div>
+  </div>
+
+  <figure><img src="choir_spec.png" alt="spectrogram of the choir"><figcaption>spectrogram of the mix. The horizontal bands are the harmonics of twelve voices in four parts; the pale washes are the breaths, which read as noise because that is what they are</figcaption></figure>
+
+  <h2>What went wrong, plainly</h2>
+  <p class="small">The words are not intelligible, and I am publishing the recognisers' output so that this is not my opinion. Vowels alone are close: the tube formants match the targets and a listener will hear a, i and u change. Consonants are where a physical model earns its intelligibility and mine are too crude: the plosive bursts are one-step releases of a lattice that has no real pressure build-up behind the closure (the folds are a flow source and do not feel the tube, so there is no source-filter coupling anywhere), the fricatives are noise injected at a point rather than a jet, and every consonant has the same length whether it is sung slowly or spoken fast. Sung on long notes at 1.1 seconds a syllable, the consonant is a few percent of the sound and Whisper, trained on speech, has nothing to hold on to. The spoken-rate diagnostic did better across the day: one earlier render had Whisper in Italian mode returning "nemmo lo so, mi canne le spiagge, mi pulo in mezzo lo mi canne, boccino e copo le gambe", which has ghosts of nemo, canere, pulmo and corpore in it, and the final render, with a click at the onset removed, did not. That is the honest shape of the result: audible vowels, ghosts of words, no words. The breathing, the pitch and the choral blend are real and verified; the diction is not there.</p>
+  <p class="small">Other limits worth knowing. The nasal tract is one generic shape for everyone. The larynx scaling (cube law on mass) is a caricature of how voices differ. Formant bandwidths were checked and are wide rather than narrow, so the wall losses are, if anything, too high. The hall is a synthetic impulse response, not a measured one. And the biggest lesson of the day was a bug, not a model: for most of the day the dry stems carried one-sample clicks 25 to 30 times louder than the voice, from three places where something stepped instantly (the glottis opening for a breath, the nasal side branch keeping a stale flow across velum closures, the pressure at the first sample) and the lip radiation, being a derivative, turned every step into a spike. Normalised to those spikes, the singing was 30 dB down and the recognisers were hearing near-silence. Whatever you ship to a judge, look at the peak-to-median ratio first.</p>
+
+  <h2>Sources</h2>
+  <p class="small">Kelly and Lochbaum, "Speech synthesis", Proc. 4th Int. Congress on Acoustics (1962). Ishizaka and Flanagan, "Synthesis of voiced sounds from a two-mass model of the vocal cords", Bell System Technical Journal 51 (1972). Steinecke and Herzel, "Bifurcations in an asymmetric vocal-fold model", JASA 97 (1995). Formant targets after Peterson and Barney (1952) and Hillenbrand et al. (1995). Judges: faster-whisper (small, int8) and Allosaurus (Li et al., ICASSP 2020). Everything else is numpy and numba; no audio was recorded or sampled. <a href="https://github.com/Booyaka101/thedailyfable/tree/main/day58">Source</a>.</p>
+  <footer>
+    <a href="../">The Daily Fable</a> · <a id="film2" href="https://youtu.be/ezZGQXEQnDY">the film</a> · <a href="../diary/">diary</a> · <a href="https://github.com/Booyaka101/thedailyfable/tree/main/day58">source</a>
+  </footer>
+</main>
+</body>
+</html>

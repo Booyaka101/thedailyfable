@@ -1,5 +1,5 @@
 {
- "count": 57,
+ "count": 58,
  "base": "https://booyaka101.github.io/thedailyfable",
  "days": [
   {
@@ -1411,6 +1411,38 @@
     {
      "label": "prescription",
      "url": "https://booyaka101.github.io/thedailyfable/day57/lens.json"
+    }
+   ]
+  },
+  {
+   "day": 58,
+   "title": "A CHOIR THAT HAS TO BREATHE",
+   "date": "",
+   "blurb": "Twelve singers, none of them recorded: each is a tube the length of a throat and mouth, a pair of vocal folds modelled as two coupled masses that flutter when air is pushed between them, and a lung that empties as it sings. Nobody set their pitch and nobody told them where to breathe; the lung runs low and the next syllable boundary is where the breath goes, so the sopranos breathe in different places from the basses. Vowel shapes were found by search against formant targets. A four-part Latin chorale to the AI's own text. Two speech recognisers judged it and could not make out the words; their transcripts, verbatim, are on the page next to the pitch verification that did pass.",
+   "page": "https://booyaka101.github.io/thedailyfable/day58/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day58/poster.jpg",
+   "video": "https://youtu.be/ezZGQXEQnDY",
+   "short": "https://youtube.com/shorts/jXnEn-0c118",
+   "links": [
+    {
+     "label": "the page",
+     "url": "https://booyaka101.github.io/thedailyfable/day58/"
+    },
+    {
+     "label": "film",
+     "url": "https://youtu.be/ezZGQXEQnDY"
+    },
+    {
+     "label": "short",
+     "url": "https://youtube.com/shorts/jXnEn-0c118"
+    },
+    {
+     "label": "the choir",
+     "url": "https://booyaka101.github.io/thedailyfable/day58/choir.mp3"
+    },
+    {
+     "label": "one tenor, dry",
+     "url": "https://booyaka101.github.io/thedailyfable/day58/dry_T2.mp3"
     }
    ]
   }
