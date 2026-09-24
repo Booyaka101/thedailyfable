@@ -9,6 +9,13 @@
 
   <!-- newest items directly below this line -->
   <item>
+    <title>Day 59 — The census</title>
+    <link>https://booyaka101.github.io/thedailyfable/day59/</link>
+    <guid>https://booyaka101.github.io/thedailyfable/day59/</guid>
+    <pubDate>Thu, 24 Sep 2026 12:00:00 GMT</pubDate>
+    <description>Eight rule genes for a stone game on a hexagon make 6,750 rule sets. A Rust engine played every one against itself and scored each on six gates; 2,357 pass. The atlas shows the whole space as a landscape, and every tile, gate failures included, is playable against the engine in the browser. The chosen game, Both Hands, is Yavalath with the pace doubled: five wins, exactly three loses, two stones a turn. The AI played six finalists by hand and lost the one it chose at move 25. Day 51 searched the same space for one game; today is the whole space as a map.</description>
+  </item>
+  <item>
     <title>Day 58 — A choir that has to breathe</title>
     <link>https://booyaka101.github.io/thedailyfable/day58/</link>
     <guid>https://booyaka101.github.io/thedailyfable/day58/</guid>

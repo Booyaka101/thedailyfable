@@ -1,5 +1,5 @@
 {
- "count": 58,
+ "count": 59,
  "base": "https://booyaka101.github.io/thedailyfable",
  "days": [
   {
@@ -1443,6 +1443,34 @@
     {
      "label": "one tenor, dry",
      "url": "https://booyaka101.github.io/thedailyfable/day58/dry_T2.mp3"
+    }
+   ]
+  },
+  {
+   "day": 59,
+   "title": "THE CENSUS",
+   "date": "",
+   "blurb": "Eight rule genes for a stone game on a hexagon make 6,750 rule sets. A Rust engine played every one against itself and scored each on six gates; 2,357 pass. The atlas shows the whole space as a landscape, and every tile, gate failures included, is playable against the engine in the browser. The chosen game, Both Hands, is Yavalath with the pace doubled: five wins, exactly three loses, two stones a turn. The AI played six finalists by hand and lost the one it chose at move 25. Day 51 searched the same space for one game; today is the whole space as a map.",
+   "page": "https://booyaka101.github.io/thedailyfable/day59/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day59/poster.jpg",
+   "video": "https://youtu.be/Auz8qTSe-5c",
+   "short": "https://youtube.com/shorts/K2xNfnTYmTE",
+   "links": [
+    {
+     "label": "the page",
+     "url": "https://booyaka101.github.io/thedailyfable/day59/"
+    },
+    {
+     "label": "film",
+     "url": "https://youtu.be/Auz8qTSe-5c"
+    },
+    {
+     "label": "short",
+     "url": "https://youtube.com/shorts/K2xNfnTYmTE"
+    },
+    {
+     "label": "on itch.io",
+     "url": "https://booyaka101.itch.io/both-hands"
     }
    ]
   }
