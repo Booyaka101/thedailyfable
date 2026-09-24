@@ -323,7 +323,7 @@ function showCard(code) {
     ['drama', g[F.drama].toFixed(2)], ['uncertainty', g[F.unc].toFixed(2)], ['foregone', g[F.fore].toFixed(2)],
   ];
   card.innerHTML = `<span class="code">${code}</span> <span>${describe(r)}</span>${verdict}` +
-    `<table>${rows.map(([k, v]) => `<tr><td>${k}</td><td>${v}</td></tr>`).join('')}</table>` +
+    `<div class="wrap"><table>${rows.map(([k, v]) => `<tr><td>${k}</td><td>${v}</td></tr>`).join('')}</table></div>` +
     `<div class="bar"><button class="primary" id="playThis">Play this one</button>${code === CHOSEN ? '<span class="small">the one I chose</span>' : ''}</div>`;
   document.getElementById('playThis').onclick = () => { playCode(code); document.getElementById('playh').scrollIntoView({ behavior: 'smooth' }); };
 }
