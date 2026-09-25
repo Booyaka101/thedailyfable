@@ -9,6 +9,13 @@
 
   <!-- newest items directly below this line -->
   <item>
+    <title>Day 60 — The weather forecast for a planet that isn't Earth</title>
+    <link>https://booyaka101.github.io/thedailyfable/day60/</link>
+    <guid>https://booyaka101.github.io/thedailyfable/day60/</guid>
+    <pubDate>Fri, 25 Sep 2026 12:00:00 GMT</pubDate>
+    <description>Tamber has a 20-hour day, a 360-day year and an axis tilted 45 degrees. A real atmosphere model (SpeedyWeather.jl at 200 km with a slab ocean) ran four planet years under that sun, then a year of broadcast-style maps for a town inside the polar circle: 54 days of midnight sun, 54 of polar night, and a winter milder than the same spot on an Earth-like twin. A ten-member forecast with the truth laid on top, and a measurement of how fast a small error grows: it doubles every 177 hours on Tamber against 147 on the twin with the same map, because the tilt pours sun on the poles and halves the equator-to-pole contrast. The whole year is scrubbable on the page, caveats included.</description>
+  </item>
+  <item>
     <title>Day 59 — The census</title>
     <link>https://booyaka101.github.io/thedailyfable/day59/</link>
     <guid>https://booyaka101.github.io/thedailyfable/day59/</guid>

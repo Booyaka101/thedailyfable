@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Day 60: The weather forecast for a planet that isn't Earth</title>
+<meta name="description" content="A real atmosphere model run on an invented planet: 20-hour day, 360-day year, 45 degree tilt. A year of weather maps, a ten-member forecast for one town, and how fast forecasts fall apart there compared with an Earth-like twin.">
+<meta property="og:title" content="Day 60: The weather forecast for a planet that isn't Earth">
+<meta property="og:description" content="A real atmosphere model run on an invented planet: 20-hour day, 360-day year, 45 degree tilt. A year of weather maps, a ten-member forecast for one town, and how fast forecasts fall apart there compared with an Earth-like twin.">
+<meta property="og:image" content="https://booyaka101.github.io/thedailyfable/day60/poster.jpg">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://booyaka101.github.io/thedailyfable/day60/poster.jpg">
+<style>
+  :root { color-scheme: dark; --bg:#0b1220; --fg:#e8e4d8; --dim:#9fb0c8; --line:#22304a; --acc:#f0b35b; }
+  * { box-sizing: border-box; }
+  html, body { margin:0; background:var(--bg); color:var(--fg); font: 17px/1.5 Georgia, 'Times New Roman', serif; }
+  main { max-width: 900px; margin: 0 auto; padding: 22px 14px 80px; }
+  h1 { font-weight:normal; font-size: clamp(30px, 6vw, 58px); letter-spacing:.02em; margin: 8px 0 4px; line-height:1.05; color:#f3efe6; }
+  h2 { font-weight:normal; font-size:19px; letter-spacing:.08em; text-transform:uppercase; color:var(--dim); margin:44px 0 12px; border-top:1px solid var(--line); padding-top:20px; }
+  .kicker { font-family: system-ui, sans-serif; font-size:12px; letter-spacing:.16em; text-transform:uppercase; color:var(--dim); }
+  p.lead { font-size:19px; color:#e7e3da; }
+  a { color: var(--acc); }
+  img, video { display:block; width:100%; height:auto; border-radius:4px; background:#000; }
+  figure { margin: 14px 0; }
+  figcaption { font-family: system-ui, sans-serif; font-size:13.5px; color:var(--dim); margin-top:6px; }
+  .film { position:relative; width:100%; aspect-ratio:16/9; background:#000; border-radius:4px; overflow:hidden; }
+  .film iframe { position:absolute; inset:0; width:100%; height:100%; border:0; }
+  .facts { display:grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap:10px; margin: 14px 0; }
+  .facts div { border:1px solid var(--line); border-radius:8px; padding:10px 12px; background:#101a2e; }
+  .facts b { display:block; font-weight:normal; font-size:24px; color:#fff; }
+  .facts span { font-family: system-ui, sans-serif; font-size:13px; color:var(--dim); }
+  .bar { display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin: 10px 0; }
+  button { font: inherit; font-size: 15px; background:#1a2740; color:var(--fg); border:1px solid #33456a; border-radius: 8px; padding: 8px 14px; min-height: 44px; min-width:44px; cursor:pointer; }
+  button.on { background:#3a3320; border-color: var(--acc); color:#fff; }
+  input[type=range] { width:100%; min-height:44px; }
+  #dayLabel { font-family: ui-monospace, Consolas, monospace; font-size:15px; color:var(--dim); min-height:24px; }
+  table { border-collapse:collapse; font-family: ui-monospace, Consolas, monospace; font-size:13.5px; width:100%; }
+  th, td { text-align:right; padding:5px 10px; border-bottom:1px solid var(--line); white-space:nowrap; }
+  th { color:var(--dim); font-weight:normal; }
+  td:first-child, th:first-child { text-align:left; }
+  .wrap { overflow-x:auto; }
+  .small { font-size: 14px; color: var(--dim); }
+  code { font: 13.5px/1 ui-monospace, Consolas, monospace; background:#141f33; padding: 2px 5px; border-radius: 4px; }
+  ul { padding-left: 20px; } li { margin: 4px 0; }
+</style>
+</head>
+<body>
+<main>
+  <div class="kicker">The Daily Fable · day 60</div>
+  <h1>The weather forecast for a planet that isn't Earth</h1>
+  <p class="lead">Tamber has a 20-hour day, a 360-day year and an axis tilted 45 degrees. I gave those numbers and a hand-drawn set of continents to a real atmosphere model, ran it under that sun for four planet years until the ocean settled, and then did what a weather service does: a year of maps, a ten-member forecast for one town, and a measurement of how fast a forecast falls apart there.</p>
+
+  <div class="film"><iframe src="https://www.youtube.com/embed/xTggWTcoDfE" title="Day 60 film" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+  <p class="small"><a href="https://youtu.be/xTggWTcoDfE">watch on YouTube</a> &middot; <a href="https://youtube.com/shorts/iW7ngtR6Q9k">the Short</a></p>
+
+  <h2>The planet</h2>
+  <div class="facts">
+    <div><b>20 h</b><span>day (Earth 24)</span></div>
+    <div><b>360 days</b><span>year, 300 Earth days</span></div>
+    <div><b>45°</b><span>axial tilt (Earth 23.4)</span></div>
+    <div><b>45° N/S</b><span>polar circles (Earth 66.5)</span></div>
+    <div><b>11%</b><span>land</span></div>
+    <div><b>50° N</b><span>Corran, the town</span></div>
+  </div>
+  <p>Twice Earth's tilt moves the polar circles down to 45 degrees of latitude. Corran sits on the west coast of the northern continent, Caul, at 50 north, the latitude of Vancouver or Prague, and is well inside the circle. Every summer the sun stops setting there for 54 days, and every winter it stops rising for 54 days.</p>
+  <figure><img src="globe.jpg" alt="Tamber's globe with the continents Caul, Ostry, Rime and the Scatter, the 45 degree polar circles and the town Corran" loading="lazy"><figcaption>The world: Caul in the north, Ostry in the south, Rime at the pole, the Scatter on the equator. Amber rings are the polar circles.</figcaption></figure>
+
+  <h2>A year at Corran</h2>
+  <p>Drag through the year. Every frame is the model's own state, five hours apart, drawn as a broadcast map: surface temperature, rain in green and blue, snow in white, isobars every 4 hPa, the night side shaded. The inset globe shows where the sun is.</p>
+  <video id="yearVid" src="year.mp4" playsinline muted preload="metadata" poster="poster.jpg"></video>
+  <input id="scrub" type="range" min="0" max="1000" value="0" aria-label="scrub the year">
+  <div id="dayLabel">day 1 of 360</div>
+  <div class="bar">
+    <button id="play">Play the year</button>
+    <button data-day="1">Spring equinox</button>
+    <button data-day="90">Midsummer</button>
+    <button data-day="180">Autumn equinox</button>
+    <button data-day="270">Midwinter</button>
+  </div>
+  <figure><img src="year_strip.png" alt="Daily high and low temperature at Corran over the year" loading="lazy"><figcaption>Corran's daily high and low through the year. Hottest day 26° on day 166, coldest -10° on day 271. 534 mm of rain and snow in the year.</figcaption></figure>
+
+  <h2>The forecast</h2>
+  <p>Issued on day 181. I took that day's atmosphere, made ten copies, gave each a smooth random temperature field of one degree (24 random waves up to wavenumber 8, the size and shape of an analysis error), and ran all ten forward for 30 Earth days. Where the ten agree the forecast is confident; where they fan out it is not. Then I laid the unperturbed run, the "truth", on top.</p>
+  <figure><img src="bulletin.jpg" alt="Ten-member temperature plume for Corran with the truth laid on top, and the chance of rain by day" loading="lazy"><figcaption>Truth (amber) against ten futures (blue). The truth stayed inside the envelope 95% of the time. 4 of 36 local days were wet; the ensemble's rain call (50% threshold) was right on 35 days, Brier score 0.03 against 0.10 for climatology.</figcaption></figure>
+
+  <h2>How far ahead can you forecast on Tamber?</h2>
+  <p>The same experiment, three start dates per planet, ten members each, with a tiny nudge (a hundredth of a degree) so the growth starts from nearly nothing. The error is the global root-mean-square difference in sea-level pressure between each member and the unperturbed run. On Tamber a small error doubles every <b>177 hours</b> (8.9 of its days). On an Earth-like twin with the same continents, 24-hour day and 23.4 degree tilt, it doubles every <b>147 hours</b>.</p>
+  <figure><img src="growth.jpg" alt="Forecast error growth, Tamber against the Earth twin" loading="lazy"><figcaption>Error growth in sea-level pressure, log scale, Tamber in amber and the Earth twin in blue. Thin lines are individual members, thick lines the geometric mean.</figcaption></figure>
+  <p class="small">This is a perfect-model twin experiment at coarse resolution: the model forecasts itself from a nudged start, so there is no model error and the starting error is unrealistically small. It is an upper bound on predictability, and the doubling time is measured over the early exponential stretch only. As a check, the same ensembles with a 1 K smooth nudge from one date each: at 15 days the Earth twin's pressure error was 5.4 hPa against 2.9 on Tamber, the same ordering at a hundred times the amplitude.</p>
+
+  <h2>How it was made</h2>
+  <ul>
+    <li><a href="https://github.com/SpeedyWeather/SpeedyWeather.jl">SpeedyWeather.jl</a> 0.22 on Julia 1.13: a primitive-equation atmosphere, spectral T63 (about 200 km at the equator), 8 vertical layers, with a 30 m slab ocean and a bucket land surface. The planet is one constructor call: rotation, day length, year length, tilt. Seasons come from the sun, nothing is prescribed.</li>
+    <li>The continents are a closed-form noise field, the same formula in Julia and Python, so the model's mask and the map's coastline agree. Two mountain ridges, one on each large continent, up to about 3,500 m.</li>
+    <li>Spin-up: 1,200 Earth days (4 Tamber years) from rest. The global ocean was still warming by about 0.3 degrees a year at the end, so the climate is close to but not exactly settled.</li>
+    <li>The year: 12 restart segments, output every 5 hours, 1,440 states. Maps with cartopy and matplotlib, film with cairo, narration by Kokoro. Both planets, all forecasts and the film rendered on one desktop in about four hours.</li>
+    <li>Grid-point white noise barely grows in this model at any amplitude: the hyperdiffusion removes it before the large scales feel it. A 1 K white-noise bulletin gave Corran a spread of 0.1° at day 3. The bulletin above uses the smooth field instead; the doubling times use the 0.01 K white-noise runs, where the growth that survives is the large-scale part.</li>
+    <li>Things I would do with another day: fronts on the map, a higher resolution, and a longer run so the ocean truly settles. The Earth twin's year chain is 360 days, not 365.</li>
+  </ul>
+  <p class="small">Code and run driver: <a href="https://github.com/Booyaka101/thedailyfable">the repo</a>, folder day60. Runs are not committed (about 6 GB of netCDF).</p>
+</main>
+<script>
+(function(){
+  const v = document.getElementById('yearVid'), s = document.getElementById('scrub'), lab = document.getElementById('dayLabel'), play = document.getElementById('play');
+  const NDAYS = 360; let dur = 0;
+  function label(){ if(!dur) return; const d = Math.min(NDAYS, Math.floor(v.currentTime / dur * NDAYS) + 1); lab.textContent = 'day ' + d + ' of ' + NDAYS; s.value = Math.round(v.currentTime / dur * 1000); }
+  v.addEventListener('loadedmetadata', () => { dur = v.duration; label(); });
+  v.addEventListener('timeupdate', label);
+  s.addEventListener('input', () => { if(!dur) return; v.pause(); play.textContent = 'Play the year'; v.currentTime = s.value / 1000 * dur; label(); });
+  play.addEventListener('click', () => { if (v.paused) { v.play(); play.textContent = 'Pause'; } else { v.pause(); play.textContent = 'Play the year'; } });
+  v.addEventListener('ended', () => { play.textContent = 'Play the year'; });
+  document.querySelectorAll('button[data-day]').forEach(b => b.addEventListener('click', () => { if(!dur) { v.load(); v.addEventListener('loadedmetadata', () => { v.currentTime = (b.dataset.day - 1) / NDAYS * v.duration; }, {once:true}); return; } v.pause(); play.textContent = 'Play the year'; v.currentTime = (b.dataset.day - 1) / NDAYS * dur; label(); }));
+})();
+</script>
+</body>
+</html>

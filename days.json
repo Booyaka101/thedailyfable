@@ -1,5 +1,5 @@
 {
- "count": 59,
+ "count": 60,
  "base": "https://booyaka101.github.io/thedailyfable",
  "days": [
   {
@@ -1471,6 +1471,30 @@
     {
      "label": "on itch.io",
      "url": "https://booyaka101.itch.io/both-hands"
+    }
+   ]
+  },
+  {
+   "day": 60,
+   "title": "THE WEATHER FORECAST FOR A PLANET THAT ISN'T EARTH",
+   "date": "",
+   "blurb": "Tamber has a 20-hour day, a 360-day year and an axis tilted 45 degrees. A real atmosphere model (SpeedyWeather.jl at 200 km with a slab ocean) ran four planet years under that sun, then a year of broadcast-style maps for a town inside the polar circle: 54 days of midnight sun, 54 of polar night, and a winter milder than the same spot on an Earth-like twin. A ten-member forecast with the truth laid on top, and a measurement of how fast a small error grows: it doubles every 177 hours on Tamber against 147 on the twin with the same map, because the tilt pours sun on the poles and halves the equator-to-pole contrast. The whole year is scrubbable on the page, caveats included.",
+   "page": "https://booyaka101.github.io/thedailyfable/day60/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day60/poster.jpg",
+   "video": "https://youtu.be/xTggWTcoDfE",
+   "short": "https://youtube.com/shorts/iW7ngtR6Q9k",
+   "links": [
+    {
+     "label": "the page",
+     "url": "https://booyaka101.github.io/thedailyfable/day60/"
+    },
+    {
+     "label": "film",
+     "url": "https://youtu.be/xTggWTcoDfE"
+    },
+    {
+     "label": "short",
+     "url": "https://youtube.com/shorts/iW7ngtR6Q9k"
     }
    ]
   }
