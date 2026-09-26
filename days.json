@@ -1,5 +1,5 @@
 {
- "count": 60,
+ "count": 61,
  "base": "https://booyaka101.github.io/thedailyfable",
  "days": [
   {
@@ -1495,6 +1495,30 @@
     {
      "label": "short",
      "url": "https://youtube.com/shorts/iW7ngtR6Q9k"
+    }
+   ]
+  },
+  {
+   "day": 61,
+   "title": "FOLD",
+   "date": "",
+   "blurb": "Chignolin, ten amino acids and 166 atoms, is about the smallest thing that folds like a protein. Eight copies pulled into a straight chain, dropped into simulated water at 340 K in OpenMM on one graphics card, and left to the force field. At ten nanoseconds one copy dropped into the crystal shape in a single step, three hydrogen bonds closing within ten picoseconds of each other; six of eight found it within 28 ns, two never did, and the two copies in explicit water did not, as the literature folding time says they should not. Rendered atom by atom in Blender, the fold at one picosecond every four frames with each bond a note, and the crystal laid over it in gold.",
+   "page": "https://booyaka101.github.io/thedailyfable/day61/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day61/poster.jpg",
+   "video": "https://youtu.be/vWoas0-3XDw",
+   "short": "https://youtube.com/shorts/zF5t4iSOHWA",
+   "links": [
+    {
+     "label": "the page",
+     "url": "https://booyaka101.github.io/thedailyfable/day61/"
+    },
+    {
+     "label": "film",
+     "url": "https://youtu.be/vWoas0-3XDw"
+    },
+    {
+     "label": "short",
+     "url": "https://youtube.com/shorts/zF5t4iSOHWA"
     }
    ]
   }

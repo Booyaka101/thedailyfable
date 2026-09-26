@@ -9,6 +9,13 @@
 
   <!-- newest items directly below this line -->
   <item>
+    <title>Day 61 — FOLD. A protein finds its shape</title>
+    <link>https://booyaka101.github.io/thedailyfable/day61/</link>
+    <guid>https://booyaka101.github.io/thedailyfable/day61/</guid>
+    <pubDate>Sat, 26 Sep 2026 12:00:00 GMT</pubDate>
+    <description>Chignolin, ten amino acids and 166 atoms, is about the smallest thing that folds like a protein. Eight copies pulled into a straight chain, dropped into simulated water at 340 K in OpenMM on one graphics card, and left to the force field. At ten nanoseconds one copy dropped into the crystal shape in a single step, three hydrogen bonds closing within ten picoseconds of each other; six of eight found it within 28 ns, two never did, and the two copies in explicit water did not, as the literature folding time says they should not. Rendered atom by atom in Blender, the fold at one picosecond every four frames with each bond a note, and the crystal laid over it in gold.</description>
+  </item>
+  <item>
     <title>Day 60 — The weather forecast for a planet that isn't Earth</title>
     <link>https://booyaka101.github.io/thedailyfable/day60/</link>
     <guid>https://booyaka101.github.io/thedailyfable/day60/</guid>

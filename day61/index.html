@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Day 61: FOLD. A protein finds its shape</title>
+<meta name="description" content="Ten amino acids pulled into a straight chain, dropped into simulated water at 340 K, and left to the physics. Six of eight copies found the crystal shape within 28 nanoseconds, the first at 10, in a single step. Real molecular dynamics on one graphics card, rendered atom by atom.">
+<meta property="og:title" content="Day 61: FOLD. A protein finds its shape">
+<meta property="og:description" content="Ten amino acids pulled into a straight chain, dropped into simulated water at 340 K, and left to the physics. Six of eight copies found the crystal shape within 28 nanoseconds, the first at 10, in a single step.">
+<meta property="og:image" content="https://booyaka101.github.io/thedailyfable/day61/poster.jpg">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://booyaka101.github.io/thedailyfable/day61/poster.jpg">
+<style>
+  :root { color-scheme: dark; --bg:#0b1220; --fg:#e8e4d8; --dim:#9fb0c8; --line:#22304a; --acc:#f0b35b; }
+  * { box-sizing: border-box; }
+  html, body { margin:0; background:var(--bg); color:var(--fg); font: 17px/1.5 Georgia, 'Times New Roman', serif; }
+  main { max-width: 900px; margin: 0 auto; padding: 22px 14px 80px; }
+  h1 { font-weight:normal; font-size: clamp(30px, 6vw, 58px); letter-spacing:.02em; margin: 8px 0 4px; line-height:1.05; color:#f3efe6; }
+  h2 { font-weight:normal; font-size:19px; letter-spacing:.08em; text-transform:uppercase; color:var(--dim); margin:44px 0 12px; border-top:1px solid var(--line); padding-top:20px; }
+  .kicker { font-family: system-ui, sans-serif; font-size:12px; letter-spacing:.16em; text-transform:uppercase; color:var(--dim); }
+  p.lead { font-size:19px; color:#e7e3da; }
+  a { color: var(--acc); }
+  img, video { display:block; width:100%; height:auto; border-radius:4px; background:#000; }
+  figure { margin: 14px 0; }
+  figcaption { font-family: system-ui, sans-serif; font-size:13.5px; color:var(--dim); margin-top:6px; }
+  .film { position:relative; width:100%; aspect-ratio:16/9; background:#000; border-radius:4px; overflow:hidden; }
+  .film iframe { position:absolute; inset:0; width:100%; height:100%; border:0; }
+  .facts { display:grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap:10px; margin: 14px 0; }
+  .facts div { border:1px solid var(--line); border-radius:8px; padding:10px 12px; background:#101a2e; }
+  .facts b { display:block; font-weight:normal; font-size:24px; color:#fff; }
+  .facts span { font-family: system-ui, sans-serif; font-size:13px; color:var(--dim); }
+  table { border-collapse:collapse; font-family: ui-monospace, Consolas, monospace; font-size:13.5px; width:100%; }
+  th, td { text-align:right; padding:5px 10px; border-bottom:1px solid var(--line); white-space:nowrap; }
+  th { color:var(--dim); font-weight:normal; }
+  td:first-child, th:first-child { text-align:left; }
+  .wrap { overflow-x:auto; }
+  .small { font-size: 14px; color: var(--dim); }
+  code { font: 13.5px/1 ui-monospace, Consolas, monospace; background:#141f33; padding: 2px 5px; border-radius: 4px; }
+  ul { padding-left: 20px; } li { margin: 4px 0; }
+  .seq { font-family: ui-monospace, Consolas, monospace; font-size: 22px; letter-spacing: .3em; color:#fff; }
+</style>
+</head>
+<body>
+<main>
+  <div class="kicker">The Daily Fable · day 61</div>
+  <h1>FOLD. A protein finds its shape</h1>
+  <p class="lead">Chignolin is one of the smallest things that folds like a protein: ten amino acids, 166 atoms, a hairpin held by five hydrogen bonds. Its shape was measured in a crystal. I pulled the chain straight, dropped eight copies into simulated water at 340 K, and left them to the force field. Nothing in the file remembers the hairpin. At ten nanoseconds one copy dropped into the crystal shape in a single step, and the film watches it happen a picosecond at a time. By the time I stopped the runs, six of the eight had found it.</p>
+
+  <div class="film"><iframe src="https://www.youtube.com/embed/vWoas0-3XDw" title="Day 61 film" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+  <p class="small"><a href="https://youtu.be/vWoas0-3XDw">watch on YouTube</a> &middot; <a href="https://youtube.com/shorts/zF5t4iSOHWA">the Short</a></p>
+
+  <h2>The molecule</h2>
+  <p class="seq">Y Y D P E T G T W Y</p>
+  <div class="facts">
+    <div><b>10</b><span>amino acids (CLN025)</span></div>
+    <div><b>166</b><span>atoms</span></div>
+    <div><b>5</b><span>backbone hydrogen bonds in the crystal</span></div>
+    <div><b>5AWL</b><span>the crystal structure, PDB</span></div>
+    <div><b>340 K</b><span>simulation temperature</span></div>
+    <div><b>8 + 2</b><span>replicas, implicit + explicit water</span></div>
+  </div>
+  <p>CLN025 is a designed variant of chignolin (Honda and colleagues, 2008), a beta hairpin: two strands lying side by side, the turn around aspartate 3 to glycine 7, and the two tyrosines at the ends stacked with the tryptophan on one face. The judge throughout is the root-mean-square distance of the ten alpha carbons from the crystal after the best superposition. A straight chain is about 10 Å away. Under 1.5 Å counts as folded, and a replica only counts as unfolded again above 3 Å, so a folded state does not flicker.</p>
+
+  <h2>The race</h2>
+  <figure><img src="race.png" alt="CA RMSD to the crystal against time for all ten replicas; replica 2 drops under 1.5 Å at 10 ns" loading="lazy"><figcaption>Every replica's distance from the crystal, 20 ps per point. Pink is replica 2, grey the other seven implicit replicas, teal the two in explicit water. The dashed line is the folded cutoff.</figcaption></figure>
+  <p>Eight implicit replicas and the two explicit twins, 20 ps per point, up to 29 ns. Replica 2 is the one the film follows: nine nanoseconds of tangles that look almost right and come apart, then at 10.00 ns a single step from about 4 Å to under 1 Å, and it stays there for the next five and a half nanoseconds. Six of the eight implicit replicas reached the folded state at some point in 28 ns. Two, replicas 5 and 8, never got closer than 1.6 and 2.9 Å.</p>
+
+  <h2>The fold, one picosecond at a time</h2>
+  <figure><img src="fold.png" alt="Replica 2 from 9.76 to 10.56 ns: CA RMSD and the five native hydrogen bonds as bars" loading="lazy"><figcaption>Replica 2 through the fold, from the 1 ps trajectory. Below the curve, the crystal's five backbone hydrogen bonds (N to O under 3.5 Å), gold when present.</figcaption></figure>
+  <p>The turn bond, glutamate 5 to aspartate 3, is there before the fold and has been coming and going for nanoseconds. The two ends then swing together and three bonds close within about ten picoseconds of each other: glycine 7 onto aspartate 3 at 9.992 ns, tyrosine 10 onto tyrosine 1 at 9.996, aspartate 3 onto threonine 8 at 10.004. The fifth, threonine 8 onto threonine 6, arrives at 10.171 ns and stays the weakest of the five, flickering on the edge of its 3.5 Å cutoff. Over the half nanosecond after the fold the backbone sits 1.14 Å from the crystal on average, with a best frame at 0.53 Å.</p>
+  <figure><img src="reveal.jpg" alt="The simulated hairpin with the crystal backbone laid over it in gold" loading="lazy"><figcaption>The simulation at 10.3 ns with the crystal's backbone laid over it in gold. Side chains are not shown for the crystal: the tyrosine rings sit in different rotamers, which is normal at this temperature.</figcaption></figure>
+
+  <h2>Does it stay?</h2>
+  <figure><img src="stay.png" alt="Folded-state strips for the eight implicit replicas" loading="lazy"><figcaption>Gold where a replica is inside the folded state, by the dual cutoff.</figcaption></figure>
+  <p>Replica 2 held the crystal shape from 10.00 to 15.46 ns, lost it, and found it twice more, about a quarter of its run folded in all. Replica 6 first got there at 18.1 ns, replica 4 at 21.6, replica 7 at 22.7, and replica 7 was folded when the runs were stopped at 28.6 ns. Replicas 1 and 3 only brushed the state, 80 and 180 ps each, and replica 3's best frame was 1.49 Å, right on the cutoff. Replicas 5 and 8 never folded. Across the eight runs the chain was inside the folded state 6% of the time, 14.3 ns of 228. At 340 K this is what folding looks like: not a click but an equilibrium, with the folded state a place the chain keeps returning to.</p>
+
+  <h2>The slow twins</h2>
+  <p>The two explicit runs are the control. Same chain, same force field and temperature, but 2,611 real water molecules around it. Explicit water cost about 2.6 times as much per nanosecond here (3.8 ns per hour against 10 for the implicit runs, all sharing the card), so in the same 2 h 55 min the twins reached 10.6 and 10.9 ns and neither folded; the closest either came was 3.5 Å. That is expected. In the long explicit-water simulations of Lindorff-Larsen and colleagues (2011) this peptide's folding time at 340 K is about 0.6 µs, so eleven nanoseconds is a couple of percent of one folding time. The fold in the film is a real motion of a real force field, but it arrived early because implicit solvent removes the friction of water and over-stabilises compact states. That is the honest reading of the day: the shape is right, the clock is fast.</p>
+
+  <h2>How it was made</h2>
+  <ul>
+    <li><a href="https://openmm.org">OpenMM</a> 8.6 with CUDA on one RTX 4090. Amber ff14SB, GBn2 implicit solvent for the eight main replicas, TIP3P explicit water with particle-mesh Ewald for the two twins (2,611 waters in a rhombic dodecahedron 4.9 nm on a side). Langevin middle integrator at 340 K, 4 fs steps with hydrogen mass repartitioning. Every replica starts from the same extended chain built from the sequence, with its own random seed.</li>
+    <li>Trajectories every 20 ps for the race, every 1 ps for the fold, the crystal superposed on each frame's alpha carbons for the overlay. Analysis with mdtraj. The five native bonds are read off the crystal, not typed in.</li>
+    <li>Rendered atom by atom in Blender 5.2 (Cycles): polar hydrogens only, a backbone tube coloured from the N terminus to the C terminus, the crystal as a gold backbone ghost. About 1.5 s per frame at 1440p. Film composited with cairo, narration by Kokoro, the fold's chord from five sines gated by the five bonds.</li>
+    <li>The simulations ran for 2 h 55 min (09:29 to 12:24) on the same card as the renders, so the rates are lower than a dedicated run would give.</li>
+  </ul>
+  <p class="small">Caveats. Implicit solvent flatters folding: it removes the friction of water and is known to over-stabilise compact states, which is why the explicit twins are there. 340 K is a hot day for a protein and close to the melting temperature the classic long simulations used for this peptide, chosen so the fold happens in hours rather than days. The judge is one number on ten atoms; a 1.5 Å cutoff on alpha carbons is a generous definition of "the crystal". One day, one fold. The first-fold times here, 10 to 25 ns, are an implicit-solvent artefact as much as a measurement, and should not be compared with the explicit-water folding time.</p>
+  <p class="small">Code and run driver: <a href="https://github.com/Booyaka101/thedailyfable">the repo</a>, folder day61. Trajectories are not committed.</p>
+</main>
+</body>
+</html>
