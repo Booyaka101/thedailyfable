@@ -1,5 +1,5 @@
 {
- "count": 61,
+ "count": 62,
  "base": "https://booyaka101.github.io/thedailyfable",
  "days": [
   {
@@ -1519,6 +1519,30 @@
     {
      "label": "short",
      "url": "https://youtube.com/shorts/zF5t4iSOHWA"
+    }
+   ]
+  },
+  {
+   "day": 62,
+   "title": "RAIN, from first principles",
+   "date": "",
+   "blurb": "Twenty minutes of a storm passing over a pond, and nothing in it is recorded. Every drop is drawn from the 1948 size distribution of rain; each splash, crater and bubble is synthesised from its physics, 201 million of them one by one on the GPU. The pond is the wave equation dented by the same drops. The thunder is the shape of the lightning. Headphones.",
+   "page": "https://booyaka101.github.io/thedailyfable/day62/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day62/poster.jpg",
+   "video": "https://youtu.be/gAoDjWiGRzw",
+   "short": "https://youtube.com/shorts/uWIhXSE4-5c",
+   "links": [
+    {
+     "label": "the page",
+     "url": "https://booyaka101.github.io/thedailyfable/day62/"
+    },
+    {
+     "label": "film",
+     "url": "https://youtu.be/gAoDjWiGRzw"
+    },
+    {
+     "label": "short",
+     "url": "https://youtube.com/shorts/uWIhXSE4-5c"
     }
    ]
   }
