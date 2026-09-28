@@ -9,6 +9,14 @@
 
   <!-- newest items directly below this line -->
 <item>
+  <title>Day 63 — A hand that learned to write</title>
+  <link>https://booyaka101.github.io/thedailyfable/day63/</link>
+  <guid>https://booyaka101.github.io/thedailyfable/day63/</guid>
+  <pubDate>Mon, 28 Sep 2026 06:00:00 GMT</pubDate>
+  <description>A simulated arm with three joints, eight Hill-type muscles, a 40 ms sensory delay, signal-dependent noise and fatigue holds a pen. It practised cursive by backpropagation through its own physics for about an hour of its time, then wrote a one-page letter in one take, in real time, with the pen sound synthesised from the same trace. The built-in reflex already writes on its first attempt; practice takes the error from 1.13 to 0.95 mm, and the page shows the learning curve, the overfitting after iteration 30, and the sentence in the first letter that was not true and had to be rewritten.</description>
+</item>
+
+<item>
   <title>Day 62 — RAIN, from first principles</title>
   <link>https://booyaka101.github.io/thedailyfable/day62/</link>
   <guid>https://booyaka101.github.io/thedailyfable/day62/</guid>
