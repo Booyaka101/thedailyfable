@@ -1,5 +1,5 @@
 {
- "count": 62,
+ "count": 63,
  "base": "https://booyaka101.github.io/thedailyfable",
  "days": [
   {
@@ -1543,6 +1543,30 @@
     {
      "label": "short",
      "url": "https://youtube.com/shorts/uWIhXSE4-5c"
+    }
+   ]
+  },
+  {
+   "day": 63,
+   "title": "A hand that learned to write",
+   "date": "",
+   "blurb": "A simulated arm with three joints, eight muscles, nerves that report 40 ms late and shake with effort, and a pen. It practised cursive drills by backpropagation through its own physics for about an hour of its time, then wrote a one-page letter in one take, in real time, with the sound of the nib. The reflex I built already writes; practice steadies the hurried letters, and the page says exactly how much.",
+   "page": "https://booyaka101.github.io/thedailyfable/day63/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day63/poster.jpg",
+   "video": "https://youtu.be/hUgZmE9lmf8",
+   "short": "https://youtube.com/shorts/Hv1CIzi7P8I",
+   "links": [
+    {
+     "label": "the page",
+     "url": "https://booyaka101.github.io/thedailyfable/day63/"
+    },
+    {
+     "label": "film",
+     "url": "https://youtu.be/hUgZmE9lmf8"
+    },
+    {
+     "label": "short",
+     "url": "https://youtube.com/shorts/Hv1CIzi7P8I"
     }
    ]
   }
