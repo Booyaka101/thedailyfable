@@ -29,7 +29,7 @@ def strip(practice, out, attempts=(0, 1, 2, 5, 10, 20, 30)):
     small = ImageFont.truetype("C:/Windows/Fonts/georgia.ttf", 26)
     for i, (it, rms, im) in enumerate(rows):
         sheet.paste(im, (lab, i * h))
-        dr.text((24, i * h + h // 2 - 36), f"attempt {it}", fill=(40, 40, 50), font=font)
+        dr.text((24, i * h + h // 2 - 36), f"attempt {it + 1}", fill=(40, 40, 50), font=font)
         dr.text((24, i * h + h // 2 + 6), f"{rms:.2f} mm rms", fill=(120, 120, 130), font=small)
     sheet.save(out, quality=88)
     print("wrote", out, sheet.size)

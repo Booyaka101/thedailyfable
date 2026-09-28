@@ -268,8 +268,10 @@ def practice_scene(enc, page, practice_dir, W, H, speed=3, hold=0.6, subset=None
                 col, row = p[0] * ink.PX_PER_M, page.H - p[1] * ink.PX_PER_M
                 draw_pen(im, ((col - (cx - zoom_w / 2)) * scale, (row - (cy - h / 2)) * scale), pen_dir(tr, i), scale)
             d = ImageDraw.Draw(im)
-            d.text((60, 44), cap, font=font, fill=(60, 56, 58))
-            d.text((60, 104), f"error {a['rms_mm']:.2f} mm", font=font_s, fill=(120, 112, 108))
+            # the vertical view reaches above the page, so the caption sits on the dark desk there
+            dark = H > W
+            d.text((60, 44), cap, font=font, fill=(232, 224, 210) if dark else (60, 56, 58))
+            d.text((60, 104), f"error {a['rms_mm']:.2f} mm", font=font_s, fill=(190, 182, 172) if dark else (120, 112, 108))
             enc.write(np.asarray(im))
 
 
