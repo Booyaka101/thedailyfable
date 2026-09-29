@@ -1,5 +1,5 @@
 {
- "count": 63,
+ "count": 64,
  "base": "https://booyaka101.github.io/thedailyfable",
  "days": [
   {
@@ -1567,6 +1567,30 @@
     {
      "label": "short",
      "url": "https://youtube.com/shorts/Hv1CIzi7P8I"
+    }
+   ]
+  },
+  {
+   "day": 64,
+   "title": "Blown",
+   "date": "",
+   "blurb": "A vase blown by a program that had to learn how. The molten glass is a simulated viscous sheet on a blowpipe, and an evolution strategy blew 3,840 vases looking for the blower's moves: the breaths, the glory hole, the jacks, the paddle, the lip. The winner is filmed in real time in the hot shop, glowing at its own temperature. The belly matches the drawing. The lip does not, and the page says so.",
+   "page": "https://booyaka101.github.io/thedailyfable/day64/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day64/poster.jpg",
+   "video": "https://youtu.be/fFgASUC5D6E",
+   "short": "https://youtube.com/shorts/lqtR2SnQSZE",
+   "links": [
+    {
+     "label": "the page",
+     "url": "https://booyaka101.github.io/thedailyfable/day64/"
+    },
+    {
+     "label": "film",
+     "url": "https://youtu.be/fFgASUC5D6E"
+    },
+    {
+     "label": "short",
+     "url": "https://youtube.com/shorts/lqtR2SnQSZE"
     }
    ]
   }

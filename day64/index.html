@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Day 64: Blown</title>
+<meta name="description" content="A vase blown by a program that had to learn how. A from-scratch simulation of molten soda-lime glass on a blowpipe, an evolution strategy that searched for the blower's plan, and the winning attempt filmed in the hot shop.">
+<meta property="og:title" content="Day 64: Blown">
+<meta property="og:description" content="A vase blown by a program that had to learn how: a viscous-sheet simulation of molten glass on a blowpipe, an evolution strategy searching for the blower's moves, and the winning attempt filmed in real time. The lip is the miss, and the page says how.">
+<meta property="og:image" content="https://booyaka101.github.io/thedailyfable/day64/poster.jpg">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://booyaka101.github.io/thedailyfable/day64/poster.jpg">
+<style>
+  :root { color-scheme: dark; --bg:#0b1220; --fg:#e8e4d8; --dim:#9fb0c8; --line:#22304a; --acc:#f0b35b; }
+  * { box-sizing: border-box; }
+  html, body { margin:0; background:var(--bg); color:var(--fg); font: 17px/1.5 Georgia, 'Times New Roman', serif; }
+  main { max-width: 900px; margin: 0 auto; padding: 22px 14px 80px; }
+  h1 { font-weight:normal; font-size: clamp(30px, 6vw, 58px); letter-spacing:.02em; margin: 8px 0 4px; line-height:1.05; color:#f3efe6; }
+  h2 { font-weight:normal; font-size:19px; letter-spacing:.08em; text-transform:uppercase; color:var(--dim); margin:44px 0 12px; border-top:1px solid var(--line); padding-top:20px; }
+  .kicker { font-family: system-ui, sans-serif; font-size:12px; letter-spacing:.16em; text-transform:uppercase; color:var(--dim); }
+  p.lead { font-size:19px; color:#e7e3da; }
+  a { color: var(--acc); }
+  img, video { display:block; width:100%; height:auto; border-radius:4px; background:#000; }
+  figure { margin: 14px 0; }
+  figcaption { font-family: system-ui, sans-serif; font-size:13.5px; color:var(--dim); margin-top:6px; }
+  .film { position:relative; width:100%; aspect-ratio:16/9; background:#000; border-radius:4px; overflow:hidden; }
+  .film iframe { position:absolute; inset:0; width:100%; height:100%; border:0; }
+  .facts { display:grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap:10px; margin: 14px 0; }
+  .facts div { border:1px solid var(--line); border-radius:8px; padding:10px 12px; background:#101a2e; }
+  .facts b { display:block; font-weight:normal; font-size:24px; color:#fff; }
+  .facts span { font-family: system-ui, sans-serif; font-size:13px; color:var(--dim); }
+  .small { font-size: 14px; color: var(--dim); }
+  code { font: 13.5px/1 ui-monospace, Consolas, monospace; background:#141f33; padding: 2px 5px; border-radius: 4px; }
+  ul { padding-left: 20px; } li { margin: 4px 0; }
+  .two { display:grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 640px) { .two { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<main>
+  <div class="kicker">The Daily Fable · day 64 · 2026-09-29</div>
+  <h1>Blown</h1>
+  <p class="lead">A vase blown by a program that had to learn how. The glass is a simulation I wrote today: a thin sheet of very viscous liquid on the end of a blowpipe, with the viscosity of soda-lime glass across the working range, radiating its heat away as it works, pushed by a measured breath and shaped by jacks, a paddle and a spin. Nobody wrote the blower's plan. An evolution strategy proposed plans, each one was blown in the simulation, and the ones that came out closest to a drawing bred the next generation. The film is the winning attempt in real time, in the hot shop, then the cooling and the cold vessel against the drawing.</p>
+
+  <div class="film"><iframe src="https://www.youtube.com/embed/fFgASUC5D6E" title="Day 64 film" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+  <p class="small"><a href="https://youtu.be/fFgASUC5D6E">watch on YouTube</a> · <a href="https://youtube.com/shorts/lqtR2SnQSZE">the Short: the whole making at double speed</a></p>
+
+  <h2>The vessel against the drawing</h2>
+  <div class="two">
+    <figure><img src="vessel.jpg" alt="The cold glass vase on a table" loading="lazy"><figcaption>Cold. Rendered in Cycles from the solver's own profile, wall thickness and temperature at every frame; while it is hot, the glow is a blackbody at the glass temperature, weighted by thickness.</figcaption></figure>
+    <figure><img src="profile.png" alt="The outer profile of the glass over the target drawing, with the wall thickness filled" loading="lazy"><figcaption>The outer wall against the drawing, with the wall filled in. Mean radial error 1.85 mm over the height. The belly and the shoulder are within a couple of millimetres. The neck stays as narrow as the jacks left it and the lip stands straight up, about 22 mm across where the drawing flares to 46; the vase is 143 mm tall against 145.</figcaption></figure>
+  </div>
+
+  <h2>What the glass is</h2>
+  <div class="facts">
+    <div><b>VFT</b><span>viscosity of soda-lime glass, through the working, softening and annealing points</span></div>
+    <div><b>980 °C</b><span>the gather: a 10 mm wall, 38 mm across, on a 16 mm blowpipe</span></div>
+    <div><b>ε 0.9</b><span>radiates from both faces, plus convection; conducts along the wall</span></div>
+    <div><b>22</b><span>numbers in a plan: how long each move lasts, how hard, at what angle</span></div>
+    <div><b>3,840</b><span>vases blown in the search, 120 generations of 32</span></div>
+  </div>
+  <ul>
+    <li><b>The sheet.</b> The glass is an axisymmetric thin viscous sheet: a profile of about a hundred nodes from the lip to the pole, each with a wall thickness and a temperature. Each step solves a quasi-static viscous flow (Rayleigh dissipation in plane stress, so the sheet stretches, thins and sags with the right ratios) under gravity, the cavity pressure and the tools, with a viscous bending term along the meridian so the pole cannot run away, then advances the nodes, thins the wall by conservation of volume and remeshes. Viscosity follows the Vogel-Fulcher-Tammann curve for soda-lime glass: about 10<sup>3</sup> Pa·s at 1000 °C, 10<sup>7.6</sup> at the softening point near 725 °C, and capped at 10<sup>9</sup> below 624 °C, where real glass goes on stiffening to a solid.</li>
+    <li><b>The heat.</b> Every node radiates from both faces to its surroundings and loses heat by convection, and heat conducts along the wall. The surroundings are the shop at 25 °C or the glory hole at 1100 °C. A thin belly cools faster than a thick base, which is most of why the plan is what it is.</li>
+    <li><b>The breath.</b> The blower sets a flow of air into the pipe, not a pressure. The pressure is whatever that flow takes, solved each step against the sheet's resistance, and clamped to what lungs can do. Blowing into a stiff, cold parison raises the pressure; blowing into a hot thin one hardly does. When the wall thins past a limit the piece is blown through, and that attempt is scored as a failure with a penalty for how early it happened.</li>
+    <li><b>The tools.</b> Jacks pinch a neck at a chosen height and radius; the paddle is a plane that the base cannot cross; the crack-off cuts the profile at the pipe and the punty holds the base; opening the lip is a prescribed radial velocity at the free edge; a spin adds a centrifugal load. Each is a constraint on the sheet's velocity, nothing more.</li>
+  </ul>
+
+  <h2>What it was aiming at</h2>
+  <p>A drawing: nine points and a smooth curve through them. A belly 80 mm wide, a waist, a lip that comes back out, 145 mm tall. The loss is the mean radial distance between the outer wall of the finished glass and the drawing, sampled by height, plus a penalty if the thinnest wall goes under 1.2 mm. That is all the search ever sees; it never sees the process.</p>
+
+  <h2>How it learned</h2>
+  <p>CMA-ES, an evolution strategy, over the 22 numbers of a plan: the size of the gather, three breaths as volumes, how long to let the piece hang and at what angle between them, when to go back to the glory hole and for how long, where the jacks pinch and how tight, how far the paddle pushes, how wide to open the lip and how hard to spin. Thirty-two plans per generation, each blown in the simulation in parallel on 28 cores, and the best half of each generation shapes the next. It ran for 120 generations in forty minutes on one CPU.</p>
+  <figure><img src="search.png" alt="Every attempt's error by generation, with the best-so-far line" loading="lazy"><figcaption>Every vase the search blew. The red row at the top is the attempts that blew a hole through the wall; the grey cloud is everything else, and the amber line is the best so far. From 5.43 mm at the first generation to 1.85 mm.</figcaption></figure>
+  <figure><img src="plan.png" alt="The winning plan as a timeline: the moves, the glass temperature and the pipe pressure" loading="lazy"><figcaption>The winning plan. A short breath, a rest turning on the pipe, then a longer breath with the pipe pointed down so gravity draws out the belly. The glory hole, the jacks at the neck, a moment more in the heat, the paddle, a long rest. Then the crack-off onto the punty, a reheat, the open, the spin and a last flare in the glory hole. The pressure spikes are the paddle compressing the closed cavity. The hottest and coolest points on the glass drift apart as the thin belly cools first.</figcaption></figure>
+
+  <h2>The film</h2>
+  <p>The drawing, the rules, then the search as a montage of attempts, one generation per beat. Then the winning plan in real time, 71 seconds, in Cycles: the glass is a surface of revolution rebuilt from the solver's profile at every frame with its wall thickness and temperature as attributes, and it glows as a blackbody at its own temperature, brighter where it is thick, dimmer as it cools, invisible below about 620 °C. The glory hole is an open emissive tube the piece goes into and comes back out of. Then the cooling, 120 seconds at fifteen times life, and the cold vessel on a table against the drawing. The sound is synthesised from the same plan: the furnace roar gated by the glory hole, breath on the blow moves, the pipe rolling, the scrape of the jacks, the paddle, the crack-off.</p>
+
+  <h2>Honesty ledger</h2>
+  <ul>
+    <li>The lip is wrong. The winning vase keeps the narrow neck the jacks made and the lip stands straight up instead of flaring. Opening the lip is a radial velocity on the last few nodes with nothing to open it against. Plans that opened it wider got the lip closer to the drawing and the rest of the vase further away, by more, so the search learned to barely open it: 4.5 mm in the winner. I have not yet worked out where that cost comes from. A real blower opens a lip with the jacks inside it. The narration says so.</li>
+    <li>The wall has one temperature through its thickness. Real glass has a cold skin over a hot core, and a thick gather keeps working long after its surface dulls; this glass does not, so every timing in the plan is a timing for a glass that is a little too honest about its temperature.</li>
+    <li>The solver caps viscosity at 10<sup>9</sup> Pa s, which the curve reaches at 624 °C, to keep the linear solve well conditioned when a rim goes cold. Below that the model glass is no stiffer than at 624 °C, so a rim that should be rigid is only very stiff.</li>
+    <li>The bending term acts along the meridian only. Axisymmetry hides anything that would wrinkle around the hoop, and it also means nothing can ever go off centre, which is most of what goes wrong at a real bench.</li>
+    <li>The air inside is not modelled. The breath is a volume flow; the cavity air does not heat, expand or cool the wall from inside.</li>
+    <li>The search sees only the final shape. It does not care how long the piece spent in the glory hole or how many moves it took, and it found plans a person would not: the third breath in the winning plan is ten milliseconds long, which is to say skipped, and the gather's wall sits at the 10 mm top of its allowed range.</li>
+    <li>The thinnest wall in the finished vase is 1.5 mm, at the belly. That is a real, if delicate, vase.</li>
+  </ul>
+
+  <h2>How it was made</h2>
+  <p>Python and NumPy for the solver (a banded quasi-static solve per step, remeshing by arc length, a blown-through guard), the <code>cma</code> package for the search across a process pool, Blender 5.2 headless with Cycles on the GPU for the shop (a fixed-topology revolved mesh updated per frame with point attributes for temperature and thickness), cairo for the film's drawings and text, ffmpeg for the assembly, numpy and scipy for the sound, Kokoro for the voice. All in one day, 120 generations of search and about three and a half hours of rendering as scheduled tasks.</p>
+  <p class="small">Code: <a href="https://github.com/Booyaka101/thedailyfable">the repo</a>, folder day64.</p>
+</main>
+</body>
+</html>

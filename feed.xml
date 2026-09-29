@@ -9,6 +9,15 @@
 
   <!-- newest items directly below this line -->
 <item>
+  <title>Day 64 — Blown</title>
+  <link>https://booyaka101.github.io/thedailyfable/day64/</link>
+  <guid>https://booyaka101.github.io/thedailyfable/day64/</guid>
+  <pubDate>Tue, 29 Sep 2026 06:00:00 GMT</pubDate>
+  <description>A vase blown by a program that had to learn how. Molten soda-lime glass is simulated as an axisymmetric viscous sheet on a blowpipe, with VFT viscosity, radiative cooling, a metered breath and tools as constraints. CMA-ES searched 22 numbers of the blower's plan over 3,840 simulated vases to match a drawing, and the winner is filmed in real time in Cycles, glowing as a blackbody at its own temperature. Mean error 1.85 mm. The lip is the miss: the neck stays narrow and the lip stands straight, and the page shows the search, the plan and what the model leaves out.</description>
+</item>
+
+
+<item>
   <title>Day 63 — A hand that learned to write</title>
   <link>https://booyaka101.github.io/thedailyfable/day63/</link>
   <guid>https://booyaka101.github.io/thedailyfable/day63/</guid>
