@@ -1,5 +1,5 @@
 {
- "count": 64,
+ "count": 65,
  "base": "https://booyaka101.github.io/thedailyfable",
  "days": [
   {
@@ -1591,6 +1591,30 @@
     {
      "label": "short",
      "url": "https://youtube.com/shorts/lqtR2SnQSZE"
+    }
+   ]
+  },
+  {
+   "day": 65,
+   "title": "Enough",
+   "date": "",
+   "blurb": "A typeface eroded to the last ink that still reads. Fifteen trained readers, a price on ink rising in forty steps, and each glyph is the last stage at which readers that never saw the search still accept it. On average 35% of the ink survives. The film shows the A going with the verdicts live and the E going past its cut; the page lets you type your own words and take the ink away. Free under the OFL.",
+   "page": "https://booyaka101.github.io/thedailyfable/day65/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day65/poster.png",
+   "video": "https://youtu.be/1kvApepJPv0",
+   "short": "https://youtube.com/shorts/3SfLUsCwe3g",
+   "links": [
+    {
+     "label": "the page",
+     "url": "https://booyaka101.github.io/thedailyfable/day65/"
+    },
+    {
+     "label": "film",
+     "url": "https://youtu.be/1kvApepJPv0"
+    },
+    {
+     "label": "short",
+     "url": "https://youtube.com/shorts/3SfLUsCwe3g"
     }
    ]
   }
