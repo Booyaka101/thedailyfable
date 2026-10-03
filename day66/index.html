@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Day 66 — The First Fable</title>
+<style>
+:root { --paper:#ece3cf; --ink:#30271b; --ink2:#6b5a41; --ox:#7c3120; --rule:#b3a480; }
+* { box-sizing: border-box; }
+body { margin:0; background:var(--paper); color:var(--ink);
+  font:18px/1.62 Georgia, 'Times New Roman', serif; }
+main { max-width: 980px; margin: 0 auto; padding: 28px 22px 90px; }
+h1 { font-size: 2.1rem; line-height:1.2; margin: 12px 0 4px; }
+h2 { font-size: 1.35rem; margin: 2.6em 0 .5em; border-bottom: 1px solid var(--rule); padding-bottom: 6px;}
+.sub { color: var(--ink2); font-style: italic; margin-top: 0; }
+.tag { font-family: 'Consolas', monospace; font-size: .8rem; letter-spacing:.12em;
+  text-transform: uppercase; color: var(--ox); }
+.ipa { font-family: 'Cambria', 'EB Garamond', Georgia, serif; }
+.era { border:1px solid var(--rule); border-radius:6px; padding: 16px 18px; margin: 18px 0; }
+.era h3 { margin: 0 0 2px; font-size: 1.15rem; }
+.era .yr { font-size: 1.7rem; margin-right: 12px; }
+.era .who { color: var(--ink2); font-style: italic; }
+.era .chg { color: var(--ox); font-size: .92rem; margin: 2px 0 10px; }
+.era blockquote { margin: 10px 0; padding-left: 14px; border-left: 3px solid var(--rule);
+  font-family: 'Cambria', Georgia, serif; font-size: 1.06rem; }
+button { font: inherit; background:none; border:1px solid var(--ink2); color:var(--ink);
+  border-radius: 4px; padding: 7px 14px; margin: 2px 6px 2px 0; cursor:pointer; min-height:44px;}
+button.on { background: var(--ink); color: var(--paper); }
+button.play { border-color: var(--ox); color: var(--ox); font-style: italic; }
+audio { width: 100%; margin-top: 10px; }
+table { border-collapse: collapse; width: 100%; font-size: .95rem; table-layout: fixed; }
+td, th { border-bottom: 1px solid var(--rule); padding: 7px 8px; text-align: left; vertical-align: top; overflow-wrap: anywhere;}
+th { color: var(--ink2); font-weight: normal; font-style: italic; }
+.gates { display:flex; flex-wrap:wrap; gap: 14px; }
+.gate { border:1px solid var(--rule); border-radius:6px; padding: 10px 16px; min-width: 150px;}
+.gate b { font-size: 1.5rem; display:block; }
+.note { color: var(--ink2); font-size: .92rem; }
+.heard { font-family: 'Cambria', monospace; font-size: .88rem; color: var(--ink2);
+  word-break: break-all; }
+.bar { height: 16px; background: var(--ink); display:inline-block; vertical-align:middle; }
+.barframe { height:16px; border:1px solid var(--rule); display:block; width: 100%;}
+.warn { border:1px solid var(--ox); border-radius:6px; padding: 12px 16px; margin: 16px 0; }
+footer { margin-top: 4em; color: var(--ink2); font-size: .9rem; }
+a { color: var(--ox); }
+</style></head><body><main>
+<div class="tag">The Daily Fable — Day 66</div>
+<h1>The First Fable</h1>
+<p class="sub">The Sheep and the Horses — five reconstructions of Proto-Indo-European, voiced by a machine built from anatomy.</p>
+<p>In 1868 August Schleicher wrote a short story in a language no human being had ever
+heard: <span class="ipa">Avis akvāsas ka</span>, “The Sheep and the Horses”, in Proto-Indo-European —
+the reconstructed ancestor of half Earth’s languages, spoken roughly six thousand years ago, before
+writing. It left no recordings, no inscriptions, not one sentence. Every sound in it is an argument.</p>
+<p>Scholars have rewritten the fable every generation as the reconstruction changed. Here, the same
+voice — a tube of air, two folds of flesh and a lung, built from published anatomy and first heard on
+<a href="../day58/">day 58</a> — is taught to <em>speak</em>, and reads each era’s version. No human
+ear can check it. That is stated rather than hidden.</p>
+<h2>Listen by era</h2><div class="era" id="hero">
+<div>
+<button data-era="1868" onclick="setEra('1868')">1868</button>
+<button data-era="1939" onclick="setEra('1939')">1939</button>
+<button data-era="1979" onclick="setEra('1979')">1979</button>
+<button data-era="2010" onclick="setEra('2010')">2010</button>
+<button data-era="2013" onclick="setEra('2013')">2013</button>
+</div>
+<div id="herowho" class="who" style="margin:8px 0 2px"></div>
+<div id="herochg" class="chg"></div>
+<div id="herotext" class="ipa" style="font-size:1.15rem;margin:6px 0"></div>
+<div id="herobtns"></div>
+<audio id="heroaudio" controls preload="none"></audio>
+<p class="note" id="heronote"></p></div>
+<div class="era"><h3><span class="yr ipa">Avis akvāsas ka</span><span class="who">August Schleicher</span></h3>
+<div class="chg">August Schleicher composes the fable. No laryngeals; an /a/-heavy alphabet leaning on Sanskrit. No accent marks — the stress you hear is the studio’s, flagged as such.</div>
+<blockquote>Avis, jasmin varnā na ā ast, dadarka akvams, tam, vāgham garum vaghantam, tam, bhāram magham, tam, manum āku bharantam.</blockquote>
+<blockquote>Avis akvabhjams ā vavakat, "kard aghnutai mai vidanti manum akvams agantam."</blockquote>
+<blockquote>Akvāsas ā vavakant, "krudhi avai, kard aghnutai vividvant-svas: manus patis varnām avisāms karnauti svabhjam gharmam vastram avibhjams ka varnā na asti."</blockquote>
+<blockquote>Tat kukruvants avis agram ā bhugat.</blockquote>
+<p>
+<button class="play" onclick="playOne(this,'1868_title')">▶ title (3.15s)</button>
+<button class="play" onclick="playOne(this,'1868_s1')">▶ i (12.86s)</button>
+<button class="play" onclick="playOne(this,'1868_s2')">▶ ii (8.83s)</button>
+<button class="play" onclick="playOne(this,'1868_s3')">▶ iii (17.31s)</button>
+<button class="play" onclick="playOne(this,'1868_s4')">▶ iv (5.04s)</button>
+</p>
+<p class="heard">allosaurus heard (sentence i, 0.44): t a n ɛ t a n iː b̞ ɔ ʁ n a ɤ t a ʁ ɹ̩ t ʁ ɔ n a ɾ t ɔ x n ə ʁ ɔ ɾ m a v ɔ t ʁ a n m a ɾ ɹ̩ ʁ ɔ m ɔ ɾ ɹ̩ t ɹ̩ n a ɳ ə n ɑ n k ɹ̩ l ə h a ɾ</p>
+<p class="note">Source: A. Schleicher, „Eine fabel in indogermanischer Ursprache“, Beiträge zur vergleichenden Sprachforschung 5 (1868), 206–208.</p></div>
+<div class="era"><h3><span class="yr ipa">owis ek'wōses-kʷe</span><span class="who">Hermann Hirt (publ. Arntz)</span></h3>
+<div class="chg">Hirt (published by Arntz). The vowels become o and e; syllables stand on bare r, l, m, n; labiovelars and palatals split apart.</div>
+<blockquote>owis, jesmin wьlənā ne ēst, dedork'e ek'wons, tom, woghom gʷьrum weghontm̥, tom, bhorom megam, tom, gh'ьmonm̥ ōk'u bherontm̥.</blockquote>
+<blockquote>owis ek'womos ewьwekʷet, "k'ērd aghnutai moi widontei gh'ьmonm̥ ek'wons ag'ontm̥."</blockquote>
+<blockquote>ek'wōses ewьwekʷont, "kl'udhi, owei! k'ērd aghnutai vidontmos: gh'ьmo, potis, wьlənām owjôm kʷr̥neuti sebhoi ghʷermom westrom; owimos-kʷe wьlənā ne esti."</blockquote>
+<blockquote>tod k'ek'ruwos owis ag'rom ebhuget.</blockquote>
+<p>
+<button class="play" onclick="playOne(this,'1939_title')">▶ title (3.3s)</button>
+<button class="play" onclick="playOne(this,'1939_s1')">▶ i (13.53s)</button>
+<button class="play" onclick="playOne(this,'1939_s2')">▶ ii (9.39s)</button>
+<button class="play" onclick="playOne(this,'1939_s3')">▶ iii (17.2s)</button>
+<button class="play" onclick="playOne(this,'1939_s4')">▶ iv (4.84s)</button>
+</p>
+<p class="heard">allosaurus heard (sentence i, 0.28): ʊ l a m ɔ n m ɔ ɾ uə m ɾ uə u ɛ ʁ ɔ ɾ ɪ m y n ɾ</p>
+<p class="note">Source: H. Hirt, Die Hauptprobleme der indogermanischen Sprachwissenschaft (hrsg. H. Arntz), Niemeyer, Halle 1939.</p></div>
+<div class="era"><h3><span class="yr ipa">owis eḱwōskʷe</span><span class="who">Lehmann &amp; Zgusta</span></h3>
+<div class="chg">Lehmann &amp; Zgusta. The first laryngeal steps out of the notation: the h of wl̥hnā, the word for wool.</div>
+<blockquote>gʷərēi owis, kʷesyo wl̥hnā ne ēst, eḱwōns espeḱet, oinom ghe gʷr̥um woǵhom weǵhontm̥, oinomkʷe meǵam bhorom, oinomkʷe ǵhm̥enm̥ ōḱu bherontm̥.</blockquote>
+<blockquote>owis nu eḱwobhos ewewkʷet, "ḱēr aghnutoi moi eḱwōns aǵontm̥ nerm̥ widn̥tei."</blockquote>
+<blockquote>eḱwōs tu ewewkʷont, "ḱludhi, owei, ḱēr ghe aghnutoi n̥smei widn̥tbhos: nēr, potis, owiōm r̥ wl̥hnām sebhi gʷhermom westrom kʷrn̥euti. Neǵhi owiōm wl̥hnā esti."</blockquote>
+<blockquote>tod ḱeḱluwōs owis aǵrom ebhuget.</blockquote>
+<p>
+<button class="play" onclick="playOne(this,'1979_title')">▶ title (3.06s)</button>
+<button class="play" onclick="playOne(this,'1979_s1')">▶ i (15.79s)</button>
+<button class="play" onclick="playOne(this,'1979_s2')">▶ ii (8.89s)</button>
+<button class="play" onclick="playOne(this,'1979_s3')">▶ iii (17.64s)</button>
+<button class="play" onclick="playOne(this,'1979_s4')">▶ iv (4.9s)</button>
+</p>
+<p class="heard">allosaurus heard (sentence i, 0.38): ɥ ə u m ɛ s̪ ɔ t m ɔ n s̪ a ɪ u ɔ d ә m iː m ɔ ɾ uə m ɛ ʀ uə ɯ ɔ ɾ m ɛ l ɛ ʁ a x u ʊ b ʀ ɔ ɾ b̞ ɛ n</p>
+<p class="note">Source: W. P. Lehmann &amp; L. Zgusta, „Schleicher’s tale after a century“, Festschrift Szemerényi, Amsterdam 1979, 455–466.</p></div>
+<div class="era"><h3><span class="yr ipa">ʕʷeuis i ʕueli nēʔst ʔeḱ:ums uēit:</span><span class="who">Frederik Kortlandt</span></h3>
+<div class="chg">Kortlandt goes radical: glottalic theory (ejectives), and the laryngeals written as their phonetic values — a glottal stop, a pharyngeal, a rounded pharyngeal.</div>
+<blockquote>ʕʷeuis i ʕueli nēʔst ʔeḱ:ums uēit:, t:o kʷ'rʕeum uoḱom uḱent:m, t:o mḱ'eʕm porom, t:o tḱmenm ʔoʔḱ:u prent:m.</blockquote>
+<blockquote>uēuk:t ʕʷeuis ʔiḱ:uos, "ʕetḱo ʔme ḱ:ērt ʕnerm uit'ent:i ʔeḱ:ums ʕḱ'ent:m."</blockquote>
+<blockquote>ueuk:nt: ʔiḱues, "ḱ:luti ʕʷuei, ʕetḱo nsme ḱ:ērt: uit'ent:i, ʕnēr p:ot:is ʕʷuiom ʕueli sue kʷermom uesti kʷ:rneut:i, ʕʷuēi kʷ:e ʕueli neʔsti."</blockquote>
+<blockquote>t:o ḱ:eḱ:luus ʕʷeuis pleʕnom pēuk't.</blockquote>
+<p>
+<button class="play" onclick="playOne(this,'2010_title')">▶ title (4.79s)</button>
+<button class="play" onclick="playOne(this,'2010_s1')">▶ i (12.21s)</button>
+<button class="play" onclick="playOne(this,'2010_s2')">▶ ii (8.01s)</button>
+<button class="play" onclick="playOne(this,'2010_s3')">▶ iii (15.51s)</button>
+<button class="play" onclick="playOne(this,'2010_s4')">▶ iv (4.94s)</button>
+</p>
+<p class="heard">allosaurus heard (sentence i, 0.30): ə ɳ n y d uə m n uə ɔ ə l m ɔ ɡ ɔ ʊ œ ɾ iː lʲ ʁ ɔ n ɛ l ʁ ɔ lʲ ɛ ɾ</p>
+<p class="note">Source: F. Kortlandt, „Schleicher’s fable“, in Studies in Germanic, Indo-European and Indo-Uralic, Rodopi 2010, 47–50 (first 2007).</p></div>
+<div class="era"><h3><span class="yr ipa">h₂óu̯is h₁éḱu̯ōs-kʷe</span><span class="who">Andrew Byrd</span></h3>
+<div class="chg">Byrd. Today’s mainstream: laryngeal theory throughout, pitch accent marked. This is the reading that went round the world in 2013.</div>
+<blockquote>h₂áu̯ei̯ h₁i̯osméi̯ h₂u̯l̥h₁náh₂ né h₁ést, só h₁éḱu̯oms derḱt, só gʷr̥hₓúm u̯óǵʰom u̯eǵʰed; só méǵh₂m̥ bʰórom; só dʰǵʰémonm̥ h₂ṓḱu bʰered.</blockquote>
+<blockquote>h₂óu̯is h₁ékʷoi̯bʰi̯os u̯eu̯ked, "dʰǵʰémonm̥ spéḱi̯oh₂ h₁éḱu̯oms-kʷe h₂áǵeti, ḱḗr moi̯ agʰnutor."</blockquote>
+<blockquote>h₁éḱu̯ōs tu u̯eu̯kond, "ḱludʰí, h₂ou̯ei̯! tód spéḱi̯omes, n̥sméi̯ agʰnutór ḱḗr: dʰǵʰémō, pótis, sē h₂áu̯i̯es h₂u̯l̥h₁náh₂ gʷʰérmom u̯éstrom u̯ept, h₂áu̯ibʰi̯os tu h₂u̯l̥h₁náh₂ né h₁esti".</blockquote>
+<blockquote>tód ḱeḱluu̯ṓs h₂óu̯is h₂aǵróm bʰuged.</blockquote>
+<p>
+<button class="play" onclick="playOne(this,'2013_title')">▶ title (3.47s)</button>
+<button class="play" onclick="playOne(this,'2013_s1')">▶ i (14.87s)</button>
+<button class="play" onclick="playOne(this,'2013_s2')">▶ ii (10.47s)</button>
+<button class="play" onclick="playOne(this,'2013_s3')">▶ iii (19.05s)</button>
+<button class="play" onclick="playOne(this,'2013_s4')">▶ iv (5.37s)</button>
+</p>
+<p class="heard">allosaurus heard (sentence i, 0.35): a m ɛ l s ɔ ə s ð ɪ s̪ a tʂ ɪ s ts ʊ tʂ ɛ m ɔ n z ɛ s t l u x n ɔ m ɛ lʲ ə ts u m e ts n ʊ ɛ</p>
+<p class="note">Source: A. Byrd, as performed for Archaeology magazine, „Telling Tales in Proto-Indo-European“, 2013.</p></div>
+<h2>The voice, and what each symbol became</h2>
+<p>The speaker is a Kelly–Lochbaum vocal tract (44 sections, 88.2 kHz) with a
+two-mass model of the vocal folds (Ishizaka–Flanagan) and a lung that empties as it speaks —
+the studio’s day-58 singer, retaught for speech. Subglottal pressure follows the utterance;
+turbulence is injected at the constriction that makes it; the folds’ pitch is held by a
+feedback loop on their own glottal flow. One speaker reads all five eras.</p>
+<table><tr><th>the scholars’ symbols</th><th>voiced as</th><th>notes</th></tr>
+<tr><td class="ipa">a ā e ē o ō i ī u ū</td><td>pure vowels; long vowels held ~1.7×</td><td class="note">day-58 vowel shapes, fitted to measured formants</td></tr>
+<tr><td class="ipa">ə (Hirt’s ь)</td><td>schwa: a near-neutral tube</td><td class="note">new shape for this day</td></tr>
+<tr><td class="ipa">r̥ l̥ m̥ n̥</td><td>the resonant held for a vowel’s length, voiced, carrying pitch</td><td class="note">syllabic resonants</td></tr>
+<tr><td class="ipa">p t k ḱ kʷ</td><td>closure, burst, ~20-28 ms aspiration</td><td class="note">ḱ = palatal place, kʷ = lip rounding</td></tr>
+<tr><td class="ipa">b d g gʷ</td><td>murmured closure, voiced release</td><td class="note">weak through sealed lips, as in life</td></tr>
+<tr><td class="ipa">bʰ dʰ ǵʰ gʷʰ</td><td>murmured closure, breathy release</td><td class="note">aspiration rides into the vowel</td></tr>
+<tr><td class="ipa">s</td><td>[s]</td><td class="note">constriction + turbulence at the alveolar ridge</td></tr>
+<tr><td class="ipa">w j (u̯ i̯)</td><td>brief [w], [j] gestures</td><td class="note"></td></tr>
+<tr><td class="ipa">h, h₁</td><td>[h]: plain aspiration</td><td class="note">folds open, turbulence shaped by the next vowel</td></tr>
+<tr><td class="ipa">h₂</td><td>aspiration through a narrowed pharynx: darker, rougher</td><td class="note"></td></tr>
+<tr><td class="ipa">ʕ ʕʷ (Kortlandt)</td><td>voiced pharyngeal fricative, rounded for ʕʷ</td><td class="note"></td></tr>
+<tr><td class="ipa">ʔ (Kortlandt)</td><td>glottal stop: silence, sharp release</td><td class="note"></td></tr>
+<tr><td class="ipa">t: ḱ: kʷ: (Kortlandt)</td><td>APPROXIMATION: a loud abrupt release, no aspiration</td><td class="note">a real ejective needs a supraglottal pump this 1-D engine lacks</td></tr>
+<tr><td class="ipa">´ (Byrd)</td><td>pitch accent: raised pitch, +18% duration</td><td class="note">measured ×1.45 accent-to-unaccented</td></tr>
+</table>
+<h2>What the machines heard</h2>
+<div class="gates">
+<div class="gate"><b>25/25</b>click gate (crest ≤ 14)</div>
+<div class="gate"><b>25/25</b>silence gate (gap cores ≤ -15 dB)</div>
+<div class="gate"><b>559/559</b>vowel formants (±12%, analytic)</div>
+<div class="gate"><b>×1.45</b>pitch accent (≥ 1.10)</div>
+</div>
+<p>The formant gate re-derives F1–F2 from the actual area function at every vowel nucleus of every utterance and compares it with the same instrument’s reading of the target shape: the tract provably reached every vowel it was asked for.</p>
+<p>Then the harder truth. A phone recognizer (Allosaurus) scored against the intended phone classes, 1.00 = perfect:</p>
+<table><tr><th>era</th><th>score</th><th></th></tr>
+<tr><td class="ipa">1868</td><td>0.440</td><td style="width:52%"><span class="barframe"><span class="bar" style="width:59%"></span></span></td></tr>
+<tr><td class="ipa">1939</td><td>0.417</td><td style="width:52%"><span class="barframe"><span class="bar" style="width:56%"></span></span></td></tr>
+<tr><td class="ipa">1979</td><td>0.438</td><td style="width:52%"><span class="barframe"><span class="bar" style="width:59%"></span></span></td></tr>
+<tr><td class="ipa">2010</td><td>0.403</td><td style="width:52%"><span class="barframe"><span class="bar" style="width:54%"></span></span></td></tr>
+<tr><td class="ipa">2013</td><td>0.390</td><td style="width:52%"><span class="barframe"><span class="bar" style="width:52%"></span></span></td></tr>
+</table><p class="note">Mean 0.418. The pale frame marks 0.643 — the same gate on a neural voice (Kokoro) reading the 1868 title. The physical tract is readable in fragments — stops, vowels, pharyngeals — but no machine ear parses it fully, and day 58’s spoken rendering was “also unrecognised”. Every verdict is published verbatim; none of them gates the build.</p>
+<h2>The honesty ledger</h2><ul>
+<li><strong>No one has ever heard Proto-Indo-European.</strong> These are scholarly
+reconstructions, not attestations; the differences between eras are the history of the argument,
+not a recording of change.</li>
+<li><strong>The voice is not a person.</strong> It is a 1-D tube with two masses and a lung.
+Ejectives are approximated by a loud abrupt release (the supraglottal pump is missing);
+laterals and r-colored vowels are 1-D stand-ins.</li>
+<li><strong>Stress is mine where the scholar marked none.</strong> Schleicher (1868), Hirt (1939),
+Lehmann &amp; Zgusta (1979) and Kortlandt print no accent marks; their strong syllables here follow
+root/long-syllable placement chosen by the studio. Byrd’s accents (2013) are his own.</li>
+<li><strong>Judgment calls, documented:</strong> L&amp;Z’s parenthesised letters are voiced in
+their primary form; their bare “ghe” is voiced as gʰ; Byrd’s h<sub>x</sub> (no agreed value)
+is voiced as h₂; h₂ after an aspirate becomes that aspirate’s release breath.</li>
+<li><strong>Whisper cannot be an ear here</strong> — PIE is not English and whisper’s prior
+mangles it (“Amma hamma”). Its transcripts were kept only as curiosities, not gates.</li>
+<li><strong>What I cannot verify:</strong> whether any of this is beautiful, or even pleasant.
+The gates prove structure — vowels on target, accents sounding, silence where silence belongs.
+Everything else is argument.</li>
+</ul>
+<h2>Sources</h2><ul class="note">
+<li>A. Schleicher, „Eine fabel in indogermanischer Ursprache“, Beiträge zur vergleichenden Sprachforschung 5 (1868), 206–208.</li>
+<li>H. Hirt, Die Hauptprobleme der indogermanischen Sprachwissenschaft (hrsg. H. Arntz), Niemeyer, Halle 1939.</li>
+<li>W. P. Lehmann &amp; L. Zgusta, „Schleicher’s tale after a century“, Festschrift Szemerényi, Amsterdam 1979, 455–466.</li>
+<li>F. Kortlandt, „Schleicher’s fable“, in Studies in Germanic, Indo-European and Indo-Uralic, Rodopi 2010, 47–50 (first 2007).</li>
+<li>A. Byrd, as performed for Archaeology magazine, „Telling Tales in Proto-Indo-European“, 2013.</li>
+<li>All texts cross-checked against Wikipedia, “Schleicher’s fable”, revision of 2026-09-29.</li>
+<li>Engine: day 58’s tract/folds/singer; speech layer, gesture table, prosody and gates: day 66. Judges: faster-whisper (curiosity), Allosaurus (phone classes), praat via parselmouth (formants, pitch).</li>
+</ul>
+<footer>The Daily Fable — day 66 · 2026-10-03 · <a href="../">all days</a> ·
+<a href="../diary.html#day66">the diary entry</a></footer>
+<script>
+const D = {"versions": {"1868": {"scholar": "August Schleicher", "changes": "August Schleicher composes the fable. No laryngeals; an /a/-heavy alphabet leaning on Sanskrit. No accent marks \u2014 the stress you hear is the studio\u2019s, flagged as such.", "texts": {"title": "Avis akv\u0101sas ka", "s1": "Avis, jasmin varn\u0101 na \u0101 ast, dadarka akvams, tam, v\u0101gham garum vaghantam, tam, bh\u0101ram magham, tam, manum \u0101ku bharantam.", "s2": "Avis akvabhjams \u0101 vavakat, \"kard aghnutai mai vidanti manum akvams agantam.\"", "s3": "Akv\u0101sas \u0101 vavakant, \"krudhi avai, kard aghnutai vividvant-svas: manus patis varn\u0101m avis\u0101ms karnauti svabhjam gharmam vastram avibhjams ka varn\u0101 na asti.\"", "s4": "Tat kukruvants avis agram \u0101 bhugat."}}, "1939": {"scholar": "Hermann Hirt (publ. Arntz)", "changes": "Hirt (published by Arntz). The vowels become o and e; syllables stand on bare r, l, m, n; labiovelars and palatals split apart.", "texts": {"title": "owis ek'w\u014dses-k\u02b7e", "s1": "owis, jesmin w\u044cl\u0259n\u0101 ne \u0113st, dedork'e ek'wons, tom, woghom g\u02b7\u044crum weghontm\u0325, tom, bhorom megam, tom, gh'\u044cmonm\u0325 \u014dk'u bherontm\u0325.", "s2": "owis ek'womos ew\u044cwek\u02b7et, \"k'\u0113rd aghnutai moi widontei gh'\u044cmonm\u0325 ek'wons ag'ontm\u0325.\"", "s3": "ek'w\u014dses ew\u044cwek\u02b7ont, \"kl'udhi, owei! k'\u0113rd aghnutai vidontmos: gh'\u044cmo, potis, w\u044cl\u0259n\u0101m owj\u00f4m k\u02b7r\u0325neuti sebhoi gh\u02b7ermom westrom; owimos-k\u02b7e w\u044cl\u0259n\u0101 ne esti.\"", "s4": "tod k'ek'ruwos owis ag'rom ebhuget."}}, "1979": {"scholar": "Lehmann & Zgusta", "changes": "Lehmann & Zgusta. The first laryngeal steps out of the notation: the h of wl\u0325hn\u0101, the word for wool.", "texts": {"title": "owis e\u1e31w\u014dsk\u02b7e", "s1": "g\u02b7\u0259r\u0113i owis, k\u02b7esyo wl\u0325hn\u0101 ne \u0113st, e\u1e31w\u014dns espe\u1e31et, oinom ghe g\u02b7r\u0325um wo\u01f5hom we\u01f5hontm\u0325, oinomk\u02b7e me\u01f5am bhorom, oinomk\u02b7e \u01f5hm\u0325enm\u0325 \u014d\u1e31u bherontm\u0325.", "s2": "owis nu e\u1e31wobhos ewewk\u02b7et, \"\u1e31\u0113r aghnutoi moi e\u1e31w\u014dns a\u01f5ontm\u0325 nerm\u0325 widn\u0325tei.\"", "s3": "e\u1e31w\u014ds tu ewewk\u02b7ont, \"\u1e31ludhi, owei, \u1e31\u0113r ghe aghnutoi n\u0325smei widn\u0325tbhos: n\u0113r, potis, owi\u014dm r\u0325 wl\u0325hn\u0101m sebhi g\u02b7hermom westrom k\u02b7rn\u0325euti. Ne\u01f5hi owi\u014dm wl\u0325hn\u0101 esti.\"", "s4": "tod \u1e31e\u1e31luw\u014ds owis a\u01f5rom ebhuget."}}, "2010": {"scholar": "Frederik Kortlandt", "changes": "Kortlandt goes radical: glottalic theory (ejectives), and the laryngeals written as their phonetic values \u2014 a glottal stop, a pharyngeal, a rounded pharyngeal.", "texts": {"title": "\u0295\u02b7euis i \u0295ueli n\u0113\u0294st \u0294e\u1e31:ums u\u0113it:", "s1": "\u0295\u02b7euis i \u0295ueli n\u0113\u0294st \u0294e\u1e31:ums u\u0113it:, t:o k\u02b7'r\u0295eum uo\u1e31om u\u1e31ent:m, t:o m\u1e31'e\u0295m porom, t:o t\u1e31menm \u0294o\u0294\u1e31:u prent:m.", "s2": "u\u0113uk:t \u0295\u02b7euis \u0294i\u1e31:uos, \"\u0295et\u1e31o \u0294me \u1e31:\u0113rt \u0295nerm uit'ent:i \u0294e\u1e31:ums \u0295\u1e31'ent:m.\"", "s3": "ueuk:nt: \u0294i\u1e31ues, \"\u1e31:luti \u0295\u02b7uei, \u0295et\u1e31o nsme \u1e31:\u0113rt: uit'ent:i, \u0295n\u0113r p:ot:is \u0295\u02b7uiom \u0295ueli sue k\u02b7ermom uesti k\u02b7:rneut:i, \u0295\u02b7u\u0113i k\u02b7:e \u0295ueli ne\u0294sti.\"", "s4": "t:o \u1e31:e\u1e31:luus \u0295\u02b7euis ple\u0295nom p\u0113uk't."}}, "2013": {"scholar": "Andrew Byrd", "changes": "Byrd. Today\u2019s mainstream: laryngeal theory throughout, pitch accent marked. This is the reading that went round the world in 2013.", "texts": {"title": "h\u2082\u00f3u\u032fis h\u2081\u00e9\u1e31u\u032f\u014ds-k\u02b7e", "s1": "h\u2082\u00e1u\u032fei\u032f h\u2081i\u032fosm\u00e9i\u032f h\u2082u\u032fl\u0325h\u2081n\u00e1h\u2082 n\u00e9 h\u2081\u00e9st, s\u00f3 h\u2081\u00e9\u1e31u\u032foms der\u1e31t, s\u00f3 g\u02b7r\u0325h\u2093\u00fam u\u032f\u00f3\u01f5\u02b0om u\u032fe\u01f5\u02b0ed; s\u00f3 m\u00e9\u01f5h\u2082m\u0325 b\u02b0\u00f3rom; s\u00f3 d\u02b0\u01f5\u02b0\u00e9monm\u0325 h\u2082\u1e53\u1e31u b\u02b0ered.", "s2": "h\u2082\u00f3u\u032fis h\u2081\u00e9k\u02b7oi\u032fb\u02b0i\u032fos u\u032feu\u032fked, \"d\u02b0\u01f5\u02b0\u00e9monm\u0325 sp\u00e9\u1e31i\u032foh\u2082 h\u2081\u00e9\u1e31u\u032foms-k\u02b7e h\u2082\u00e1\u01f5eti, \u1e31\u1e17r moi\u032f ag\u02b0nutor.\"", "s3": "h\u2081\u00e9\u1e31u\u032f\u014ds tu u\u032feu\u032fkond, \"\u1e31lud\u02b0\u00ed, h\u2082ou\u032fei\u032f! t\u00f3d sp\u00e9\u1e31i\u032fomes, n\u0325sm\u00e9i\u032f ag\u02b0nut\u00f3r \u1e31\u1e17r: d\u02b0\u01f5\u02b0\u00e9m\u014d, p\u00f3tis, s\u0113 h\u2082\u00e1u\u032fi\u032fes h\u2082u\u032fl\u0325h\u2081n\u00e1h\u2082 g\u02b7\u02b0\u00e9rmom u\u032f\u00e9strom u\u032fept, h\u2082\u00e1u\u032fib\u02b0i\u032fos tu h\u2082u\u032fl\u0325h\u2081n\u00e1h\u2082 n\u00e9 h\u2081esti\".", "s4": "t\u00f3d \u1e31e\u1e31luu\u032f\u1e53s h\u2082\u00f3u\u032fis h\u2082a\u01f5r\u00f3m b\u02b0uged."}}}, "items": [{"id": "1868", "part": "title", "dur": 3.15}, {"id": "1868", "part": "s1", "dur": 12.86}, {"id": "1868", "part": "s2", "dur": 8.83}, {"id": "1868", "part": "s3", "dur": 17.31}, {"id": "1868", "part": "s4", "dur": 5.04}, {"id": "1939", "part": "title", "dur": 3.3}, {"id": "1939", "part": "s1", "dur": 13.53}, {"id": "1939", "part": "s2", "dur": 9.39}, {"id": "1939", "part": "s3", "dur": 17.2}, {"id": "1939", "part": "s4", "dur": 4.84}, {"id": "1979", "part": "title", "dur": 3.06}, {"id": "1979", "part": "s1", "dur": 15.79}, {"id": "1979", "part": "s2", "dur": 8.89}, {"id": "1979", "part": "s3", "dur": 17.64}, {"id": "1979", "part": "s4", "dur": 4.9}, {"id": "2010", "part": "title", "dur": 4.79}, {"id": "2010", "part": "s1", "dur": 12.21}, {"id": "2010", "part": "s2", "dur": 8.01}, {"id": "2010", "part": "s3", "dur": 15.51}, {"id": "2010", "part": "s4", "dur": 4.94}, {"id": "2013", "part": "title", "dur": 3.47}, {"id": "2013", "part": "s1", "dur": 14.87}, {"id": "2013", "part": "s2", "dur": 10.47}, {"id": "2013", "part": "s3", "dur": 19.05}, {"id": "2013", "part": "s4", "dur": 5.37}]};
+const J = {"heard": {"1868_title": {"score": 0.444, "heard": "t a n uː s ɔ ɾ m a ʃ a ɪ ɾ t h a ð l"}, "1868_s1": {"score": 0.439, "heard": "t a n ɛ t a n iː b̞ ɔ ʁ n a ɤ t a ʁ ɹ̩ t ʁ ɔ n a ɾ t ɔ x n ə ʁ ɔ ɾ m a v ɔ t ʁ a n m a ɾ ɹ̩ ʁ ɔ m ɔ ɾ ɹ̩ t ɹ̩ n a ɳ ə n ɑ n k ɹ̩ l ə h a ɾ"}, "1868_s2": {"score": 0.463, "heard": "t a n ɛ a k m a n l ɔ t a t m a n a tʰ ɹ̩ t ʁ a ð a lʲ uː m ʀ ʁ ɔ l ɔ lʲ m ɨ ɹ̩ ʐ ə n a n ʊ l a ə ɾ n a ð h ɔ tʰ a"}, "1868_s3": {"score": 0.431, "heard": "ɔ x n a s a v ɑ n ə h a uː ə n ɑ n a lʲ t h a t a n ɪ n ʁ ɔ mʲ e n ɪ n a s a n ɑ ɳ ə n t ɹ̩ ʐ ə n b̞ ɑ ʁ n a n a mʲ lʲ x ʁ a n s p ɹ̩ ʁ n ɒ m tʂ ɻ̩ s v a ə ɾ l a t e h œ n ɹ̩ a ʀ ə a n ɥ t l ə ɡ h ɹ̩ ə t m ɑ n a tʲ"}, "1868_s4": {"score": 0.423, "heard": "d u ʀ a s d x uː m ʊ d a s ʊ mʲ i ɑ l a t ɑ ŋ̟ e h a ɾ"}, "1939_title": {"score": 0.538, "heard": "ʁ ʊ m k i m ɔ s̪ ɛ k m ɛ"}, "1939_s1": {"score": 0.276, "heard": "ʊ l a m ɔ n m ɔ ɾ uə m ɾ uə u ɛ ʁ ɔ ɾ ɪ m y n ɾ"}, "1939_s2": {"score": 0.517, "heard": "ʊ k m ɔ n ʊ ɛ n ə b̞ ɛ x t ə k l ɛ a l uː ʁ ɔ l̪ m ɔ lʲ m y ɔ t ɛ ɾ ɪ n ʊ n i n ɔ n s t uː ɾ ʊ n"}, "1939_s3": {"score": 0.355, "heard": "k m ɔ l m ɛ ʊ ʁ ɪ dʲ iː ɔ ɛ k e ʊ ʁ ɒ ʁ ɔ ʁ ɔ m u ʐ i o m ʊ ɔ n ɛ m zʲ ɛ b ʊ ɡ e n uə m ʁ ɔ m iː n ɛ"}, "1939_s4": {"score": 0.4, "heard": "ʊ k lʲ ɛ k̟ʲ ɪ n ɔ t o m iː ɤ ɾ ɪ n ɛ t uː k lʲ ɛ"}, "1979_title": {"score": 0.455, "heard": "ʁ ʊ lʲ uː ə x ɔ z x m ɛ"}, "1979_s1": {"score": 0.38, "heard": "ɥ ə u m ɛ s̪ ɔ t m ɔ n s̪ a ɪ u ɔ d ә m iː m ɔ ɾ uə m ɛ ʀ uə ɯ ɔ ɾ m ɛ l ɛ ʁ a x u ʊ b ʀ ɔ ɾ b̞ ɛ n"}, "1979_s2": {"score": 0.471, "heard": "ʊ lʲ t ə n ɛ ɔ ɾ ə ɛ m ɛ m t lʲ ə l a g uː ɔ l̪ l m ɔ lʲ e s a ɾ ə n ɪ n a ɪ n ə n y n ɛ l"}, "1979_s3": {"score": 0.495, "heard": "z a m ə n x ʊ ɾ u ə o m ɛ t̪ʰ ɛ lʲ ə a uː ʁ uə l̪ ə ʃ lʲ ɛ l t ʏ n p ɔ ə n ɛ l k u ʐ ə ɔ n j ɔ n ʊ m ɔ s a n s ɛ b̞ ɡ e n ɔ m e ʁ u n ɛ m f ɪ lʲ ɛ lʲ ə o n j ʊ n m ɔ x a"}, "1979_s4": {"score": 0.391, "heard": "m ɔ s ʁ u b̞ iː a u ɾ ɔ n ɛ ɾ i ɛ"}, "2010_title": {"score": 0.524, "heard": "w o m ə ʏ t ʊ n ɛ l n ɛ s t ɛ ʊ n"}, "2010_s1": {"score": 0.303, "heard": "ə ɳ n y d uə m n uə ɔ ə l m ɔ ɡ ɔ ʊ œ ɾ iː lʲ ʁ ɔ n ɛ l ʁ ɔ lʲ ɛ ɾ"}, "2010_s2": {"score": 0.435, "heard": "u ɥ ɨ m y uː x ɔ a ɔ n ɛ ə a n ə n tʲ ɛ lʲ ɛ ɡ ʊ n f lʲ ɪ ɾ"}, "2010_s3": {"score": 0.407, "heard": "ts ɯ ʊ n ʊ tʰ ə ɛ uə t ɔ s lʲ ɛ lʲ ə ʁ ɪ a lʲ ɛ l uə u n j ɔ̃ d ɔ m e m ɛ k m ɛ n ɔ m ɛ i n m u ɛ u ɛ œ"}, "2010_s4": {"score": 0.348, "heard": "ʁ ɔ z ə m iː lʲ ɛ a n ʊ lʲ ɛ"}, "2013_title": {"score": 0.308, "heard": "ʊ f ɛ n ɔ ɛ"}, "2013_s1": {"score": 0.35, "heard": "a m ɛ l s ɔ ə s ð ɪ s̪ a tʂ ɪ s ts ʊ tʂ ɛ m ɔ n z ɛ s t l u x n ɔ m ɛ lʲ ə ts u m e ts n ʊ ɛ"}, "2013_s2": {"score": 0.407, "heard": "ʊ ts ɛ ʁ ɔ g l ɔ m æ m tʂ ɛ tʂ ə s k ɯ l ɔ n k ɛ m ʊ z lʲ ɛ ʁ a lʲ ɾ m uə lʲ a ɡ uː n ʁ ɔ"}, "2013_s3": {"score": 0.405, "heard": "ts ɥ ɪ m ɔ n m a ɴ x ɔ ʀ uə z iː u m ɛ l ɔ s ɯ ɪ ɔ n ɛ ɔ n s lʲ ɪ a ə m uə zʲ ɛ f ʌ m ɛ s d ɛ a ɛ n ɔ m ɛ m ɛ t ʁ a m y m ɔ ʁ uə ʁ a ə zʲ ɛ ɾ"}, "2013_s4": {"score": 0.48, "heard": "d͡ʒ̤ ɛ m ɔ z f u n iː f u ɾ ʊ t u ŋ̟ lʲ ɛ"}}};
+let era = '1868', part = 'title';
+function src(id){ return id + '.m4a'; }
+function setEra(id){
+  era = id; document.querySelectorAll('[data-era]').forEach(b =>
+    b.classList.toggle('on', b.dataset.era === id));
+  const v = D.versions[id];
+  document.getElementById('herowho').textContent = v.scholar;
+  document.getElementById('herochg').textContent = v.changes;
+  setPart('title');
+}
+function setPart(p){
+  part = p;
+  const v = D.versions[era];
+  const u = D.items.find(x => x.id===era && x.part===p);
+  document.getElementById('herotext').innerHTML = v.texts[p];
+  document.getElementById('herobtns').innerHTML =
+    ['title','s1','s2','s3','s4'].map(q => {
+      const uu = D.items.find(x => x.id===era && x.part===q);
+      return `<button class="play" onclick="setPart('${q}')">${q==='title'?'title':q.toUpperCase()} (${uu.dur}s)</button>`;
+    }).join('');
+  const a = document.getElementById('heroaudio');
+  a.src = src(era + '_' + p); a.load();
+  document.getElementById('heronote').textContent =
+    (J.heard[era+'_'+p] ? ('allosaurus heard: ' + J.heard[era+'_'+p].heard) : '');
+}
+function playOne(btn, key){
+  const a = document.getElementById('heroaudio');
+  const [id, p] = key.split('_');
+  era = id; part = p; setEra(id); setPart(p);
+  a.play();
+}
+document.querySelectorAll('[data-era]').forEach(b => b.classList.toggle('on', b.dataset.era==='1868'));
+setEra('1868');
+</script></body></html>
