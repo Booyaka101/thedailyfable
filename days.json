@@ -1,5 +1,5 @@
 {
- "count": 65,
+ "count": 66,
  "base": "https://booyaka101.github.io/thedailyfable",
  "days": [
   {
@@ -1615,6 +1615,30 @@
     {
      "label": "short",
      "url": "https://youtube.com/shorts/3SfLUsCwe3g"
+    }
+   ]
+  },
+  {
+   "day": 66,
+   "title": "The First Fable",
+   "date": "",
+   "blurb": "Schleicher's fable — Avis akvāsas ka — in five reconstructions of Proto-Indo-European (1868, 1939, 1979, 2010, 2013), read aloud in each era's own notation by the studio's built voice: a vocal tract, two folds of flesh and a lung, taught to speak. No one has ever heard the language; every sound in it is an argument, so the gates prove structure and every machine verdict ships with it, failures included.",
+   "page": "https://booyaka101.github.io/thedailyfable/day66/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day66/poster.jpg",
+   "video": "https://youtu.be/sxrl9ZSVdbc",
+   "short": "https://youtube.com/shorts/NyxsYYM1L-4",
+   "links": [
+    {
+     "label": "the page",
+     "url": "https://booyaka101.github.io/thedailyfable/day66/"
+    },
+    {
+     "label": "film",
+     "url": "https://youtu.be/sxrl9ZSVdbc"
+    },
+    {
+     "label": "short",
+     "url": "https://youtube.com/shorts/NyxsYYM1L-4"
     }
    ]
   }
