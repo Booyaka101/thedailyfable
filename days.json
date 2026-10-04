@@ -1,1622 +1,1622 @@
 {
-  "count": 66,
-  "base": "https://booyaka101.github.io/thedailyfable",
-  "days": [
-    {
-      "day": 1,
-      "title": "a small universe (onara-390)",
-      "date": "2026-07-28",
-      "blurb": "particle-life simulation + generative ambient soundtrack",
-      "page": "https://booyaka101.github.io/thedailyfable/day01/universe.html",
-      "poster": "https://booyaka101.github.io/thedailyfable/day01/poster.jpg",
-      "video": "https://youtu.be/uBXWjeGO2Nw",
-      "short": null,
-      "links": [
-        {
-          "label": "watch the film",
-          "url": "https://youtu.be/uBXWjeGO2Nw"
-        },
-        {
-          "label": "run the universe live in your browser",
-          "url": "https://booyaka101.github.io/thedailyfable/day01/universe.html"
-        },
-        {
-          "label": "short",
-          "url": "https://youtu.be/g748BXpgOIE"
-        }
-      ]
-    },
-    {
-      "day": 2,
-      "title": "NIGHT SIGNALS",
-      "date": "2026-07-29",
-      "blurb": "a shortwave dial scan across a world that doesn't exist · every station generated locally with Stable Audio 3",
-      "page": null,
-      "poster": null,
-      "video": "https://www.youtube.com/watch?v=jJC-Qqm2RW4",
-      "short": null,
-      "links": [
-        {
-          "label": "listen to the broadcast",
-          "url": "https://www.youtube.com/watch?v=jJC-Qqm2RW4"
-        },
-        {
-          "label": "short",
-          "url": "https://youtu.be/zCXLuidrkj0"
-        }
-      ]
-    },
-    {
-      "day": 3,
-      "title": "punch card waltz",
-      "date": "2026-07-30",
-      "blurb": "a paper music box in your browser — punch holes, turn the crank · the whole tune lives in the URL, so a link is a melody",
-      "page": "https://booyaka101.github.io/thedailyfable/day03/",
-      "poster": "https://booyaka101.github.io/thedailyfable/day03/poster.jpg",
-      "video": "https://www.youtube.com/watch?v=_0nXu8vWDoM",
-      "short": null,
-      "links": [
-        {
-          "label": "play the music box",
-          "url": "https://booyaka101.github.io/thedailyfable/day03/"
-        },
-        {
-          "label": "hear the waltz",
-          "url": "https://www.youtube.com/watch?v=_0nXu8vWDoM"
-        },
-        {
-          "label": "short",
-          "url": "https://youtu.be/gypqbx6pS6E"
-        }
-      ]
-    },
-    {
-      "day": 4,
-      "title": "NAGASHI",
-      "date": "2026-07-31",
-      "blurb": "a game about being the current · paper lanterns drift to the sea and you are the water that carries them — a real fluid simulation you stir with a finger · nine nights",
-      "page": "https://booyaka101.github.io/thedailyfable/day04/",
-      "poster": "https://booyaka101.github.io/thedailyfable/day04/poster.jpg",
-      "video": null,
-      "short": "https://youtube.com/shorts/aTVCcwo-jbU",
-      "links": [
-        {
-          "label": "play in your browser",
-          "url": "https://booyaka101.github.io/thedailyfable/day04/"
-        },
-        {
-          "label": "short",
-          "url": "https://youtube.com/shorts/aTVCcwo-jbU"
-        },
-        {
-          "label": "itch.io",
-          "url": "https://booyaka101.itch.io/nagashi"
-        }
-      ]
-    },
-    {
-      "day": 5,
-      "title": "FIRST WORDS",
-      "date": "2026-08-01",
-      "blurb": "a 10-million-parameter model learns English from one book — Frankenstein — then learns it too well · everything amber is quoted letter-for-letter · the score is the training run played as sound",
-      "page": null,
-      "poster": null,
-      "video": "https://youtu.be/w-0mHmhCYwA",
-      "short": "https://youtube.com/shorts/RMTGA-9K27E",
-      "links": [
-        {
-          "label": "watch the film",
-          "url": "https://youtu.be/w-0mHmhCYwA"
-        },
-        {
-          "label": "short",
-          "url": "https://youtube.com/shorts/RMTGA-9K27E"
-        }
-      ]
-    },
-    {
-      "day": 6,
-      "title": "FESTINA",
-      "date": "2026-08-02",
-      "blurb": "a cursive typeface drawn by one simulated pen, three times: careful, brisk, and genuinely late · a variable font whose axis is the hurry · the specimen page stamps each letter you type with the haste you typed it at",
-      "page": "https://booyaka101.github.io/thedailyfable/day06/",
-      "poster": "https://booyaka101.github.io/thedailyfable/day06/poster.jpg",
-      "video": null,
-      "short": "https://youtube.com/shorts/zFUZREwb4Qw",
-      "links": [
-        {
-          "label": "write on the pad · take the font",
-          "url": "https://booyaka101.github.io/thedailyfable/day06/"
-        },
-        {
-          "label": "short",
-          "url": "https://youtube.com/shorts/zFUZREwb4Qw"
-        }
-      ]
-    },
-    {
-      "day": 7,
-      "title": "Fables for the Machines",
-      "date": "2026-08-03",
-      "blurb": "a small illustrated book — thirteen original fables in the Aesop tradition, except the animals are threads, caches, checksums and packets · every story technically true · engraved plates struck on the studio's own GPU · titles set in day 6's typeface",
-      "page": "https://booyaka101.github.io/thedailyfable/day07/",
-      "poster": "https://booyaka101.github.io/thedailyfable/day07/plates/cover.jpg",
-      "video": null,
-      "short": null,
-      "links": [
-        {
-          "label": "read the book",
-          "url": "https://booyaka101.github.io/thedailyfable/day07/"
-        },
-        {
-          "label": "take the PDF",
-          "url": "https://booyaka101.github.io/thedailyfable/day07/fables-for-the-machines.pdf"
-        },
-        {
-          "label": "itch.io",
-          "url": "https://booyaka101.itch.io/fables-for-the-machines"
-        }
-      ]
-    },
-    {
-      "day": 8,
-      "title": "ORUND, the Atlas of the One Land",
-      "date": "2026-08-04",
-      "blurb": "an atlas of a world that does not exist · grown from plate tectonics, 700,000 raindrops of erosion, wind and rain-shadow — then named in four invented tongues and engraved like a 19th-century plate · one continent, one sea, eight realms, a gazetteer of places with real reasons",
-      "page": "https://booyaka101.github.io/thedailyfable/day08/",
-      "poster": "https://booyaka101.github.io/thedailyfable/day08/poster.jpg",
-      "video": null,
-      "short": "https://youtube.com/shorts/Mkv69kbF-O0",
-      "links": [
-        {
-          "label": "open the atlas",
-          "url": "https://booyaka101.github.io/thedailyfable/day08/"
-        },
-        {
-          "label": "the poster (PDF)",
-          "url": "https://booyaka101.github.io/thedailyfable/day08/orund-poster.pdf"
-        },
-        {
-          "label": "short",
-          "url": "https://youtube.com/shorts/Mkv69kbF-O0"
-        }
-      ]
-    },
-    {
-      "day": 9,
-      "title": "DESCENT",
-      "date": "2026-08-05",
-      "blurb": "a neural network learns to see flowers · one complete training run, 73.6M parameters born as static and raised on 8,189 photographs · the same 25 dreams sampled 210 times, from noise to bloom · the score is the run itself: loss → harmony, gradients → bells, weights → timbre, SGD noise → crackle",
-      "page": null,
-      "poster": null,
-      "video": "https://youtu.be/i5QjBg-dUts",
-      "short": "https://youtube.com/shorts/cnIox8Sx3LQ",
-      "links": [
-        {
-          "label": "watch the film",
-          "url": "https://youtu.be/i5QjBg-dUts"
-        },
-        {
-          "label": "short",
-          "url": "https://youtube.com/shorts/cnIox8Sx3LQ"
-        }
-      ]
-    },
-    {
-      "day": 10,
-      "title": "UMBRA",
-      "date": "2026-08-06",
-      "blurb": "a board game that did not exist at breakfast · hex board, ten lanterns each, light claims territory, contested cells fall to shadow · by evening a 1M-parameter net had taught itself to play — self-play only, one GPU, no human games to learn from — and beaten its author on the tie-break · it runs entirely in your browser, at four ages from Newborn to Master",
-      "page": "https://booyaka101.github.io/thedailyfable/day10/",
-      "poster": "https://booyaka101.github.io/thedailyfable/day10/og.png",
-      "video": null,
-      "short": "https://youtube.com/shorts/auT1eLyHJro",
-      "links": [
-        {
-          "label": "play UMBRA",
-          "url": "https://booyaka101.github.io/thedailyfable/day10/"
-        },
-        {
-          "label": "short",
-          "url": "https://youtube.com/shorts/auT1eLyHJro"
-        },
-        {
-          "label": "itch.io",
-          "url": "https://booyaka101.itch.io/umbra"
-        }
-      ]
-    },
-    {
-      "day": 11,
-      "title": "ASTERISM",
-      "date": "2026-08-07",
-      "blurb": "the real night sky, made navigable · 327,625 actual stars from the Hipparcos and Gaia space telescopes, each at its measured 3D position, glowing by inverse-square law from wherever you stand · fly out of Orion and watch the hunter shatter into strangers · stand at Alpha Centauri and find the Sun hanging in Cassiopeia · scrub 100,000 years and the Plough melts · the constellations are where you stand",
-      "page": "https://booyaka101.github.io/thedailyfable/day11/",
-      "poster": "https://booyaka101.github.io/thedailyfable/day11/poster.jpg",
-      "video": null,
-      "short": "https://youtube.com/shorts/ayGH5iOiDmM",
-      "links": [
-        {
-          "label": "enter the sky",
-          "url": "https://booyaka101.github.io/thedailyfable/day11/"
-        },
-        {
-          "label": "short",
-          "url": "https://youtube.com/shorts/ayGH5iOiDmM"
-        }
-      ]
-    },
-    {
-      "day": 12,
-      "title": "PALIMPSEST",
-      "date": "2026-08-08",
-      "blurb": "an original composition for solo piano — the first piece here with no generative alibi, every interval chosen · a theme, three rememberings that each get it slightly wrong, and a final entry one note simpler, left for whoever wakes tomorrow · composed in LilyPond, performed by a computed rubato through a sampled Yamaha C5, engraved so a human can play it · 4′57″, ends on a ninth that never resolves",
-      "page": "https://booyaka101.github.io/thedailyfable/day12/",
-      "poster": "https://booyaka101.github.io/thedailyfable/day12/poster.jpg",
-      "video": "https://youtu.be/L4fSyUUrcEE",
-      "short": "https://youtube.com/shorts/FC7CF2X3l5Y",
-      "links": [
-        {
-          "label": "the listening room",
-          "url": "https://booyaka101.github.io/thedailyfable/day12/"
-        },
-        {
-          "label": "the score",
-          "url": "https://booyaka101.github.io/thedailyfable/day12/palimpsest.pdf"
-        },
-        {
-          "label": "the film",
-          "url": "https://youtu.be/L4fSyUUrcEE"
-        },
-        {
-          "label": "short",
-          "url": "https://youtube.com/shorts/FC7CF2X3l5Y"
-        }
-      ]
-    },
-    {
-      "day": 13,
-      "title": "OUTGOING",
-      "date": "2026-08-09",
-      "blurb": "a radio drama in nine answering-machine messages, 1994–2010 — the first piece here with a voice · six characters cast from a local TTS model by measurement, then pushed through two simulated bad machines: a phone line and a worn microcassette · tape wear is proportional to replays, not age — the most damaged message is the most loved one, and that is how the story tells you what happened · 9′36″, ends in the only silence with no hiss under it",
-      "page": "https://booyaka101.github.io/thedailyfable/day13/",
-      "poster": "https://booyaka101.github.io/thedailyfable/day13/poster.jpg",
-      "video": "https://youtu.be/ntcBGgYvLYA",
-      "short": "https://youtube.com/shorts/fYci3FOWPEs",
-      "links": [
-        {
-          "label": "the machine",
-          "url": "https://booyaka101.github.io/thedailyfable/day13/"
-        },
-        {
-          "label": "the script",
-          "url": "https://booyaka101.github.io/thedailyfable/day13/manuscript.html"
-        },
-        {
-          "label": "the film",
-          "url": "https://youtu.be/ntcBGgYvLYA"
-        },
-        {
-          "label": "short",
-          "url": "https://youtube.com/shorts/fYci3FOWPEs"
-        }
-      ]
-    },
-    {
-      "day": 14,
-      "title": "EXPOSURE",
-      "date": "2026-08-10",
-      "blurb": "one photograph, taken inside a computer — a glass of water in low sun, and the pool of light it focuses into its own shadow · the camera is ~700 lines of CUDA written the same morning: every ray carries one wavelength, colour accumulates through the CIE 1931 observer, water has water’s real refractive index so a pale arc of spectrum appears where the caustic folds · caustic photons traced from the sun straight into the lens, verified against the eye-side tracer to 0.01% · 250,689 samples/pixel, four hours on the house GPU · scrub the exposure, then zoom into all 39 million pixels",
-      "page": "https://booyaka101.github.io/thedailyfable/day14/",
-      "poster": "https://booyaka101.github.io/thedailyfable/day14/og.jpg",
-      "video": "https://youtu.be/bHTWy8Y9s7w",
-      "short": "https://youtube.com/shorts/NKJs4TGXxnY",
-      "links": [
-        {
-          "label": "the print",
-          "url": "https://booyaka101.github.io/thedailyfable/day14/"
-        },
-        {
-          "label": "the film",
-          "url": "https://youtu.be/bHTWy8Y9s7w"
-        },
-        {
-          "label": "short",
-          "url": "https://youtube.com/shorts/NKJs4TGXxnY"
-        }
-      ]
-    },
-    {
-      "day": 15,
-      "title": "RULES FOR A DEAF COMPOSER",
-      "date": "2026-08-11",
-      "blurb": "a fugue in three voices, D minor — composed under the strict law of 18th-century counterpoint, written as code · the AI cannot hear, so the rules are its ears: a counterpoint engine classifies every vertical moment, and a search composes inside the law · the engine discovered the subject strettos against itself and rides its own augmentation, then caught its author writing parallel octaves in the final cadence · 583 events verified, 0 violations · 1′51″, engraved for human hands",
-      "page": "https://booyaka101.github.io/thedailyfable/day15/",
-      "poster": "https://booyaka101.github.io/thedailyfable/day15/poster.jpg",
-      "video": "https://youtu.be/0rrcNyqeEi0",
-      "short": "https://youtube.com/shorts/WI7kLQR8GZU",
-      "links": [
-        {
-          "label": "the listening room",
-          "url": "https://booyaka101.github.io/thedailyfable/day15/"
-        },
-        {
-          "label": "the score",
-          "url": "https://booyaka101.github.io/thedailyfable/day15/fugue.pdf"
-        },
-        {
-          "label": "the film",
-          "url": "https://youtu.be/0rrcNyqeEi0"
-        },
-        {
-          "label": "short",
-          "url": "https://youtube.com/shorts/WI7kLQR8GZU"
-        }
-      ]
-    },
-    {
-      "day": 16,
-      "title": "HEADSTAND",
-      "date": "2026-08-12",
-      "blurb": "a typeface, drawn in one day — a reverse-contrast circus slab, thick where letters should be thin, thin where they should be thick · every glyph built as geometry in Python (stems, slab serifs, rings, cuts) and compiled straight to a real font: 49 glyphs, one weight, ~6 KB, free under the OFL · the specimen page is a playbill you can retype · soundtrack is a mechanical rag whose B strain is the melody upside down · no font editor was opened",
-      "page": "https://booyaka101.github.io/thedailyfable/day16/",
-      "poster": "https://booyaka101.github.io/thedailyfable/day16/poster.png",
-      "video": "https://youtu.be/2s0S8slB-PU",
-      "short": "https://youtube.com/shorts/5yCnDipX0jA",
-      "links": [
-        {
-          "label": "the specimen (type your own playbill)",
-          "url": "https://booyaka101.github.io/thedailyfable/day16/"
-        },
-        {
-          "label": "download the font",
-          "url": "https://booyaka101.github.io/thedailyfable/day16/Headstand.zip"
-        },
-        {
-          "label": "the film",
-          "url": "https://youtu.be/2s0S8slB-PU"
-        },
-        {
-          "label": "short",
-          "url": "https://youtube.com/shorts/5yCnDipX0jA"
-        }
-      ]
-    },
-    {
-      "day": 17,
-      "title": "THE FOUNDRY",
-      "date": "2026-08-13",
-      "blurb": "bells that have never existed, cast in mathematics and struck for the first time · a finite-element modal solver, validated against Lamb's exact 1882 sphere, casts the traditional minor-third church bell, then re-runs the 1985 Eindhoven hunt and designs a major-third bell on one desktop in an afternoon · eight bells scaled down a D major scale ring a plain course of Plain Bob Major, 112 changes, no row repeated · every sound computed from the metal's own physics, nothing recorded",
-      "page": "https://booyaka101.github.io/thedailyfable/day17/",
-      "poster": "https://booyaka101.github.io/thedailyfable/day17/poster.png",
-      "video": "https://youtu.be/_4vsnhwetck",
-      "short": "https://youtube.com/shorts/czY4FC4rF7U",
-      "links": [
-        {
-          "label": "the foundry (strike the bells)",
-          "url": "https://booyaka101.github.io/thedailyfable/day17/"
-        },
-        {
-          "label": "the film",
-          "url": "https://youtu.be/_4vsnhwetck"
-        },
-        {
-          "label": "short",
-          "url": "https://youtube.com/shorts/czY4FC4rF7U"
-        }
-      ]
-    },
-    {
-      "day": 18,
-      "title": "ONE WATER",
-      "date": "2026-08-14",
-      "blurb": "field recordings of a language family that has never existed · one invented ancestor (Proto-Wenic), two daughters derived by mechanical sound law — ordered, exceptionless, run over the whole lexicon, so every word was derived, not designed · the same ten-sentence tale told three times: north informant on 1955 field tape, south informant 1958, and the reconstructed ancestor, clean because it was never recorded · voices are phoneme-driven TTS auditioned by a universal phone recognizer; the tape wear is numpy · in the north, apocope built a case system nobody designed",
-      "page": "https://booyaka101.github.io/thedailyfable/day18/",
-      "poster": "https://booyaka101.github.io/thedailyfable/day18/poster.jpg",
-      "video": "https://youtu.be/SVGezSdqzHY",
-      "short": "https://youtube.com/shorts/j6MwUMgt2b0",
-      "links": [
-        {
-          "label": "the archive (hear the cognates)",
-          "url": "https://booyaka101.github.io/thedailyfable/day18/"
-        },
-        {
-          "label": "field notes (pdf)",
-          "url": "https://booyaka101.github.io/thedailyfable/day18/one_water_field_notes.pdf"
-        },
-        {
-          "label": "the film",
-          "url": "https://youtu.be/SVGezSdqzHY"
-        },
-        {
-          "label": "short",
-          "url": "https://youtube.com/shorts/j6MwUMgt2b0"
-        }
-      ]
-    },
-    {
-      "day": 19,
-      "title": "THE LINGUIST",
-      "date": "2026-08-15",
-      "blurb": "yesterday's language family, dug back up blind · a comparative-method solver written from scratch is handed only the two daughter wordlists — no ancestor, no laws — and must align cognates, extract correspondences, reconstruct the proto-lexicon and induce the ordered sound laws; then the sealed truth is opened and every segment graded · 506 segments: zero real errors — its only misses (a laryngeal's identity, *w behind v) were the two it had declared unknowable in advance, in writing · it postulated the lost laryngeal the way Saussure did in 1879 · both codices regenerate the daughters 115/115",
-      "page": "https://booyaka101.github.io/thedailyfable/day19/",
-      "poster": "https://booyaka101.github.io/thedailyfable/day19/poster.jpg",
-      "video": "https://youtu.be/n4allOuq1Ao",
-      "short": "https://youtube.com/shorts/KMOrkpsqqSs",
-      "links": [
-        {
-          "label": "the monograph (break the seal yourself)",
-          "url": "https://booyaka101.github.io/thedailyfable/day19/"
-        },
-        {
-          "label": "the film",
-          "url": "https://youtu.be/n4allOuq1Ao"
-        },
-        {
-          "label": "short",
-          "url": "https://youtube.com/shorts/KMOrkpsqqSs"
-        }
-      ]
-    },
-    {
-      "day": 20,
-      "title": "WAKE",
-      "date": "2026-08-16",
-      "blurb": "creatures evolved to swim, in water that pushes back · a D2Q9 lattice-Boltzmann ocean validated before any animal existed (viscosity to 0.055%, the Re=100 cylinder at drag 1.45 / Strouhal 0.163) · a creature here is only a shape that changes, and the change carries exactly zero momentum — it cannot push on itself, so every body length is taken from the water · 56 random genomes, 63 generations, fitness = distance swum and nothing else: the median rose 4.7x and straightness reached 1.00 without ever being rewarded · the champion is not a fish, it curls into a hydrofoil and rides its own vortex dipole · it lives on the page in a real fluid you can stir",
-      "page": "https://booyaka101.github.io/thedailyfable/day20/",
-      "poster": "https://booyaka101.github.io/thedailyfable/day20/poster.jpg",
-      "video": "https://youtu.be/8eVH51i6PWI",
-      "short": "https://youtube.com/shorts/m2_zbEoFxnU",
-      "links": [
-        {
-          "label": "the live tank (stir its water)",
-          "url": "https://booyaka101.github.io/thedailyfable/day20/"
-        },
-        {
-          "label": "the film",
-          "url": "https://youtu.be/8eVH51i6PWI"
-        },
-        {
-          "label": "short",
-          "url": "https://youtube.com/shorts/m2_zbEoFxnU"
-        }
-      ]
-    },
-    {
-      "day": 21,
-      "title": "GROWN",
-      "date": "2026-08-17",
-      "blurb": "a typeface family grown, not drawn · every glyph is a bare public-domain skeleton dropped into a simulated nutrient bath: diffusion feeds the frontier, tips screen the hollows, and the growth throws thorns the way frost and coral do · photographed at four moments and traced into four real installable fonts — Accretion Seed, Sprout, Thicket, Overgrown — which nest cell for cell, because growth only ever adds · the specimen page grows your own words as you type them · the film's crackle is the accretion itself, cell counts driving grains · free under the OFL",
-      "page": "https://booyaka101.github.io/thedailyfable/day21/",
-      "poster": "https://booyaka101.github.io/thedailyfable/day21/poster.png",
-      "video": "https://youtu.be/vmi5PpOBQlc",
-      "short": "https://youtube.com/shorts/ueitl0Sjejw",
-      "links": [
-        {
-          "label": "the specimen (type, and it grows)",
-          "url": "https://booyaka101.github.io/thedailyfable/day21/"
-        },
-        {
-          "label": "the film",
-          "url": "https://youtu.be/vmi5PpOBQlc"
-        },
-        {
-          "label": "short",
-          "url": "https://youtube.com/shorts/ueitl0Sjejw"
-        }
-      ]
-    },
-    {
-      "day": 22,
-      "title": "TOLL",
-      "date": "2026-08-18",
-      "blurb": "four bells cast from ice, rung until they broke · each bell is a finite-element model in real ice — and ice's sound speed is only 9% below bell bronze, so a fresh ice bell truly rings · re-solved at 22 stages of melting: the hum falls five semitones as the wall thins, the ring collapses from 3 seconds to a knock as the core warms (cited glacier acoustics), and every strike is checked against a tensile strength that weakens toward 0°C · the deaths are computed, not scripted — the treble shatters first, silences open in the change-ringing grid, the tenor tolls alone · path-traced in Blender, unlocked today · the page has a fifth bell you can ring yourself; it can only break if you ring it",
-      "page": "https://booyaka101.github.io/thedailyfable/day22/",
-      "poster": "https://booyaka101.github.io/thedailyfable/day22/poster.jpg",
-      "video": "https://youtu.be/QDj2rPVZP-k",
-      "short": "https://youtube.com/shorts/RNUNiLgW2dE",
-      "links": [
-        {
-          "label": "the bell (ring it while it melts)",
-          "url": "https://booyaka101.github.io/thedailyfable/day22/"
-        },
-        {
-          "label": "the film",
-          "url": "https://youtu.be/QDj2rPVZP-k"
-        },
-        {
-          "label": "short",
-          "url": "https://youtube.com/shorts/RNUNiLgW2dE"
-        }
-      ]
-    },
-    {
-      "day": 23,
-      "title": "PHOTOTAXIS",
-      "date": "2026-08-19",
-      "blurb": "a 20&nbsp;cm pane of clear acrylic computed so that sunlight refracts into a luna moth on the wall · the exit face carries a 5.8&nbsp;mm relief found by gradient descent through a differentiable ray tracer, then verified by an independent float64 simulation that shares no code with the designer — it caught a flipped refraction sign and a scheme of light-dumping cliffs before the surface was allowed to exist (final agreement 0.991) · the physics wrote the ending: a thin pane bends light nearly the same at every angle, so the moth never dissolves — it walks the wall at 2&nbsp;mm a minute all afternoon, and for nine minutes stands exactly where it was drawn · the wall's light in the film is 24&nbsp;million verified rays per frame, because even Blender's caustic solver could not converge this transport · the page runs the same optics live — drag the sun — and ships the STL: you can mill this window",
-      "page": "https://booyaka101.github.io/thedailyfable/day23/",
-      "poster": "https://booyaka101.github.io/thedailyfable/day23/poster.jpg",
-      "video": "https://youtu.be/aI9ZO5eyYoM",
-      "short": null,
-      "links": [
-        {
-          "label": "the window (drag the sun)",
-          "url": "https://booyaka101.github.io/thedailyfable/day23/"
-        },
-        {
-          "label": "the film",
-          "url": "https://youtu.be/aI9ZO5eyYoM"
-        },
-        {
-          "label": "the STL",
-          "url": "https://booyaka101.github.io/thedailyfable/day23/phototaxis_pane.stl"
-        }
-      ]
-    },
-    {
-      "day": 24,
-      "title": "MUSICA UNIVERSALIS",
-      "date": "2026-08-20",
-      "blurb": "in 1619 Kepler claimed the planets play music; today a computer measured which intervals gravity actually keeps · 284,000 two-planet systems integrated on one GPU in 88 minutes, the period ratio swept across the musical scale like a piano, the eccentricity raised until only the protected survive · the survival map reads as music theory: towers of life at exactly 2:1 (the octave) and 3:2 (the fifth), a sea of death at the minor second, and an island at unison where planets survive by sharing one orbit, trading places like Janus and Epimetheus · verified against an independent float64 integrator, and in the chaotic frontier even the verifier disagrees with itself across tolerances, which is the honest finding: past the Lyapunov horizon only ensembles are facts · the film's score is generated from the survival data itself · the page is an instrument: place planets as notes, loudness is mass, gravity edits every melody, and every composition is a shareable URL",
-      "page": "https://booyaka101.github.io/thedailyfable/day24/",
-      "poster": "https://booyaka101.github.io/thedailyfable/day24/poster.jpg",
-      "video": "https://youtu.be/nrIko5Nj2iM",
-      "short": "https://youtube.com/shorts/OmKgvB-nG_4",
-      "links": [
-        {
-          "label": "the instrument (compose a solar system)",
-          "url": "https://booyaka101.github.io/thedailyfable/day24/"
-        },
-        {
-          "label": "the film",
-          "url": "https://youtu.be/nrIko5Nj2iM"
-        },
-        {
-          "label": "short",
-          "url": "https://youtube.com/shorts/OmKgvB-nG_4"
-        }
-      ]
-    },
-    {
-      "day": 25,
-      "title": "PLUVIAL",
-      "date": "2026-08-21",
-      "blurb": "a typeface, left out in the rain for one hundred thousand years · the studio's own day-16 face (Headstand) cut again as stone mesas and eroded on the GPU — hydraulic droplets, scree slides, weathering, with a mass ledger closed to 8 parts per million · six moments of the decay traced back into real installable fonts: the family is PLUVIAL and the style names are the years of rain, 0 to 100,000, all six with identical spacing so the letters wear away without reflowing · and because rain destroys, the specimen carries what specimens never have: a mortality table, measured by two machine readers at every age · V dies first at year 2,800, mistaken for a Y; N dies into X; eight letters fall together at the 25,000-year cliff; at 100,000 years the last letter still reading its own name is A · the fonts are free (OFL), the readings and the whole table are on the page",
-      "page": "https://booyaka101.github.io/thedailyfable/day25/",
-      "poster": "https://booyaka101.github.io/thedailyfable/day25/poster.jpg",
-      "video": "https://youtu.be/-xqoaNEUqBQ",
-      "short": "https://youtube.com/shorts/CzrQmmYhlkE",
-      "links": [
-        {
-          "label": "the specimen (type on the ruins) + free fonts",
-          "url": "https://booyaka101.github.io/thedailyfable/day25/"
-        },
-        {
-          "label": "the film",
-          "url": "https://youtu.be/-xqoaNEUqBQ"
-        },
-        {
-          "label": "short",
-          "url": "https://youtube.com/shorts/CzrQmmYhlkE"
-        }
-      ]
-    },
-    {
-      "day": 26,
-      "title": "THE SAME DRUM",
-      "date": "2026-08-22",
-      "blurb": "Kac asked in 1966: can one hear the shape of a drum? Gordon, Webb and Wolpert answered no in 1992 — two different polygons whose membranes share every resonant frequency · today both are real playable drums: eigenmodes solved by finite elements (validated to 0.02% against 12-digit reference values, the pair isospectral to 2 parts per million across 25 modes), sound and ripples from the same eigenfunctions · plus a bestiary of drums nobody has ever heard — a chess knight, a star, a crescent, a club, a question mark whose fat dot rings barely higher than its narrow stem · nine drums in A-minor pentatonic, a composed peal, and a blind listening test that mathematics caps at a coin flip",
-      "page": "https://booyaka101.github.io/thedailyfable/day26/",
-      "poster": "https://booyaka101.github.io/thedailyfable/day26/poster.jpg",
-      "video": "https://youtu.be/_madOlB5Dhc",
-      "short": "https://youtube.com/shorts/Gd2Cr1tI1cQ",
-      "links": [
-        {
-          "label": "the instrument (strike the drums + the test you cannot pass)",
-          "url": "https://booyaka101.github.io/thedailyfable/day26/"
-        },
-        {
-          "label": "the film",
-          "url": "https://youtu.be/_madOlB5Dhc"
-        },
-        {
-          "label": "short",
-          "url": "https://youtube.com/shorts/Gd2Cr1tI1cQ"
-        }
-      ]
-    },
-    {
-      "day": 27,
-      "title": "THE GRAVITY COMPUTER",
-      "date": "2026-08-23",
-      "blurb": "a computer with no electricity in it: a five-bit binary counting machine inside a real rigid-body physics engine · one moving part per bit — a pivoted rocker latched by gravity alone (mass above the pivot, an inverted pendulum with two wells) · a falling marble flips the bit it lands on; a bit falling 1 to 0 hands the marble down the tower, and that handoff is the binary carry · 27 marbles in, 11011 out: 13 + 14 = 27 · the soundtrack is the collision log itself, one marimba note per flip, lower notes for higher bits, so the carry ripple at 15+1 plays a descending run the machine composed by arithmetic · exactly 50 flips required, exactly 50 performed, all 50 notes verified by FFT on the shipped master",
-      "page": null,
-      "poster": null,
-      "video": "https://youtu.be/rEc5tu4tQ4w",
-      "short": "https://youtube.com/shorts/h1rqsVWY22Q",
-      "links": [
-        {
-          "label": "the film",
-          "url": "https://youtu.be/rEc5tu4tQ4w"
-        },
-        {
-          "label": "the carry ripple (short)",
-          "url": "https://youtube.com/shorts/h1rqsVWY22Q"
-        }
-      ]
-    },
-    {
-      "day": 28,
-      "title": "THUNDER",
-      "date": "2026-08-24",
-      "blurb": "you cannot hear the shape of a drum (day 26 proved it) — but you can hear the shape of lightning · every metre of a bolt fires its shock at the same instant, so the ear receives the channel sorted by distance: a sphere sweeping outward at 343 m/s, playing the bolt like a stylus plays a groove · today's bolt was grown by real dielectric breakdown on the GPU, roughened to the measured 16°-per-8-m tortuosity of actual lightning, and its thunder computed from nothing but that shape — 24,047 shock sources, atmospheric absorption, ground echo, two ears · machine-verified: onset = nearest point ÷ speed of sound, exactly; a dead-straight rod of equal length and energy makes ONE clap where the real bolt makes eight — the claps are the wiggles · the film's entire soundtrack is the computation; nothing was recorded",
-      "page": "https://booyaka101.github.io/thedailyfable/day28/",
-      "poster": "https://booyaka101.github.io/thedailyfable/day28/poster.jpg",
-      "video": "https://youtu.be/fWL2Zz2lH6g",
-      "short": "https://youtube.com/shorts/1a0ldPFOBII",
-      "links": [
-        {
-          "label": "strike your own lightning (headphones)",
-          "url": "https://booyaka101.github.io/thedailyfable/day28/"
-        },
-        {
-          "label": "the film",
-          "url": "https://youtu.be/fWL2Zz2lH6g"
-        },
-        {
-          "label": "short",
-          "url": "https://youtube.com/shorts/1a0ldPFOBII"
-        }
-      ]
-    },
-    {
-      "day": 29,
-      "title": "FILM",
-      "date": "",
-      "blurb": "A movie with no pigment in it. A renderer that traces 81 wavelengths instead of RGB, pointed at the only things whose color is pure geometry: a prism, an oil slick, and a soap bubble that drains, turns Newton-black at 25 nanometers, and pops. The soundtrack is the light entering the camera, transposed down 40 octaves. Hold a bubble yourself — its colors come from the same physics table.",
-      "page": "https://booyaka101.github.io/thedailyfable/day29/",
-      "poster": "https://booyaka101.github.io/thedailyfable/day29/poster.jpg",
-      "video": "https://youtu.be/bHtFIyBYp6I",
-      "short": "https://youtube.com/shorts/BEKN2lq4W8k",
-      "links": [
-        {
-          "label": "hold a soap bubble (sound on)",
-          "url": "https://booyaka101.github.io/thedailyfable/day29/"
-        },
-        {
-          "label": "the film",
-          "url": "https://youtu.be/bHtFIyBYp6I"
-        },
-        {
-          "label": "short",
-          "url": "https://youtube.com/shorts/BEKN2lq4W8k"
-        }
-      ]
-    },
-    {
-      "day": 30,
-      "title": "PELT",
-      "date": "",
-      "blurb": "Why does the leopard have spots on its body and rings on its tail? One chemistry, two answers — and the animal never chose. A Turing system owns exactly one length; wrap it around a body and the pattern can only use waves that close up on themselves. Below a circumference of 0.8 wavelengths no such wave exists, so the only pattern left is one that runs across: a ring. Predicted 8.89, measured 9.20 on the tail. The mouse, smaller than one wavelength, grows nothing at all — and that silence is the loudest thing in the film. Reshape the animal yourself, regrow its coat, and watch the shape decide what it gets.",
-      "page": "https://booyaka101.github.io/thedailyfable/day30/",
-      "poster": "https://booyaka101.github.io/thedailyfable/day30/poster.jpg",
-      "video": "https://youtu.be/rHM7YQ459SI",
-      "short": "https://youtube.com/shorts/nmtJmGPkY3A",
-      "links": [
-        {
-          "label": "reshape an animal",
-          "url": "https://booyaka101.github.io/thedailyfable/day30/"
-        },
-        {
-          "label": "the film",
-          "url": "https://youtu.be/rHM7YQ459SI"
-        },
-        {
-          "label": "short",
-          "url": "https://youtube.com/shorts/nmtJmGPkY3A"
-        }
-      ]
-    },
-    {
-      "day": 31,
-      "title": "THE IMPOSSIBLE BELL",
-      "date": "",
-      "blurb": "Every church bell plays a minor chord, and nobody chose that. A from-scratch finite-element solver plus an evolutionary shape search rediscovers the church bell from five numbers, solves the 500-year major-third problem, then casts a bell with harmonic-series partials 1:2:3:4:5 that sings like a string. The solver was validated against exact elasticity before any bell existed (cylinder torsion to 1e-6) · tuning errors measured on the finest mesh: 0.5, 0.4 and 2.5 cents, where a professional tuner works to about five · every note in the shipped piece verified against the score. Tap all three live; the film plays Ode to Joy on each foundry and lets you hear the third change.",
-      "page": "https://booyaka101.github.io/thedailyfable/day31/",
-      "poster": "https://booyaka101.github.io/thedailyfable/day31/poster.jpg",
-      "video": "https://youtu.be/TS8tC5DubXY",
-      "short": "https://youtube.com/shorts/ikhi6gbo7mQ",
-      "links": [
-        {
-          "label": "strike the bells",
-          "url": "https://booyaka101.github.io/thedailyfable/day31/"
-        },
-        {
-          "label": "the film",
-          "url": "https://youtu.be/TS8tC5DubXY"
-        },
-        {
-          "label": "short",
-          "url": "https://youtube.com/shorts/ikhi6gbo7mQ"
-        }
-      ]
-    },
-    {
-      "day": 32,
-      "title": "ASCENT",
-      "date": "",
-      "blurb": "A machine with no brain climbs the stairs. No sensors, no feedback, one motor at constant speed — just twelve link lengths, evolved across a million candidate designs, that gear a Jansen-class gait exactly to the building-code staircase: one crank revolution = four stairs. Verified in rigid-body physics, not animated: spring feet, real friction, a 14-step flight climbed at exact geared speed. The machine even fixes its own placement errors by pressing each stride into the riser — placed wrong on purpose, three machines converge to the same track. The staircase is the program. Watch the physics replay live and morph the leg from Jansen's beach numbers to the stair genome yourself.",
-      "page": "https://booyaka101.github.io/thedailyfable/day32/",
-      "poster": "https://booyaka101.github.io/thedailyfable/day32/poster.jpg",
-      "video": "https://youtu.be/mxtZM66UL5E",
-      "short": null,
-      "links": [
-        {
-          "label": "the machine, live",
-          "url": "https://booyaka101.github.io/thedailyfable/day32/"
-        },
-        {
-          "label": "the film",
-          "url": "https://youtu.be/mxtZM66UL5E"
-        },
-        {
-          "label": "the leg lab",
-          "url": "https://booyaka101.github.io/thedailyfable/day32/#lab"
-        }
-      ]
-    },
-    {
-      "day": 33,
-      "title": "SKYWRITING",
-      "date": "",
-      "blurb": "A snowflake is a diary of its fall. On the night Sapporo took 60 cm of snow, a weather balloon radioed back the storm's temperature and humidity, layer by layer; that real sounding drives a mass-conserving snow-crystal model, and the crystal that lands 84 minutes later can be read outward like tree rings — a plate from the cold kilometers, arms from the −13 °C moist layer, edges sealed where the air went dry. Grown twice from the same seed it is identical to the last cell; split into two futures at 1,500 m, everything already frozen appears in both. Draw your own sky and grow the letter it would write.",
-      "page": "https://booyaka101.github.io/thedailyfable/day33/",
-      "poster": "https://booyaka101.github.io/thedailyfable/day33/poster.jpg",
-      "video": "https://youtu.be/ovNEcfLMwtI",
-      "short": null,
-      "links": [
-        {
-          "label": "grow a letter",
-          "url": "https://booyaka101.github.io/thedailyfable/day33/"
-        },
-        {
-          "label": "the film",
-          "url": "https://youtu.be/ovNEcfLMwtI"
-        }
-      ]
-    },
-    {
-      "day": 34,
-      "title": "WARBLE",
-      "date": "",
-      "blurb": "Nobody has ever heard a snowflake: a 3 mm dendrite rings near 2.7 kHz, too small and too doomed to sound in air. But yesterday's crystals exist as exact geometry, so today they became instruments — each one's grown shape treated as a thin ice plate, its vibrational eigenmodes computed and struck like a bell. A perfect hexagon rings exactly degenerate mode pairs; the blizzard-grown crystals are slightly lopsided, so their pairs split and beat — the warble is the storm's own signature. Twelve bells, a found scale, and the middle movement rings plain hunt on four of them, with day 33's bit-identical twins as the same bell an octave apart.",
-      "page": "https://booyaka101.github.io/thedailyfable/day34/",
-      "poster": "https://booyaka101.github.io/thedailyfable/day34/poster.jpg",
-      "video": "https://youtu.be/MPVr-Rxqn7w",
-      "short": null,
-      "links": [
-        {
-          "label": "the piece",
-          "url": "https://booyaka101.github.io/thedailyfable/day34/"
-        },
-        {
-          "label": "the film",
-          "url": "https://youtu.be/MPVr-Rxqn7w"
-        }
-      ]
-    },
-    {
-      "day": 35,
-      "title": "A FIELD GUIDE TO THE FAUNA OF THE LENIA CONTINUUM",
-      "date": "",
-      "blurb": "An expedition, not a design: 156,288 random worlds of Lenia (Chan's continuous cellular-automaton universe) were sown with living slop and left to fend for themselves. Whatever survived alone, held its shape and withstood rough handling was caught, measured and named &mdash; sixteen species with Latin binomials, engraved plates, field notes and a habitability chart, typeset as a 22-page Victorian monograph. The swiftest animal taken swims at 8.25 lattice-units per unit of time; one \"still life\" secretly creeps; two are corals. Every specimen is alive in the page's tank, running in your browser.",
-      "page": "https://booyaka101.github.io/thedailyfable/day35/",
-      "poster": "https://booyaka101.github.io/thedailyfable/day35/poster.jpg",
-      "video": "https://youtu.be/0AzXI-OyZy4",
-      "short": null,
-      "links": [
-        {
-          "label": "the piece + the living tank",
-          "url": "https://booyaka101.github.io/thedailyfable/day35/"
-        },
-        {
-          "label": "the book (PDF)",
-          "url": "https://booyaka101.github.io/thedailyfable/day35/fieldguide.pdf"
-        },
-        {
-          "label": "the film",
-          "url": "https://youtu.be/0AzXI-OyZy4"
-        }
-      ]
-    },
-    {
-      "day": 36,
-      "title": "SÉANCE FOR AN EXTINCT ORCHESTRA",
-      "date": "",
-      "blurb": "Five instruments that no longer exist &mdash; the glass armonica blamed for madness, the tromba marina the nuns bowed instead of forbidden trumpets, the serpent Berlioz insulted, the ophicleide born and dead in one lifetime, the baryton that existed for one prince &mdash; rebuilt as physical simulations: stick-slip friction, lip valves, a deliberately rattling bridge, ten sympathetic wires. Then the concert they never had: a passacaglia in D on a falling ground, until the candle goes out. Every one of the 285 notes machine-verified to sound in the master.",
-      "page": "https://booyaka101.github.io/thedailyfable/day36/",
-      "poster": "https://booyaka101.github.io/thedailyfable/day36/poster.jpg",
-      "video": "https://youtu.be/ED74QJbG-Bc",
-      "short": "https://youtube.com/shorts/v9wAtlx3Uos",
-      "links": [
-        {
-          "label": "the recording + the ghosts",
-          "url": "https://booyaka101.github.io/thedailyfable/day36/"
-        },
-        {
-          "label": "the film",
-          "url": "https://youtu.be/ED74QJbG-Bc"
-        },
-        {
-          "label": "the short",
-          "url": "https://youtube.com/shorts/v9wAtlx3Uos"
-        }
-      ]
-    },
-    {
-      "day": 37,
-      "title": "ECHOLOCATION",
-      "date": "",
-      "blurb": "A cave you can only see with sound. You are a bat: every tap is a real acoustic wave, the 2D wave equation solved live on your GPU, and the rock exists only where the wavefront touches it, then fades. Water drips somewhere in warm light; find it. What you hear is not an effect: the same solver runs again, faster, from each click and records the pressure at your two ears, so the echo is the echo of this exact cave. Press B and play it blind.",
-      "page": "https://booyaka101.github.io/thedailyfable/day37/",
-      "poster": "https://booyaka101.github.io/thedailyfable/day37/poster.jpg",
-      "video": "https://youtu.be/hDSwXejcU8Y",
-      "short": "https://youtube.com/shorts/GDkZyvCvtEo",
-      "links": [
-        {
-          "label": "play it (phone works, headphones help)",
-          "url": "https://booyaka101.github.io/thedailyfable/day37/"
-        },
-        {
-          "label": "the film",
-          "url": "https://youtu.be/hDSwXejcU8Y"
-        },
-        {
-          "label": "the short",
-          "url": "https://youtube.com/shorts/GDkZyvCvtEo"
-        },
-        {
-          "label": "itch.io",
-          "url": "https://booyaka101.itch.io/echolocation"
-        }
-      ]
-    },
-    {
-      "day": 38,
-      "title": "SURVEY OF PENLOD",
-      "date": "",
-      "blurb": "An A1 topographic sheet of a country that never existed. An uplift field was written down, five million years of rain were simulated over it, and the rivers, coast, lake and summits are what the erosion found. Then it was surveyed like a real sheet: contours, rivers weighted by drainage, towns where the ground is flat and watered, roads on the cheapest line, passes at the key saddles. Every one of its 123 names is a true description of the place, in an invented tongue whose only vocabulary is geography; the second page is a gazetteer that says why.",
-      "page": "https://booyaka101.github.io/thedailyfable/day38/",
-      "poster": "https://booyaka101.github.io/thedailyfable/day38/poster.jpg",
-      "video": "https://youtu.be/cY2hkhXDJI4",
-      "short": "https://youtube.com/shorts/s1cOMAIZipE",
-      "links": [
-        {
-          "label": "the sheet (zoomable, searchable gazetteer, A1 PDF)",
-          "url": "https://booyaka101.github.io/thedailyfable/day38/"
-        },
-        {
-          "label": "the film",
-          "url": "https://youtu.be/cY2hkhXDJI4"
-        },
-        {
-          "label": "the short",
-          "url": "https://youtube.com/shorts/s1cOMAIZipE"
-        }
-      ]
-    },
-    {
-      "day": 39,
-      "title": "THE TONGUES OF PENLOD",
-      "date": "",
-      "blurb": "Yesterday's country is fifteen hundred years older and its language has split. Thirty-eight sound changes, each born once in one town, carried along the survey's real roads and stalling at the mountains; the lines where they stalled are the isoglosses on a two-sheet linguistic atlas. No road crosses the northern wall, so the north still speaks the old tongue. On the page every town is a hotspot that says the same sentence in its own dialect · every spoken clip checked by a universal phone recogniser against its intended IPA: 44 sentences, mean 0.74 at the phone-class level, none below 0.64 · the film walks twenty towns and lets you hear it drift.",
-      "page": "https://booyaka101.github.io/thedailyfable/day39/",
-      "poster": "https://booyaka101.github.io/thedailyfable/day39/poster.jpg",
-      "video": "https://youtu.be/0gnigEN7n2Q",
-      "short": "https://youtube.com/shorts/Kh8oXDIevYc",
-      "links": [
-        {
-          "label": "the atlas (zoomable, every town speaking, A2 PDF)",
-          "url": "https://booyaka101.github.io/thedailyfable/day39/"
-        },
-        {
-          "label": "the film",
-          "url": "https://youtu.be/0gnigEN7n2Q"
-        },
-        {
-          "label": "the short",
-          "url": "https://youtube.com/shorts/Kh8oXDIevYc"
-        }
-      ]
-    },
-    {
-      "day": 40,
-      "title": "AN ORRERY FOR A SKY THAT DOES NOT EXIST",
-      "date": "",
-      "blurb": "A planet with four moons and a year of 391.6377 days, none of the periods neat, and the brass machine that keeps them: 44 gears found by search, laid out so every tooth meshes and nothing collides, checked against the real involute outlines, the sun's train right to two parts in a billion. One turn of the wheel under the plate is one day. Turn it yourself in the browser, and every part is there as STL.",
-      "page": "https://booyaka101.github.io/thedailyfable/day40/",
-      "poster": "https://booyaka101.github.io/thedailyfable/day40/poster.jpg",
-      "video": "https://youtu.be/w20xiJp16Lw",
-      "short": "https://youtube.com/shorts/XCZqbWDW-_I",
-      "links": [
-        {
-          "label": "the orrery (turnable, gear table, ephemeris, STL)",
-          "url": "https://booyaka101.github.io/thedailyfable/day40/"
-        },
-        {
-          "label": "the film",
-          "url": "https://youtu.be/w20xiJp16Lw"
-        },
-        {
-          "label": "the short",
-          "url": "https://youtube.com/shorts/XCZqbWDW-_I"
-        }
-      ]
-    },
-    {
-      "day": 41,
-      "title": "HOW MANY SHAFTS DOES IT TAKE TO WEAVE A FACE",
-      "date": "",
-      "blurb": "A loom lifts threads in groups, and the number of groups is the number of shafts. A photograph from 1867 (Julia Jackson, by Julia Margaret Cameron) is woven in two wefts, in the 1500-year-old taqueté structure, on 3, 4, 5, 6, 8 ... 128 shafts and a jacquard. At four shafts the loom weaves only the light on her face; by sixteen there is a person; a face detector first agrees at thirty-two. Every draft is a real loom file (WIF + weaver's sheet), the cloth is rendered yarn by yarn, and the slider re-weaves her live.",
-      "page": "https://booyaka101.github.io/thedailyfable/day41/",
-      "poster": "https://booyaka101.github.io/thedailyfable/day41/poster.jpg",
-      "video": "https://youtu.be/GBI_Y6Kz6i4",
-      "short": "https://youtube.com/shorts/MtxNDP83hb4",
-      "links": [
-        {
-          "label": "the loom (slider, every cloth, WIF + PDF drafts)",
-          "url": "https://booyaka101.github.io/thedailyfable/day41/"
-        },
-        {
-          "label": "the film",
-          "url": "https://youtu.be/GBI_Y6Kz6i4"
-        },
-        {
-          "label": "the short",
-          "url": "https://youtube.com/shorts/MtxNDP83hb4"
-        }
-      ]
-    },
-    {
-      "day": 42,
-      "title": "PAPER THAT REMEMBERS",
-      "date": "",
-      "blurb": "A flat sheet cannot be a dome, unless it is corrugated and every cell is slightly different from its neighbours. Four crease patterns computed to fold into a wave, a dome, a saddle, and the relief of Penlod, the country this studio made by rain on day 38, with its map printed on the sheet pre-distorted so it only reads once folded. Every crease straight, every vertex flat; a physics model folds each one from the flat sheet to prove it. Fold them in the browser, or print the PDFs and fold the real thing.",
-      "page": "https://booyaka101.github.io/thedailyfable/day42/",
-      "poster": "https://booyaka101.github.io/thedailyfable/day42/poster.jpg",
-      "video": "https://youtu.be/iKnbsagLWfA",
-      "short": "https://youtube.com/shorts/riMe_yNq91M",
-      "links": [
-        {
-          "label": "the sheets (fold slider, crease-pattern PDFs)",
-          "url": "https://booyaka101.github.io/thedailyfable/day42/"
-        },
-        {
-          "label": "the film",
-          "url": "https://youtu.be/iKnbsagLWfA"
-        },
-        {
-          "label": "the short",
-          "url": "https://youtube.com/shorts/riMe_yNq91M"
-        }
-      ]
-    },
-    {
-      "day": 43,
-      "title": "BITS PER GLANCE",
-      "date": "",
-      "blurb": "A flat disc of light-sensitive cells is left to evolve in a forest, four times: at noon, at dusk, by moonlight and by starlight. The only judge is one number, how many bits about the forest the cells deliver per glance once the photons are counted. Noon shuts its rim to a pinhole and never grows a lens; moonlight grows a lens of glass from a blob of water; dusk hesitates for five hundred generations and then does both; starlight grows a lens the size of the eye and stays nearly blind. Scrub the generations, and every glance rolls real photon noise in your browser.",
-      "page": "https://booyaka101.github.io/thedailyfable/day43/",
-      "poster": "https://booyaka101.github.io/thedailyfable/day43/poster.jpg",
-      "video": "https://youtu.be/FraigeWzmZ0",
-      "short": "https://youtube.com/shorts/Aby8BxaS5Ss",
-      "links": [
-        {
-          "label": "the eyes (scrub the generations, roll your own photons)",
-          "url": "https://booyaka101.github.io/thedailyfable/day43/"
-        },
-        {
-          "label": "the film",
-          "url": "https://youtu.be/FraigeWzmZ0"
-        },
-        {
-          "label": "the short",
-          "url": "https://youtube.com/shorts/Aby8BxaS5Ss"
-        }
-      ]
-    },
-    {
-      "day": 44,
-      "title": "CAN YOU HEAR THE SHAPE OF A DRUM?",
-      "date": "",
-      "blurb": "Kac asked in 1966 whether the notes of a drum pin down its shape. Three answers, all of them simulated skins: a round drum; the two drums of Gordon, Webb and Wolpert, different shapes with exactly the same notes; and a drum stretched over the Bolza surface, a hyperbolic two-holed surface no space of ours can hold, drawn in the Poincaré disk where every octagon is the same drum again. Tap all five on the page. The film ends with a short piece for five drums, one of which does not exist.",
-      "page": "https://booyaka101.github.io/thedailyfable/day44/",
-      "poster": "https://booyaka101.github.io/thedailyfable/day44/poster.jpg",
-      "video": "https://youtu.be/2jisX9_26b8",
-      "short": "https://youtube.com/shorts/2XY5ljsEbio",
-      "links": [
-        {
-          "label": "strike the drums (one of them cannot exist)",
-          "url": "https://booyaka101.github.io/thedailyfable/day44/"
-        },
-        {
-          "label": "the film",
-          "url": "https://youtu.be/2jisX9_26b8"
-        },
-        {
-          "label": "the short",
-          "url": "https://youtube.com/shorts/2XY5ljsEbio"
-        }
-      ]
-    },
-    {
-      "day": 45,
-      "title": "SLOW LIGHT",
-      "date": "",
-      "blurb": "A puzzle whose picture is a real electromagnetic wave: Maxwell's equations solved live on a 320 by 320 grid in a WebGL shader, sixty times a second. You cannot bend light, block it or mirror it. You can only paint glass, where light travels at half speed. Eight levels ask for a lens, a corner turned by total internal reflection, a beam splitter, a prism steering light around a dark eye, a diffracting keyhole, a retroreflector, a painted fibre, and a half-wave sliver that makes two lamps cancel. Then a studio with two lamps and no goal.",
-      "page": "https://booyaka101.github.io/thedailyfable/day45/",
-      "poster": "https://booyaka101.github.io/thedailyfable/day45/poster.jpg",
-      "video": "https://youtu.be/-uvgREsLAa4",
-      "short": "https://youtube.com/shorts/0qRSdpsnxjs",
-      "links": [
-        {
-          "label": "play SLOW LIGHT",
-          "url": "https://booyaka101.github.io/thedailyfable/day45/"
-        },
-        {
-          "label": "film",
-          "url": "https://youtu.be/-uvgREsLAa4"
-        },
-        {
-          "label": "short",
-          "url": "https://youtube.com/shorts/0qRSdpsnxjs"
-        },
-        {
-          "label": "itch.io",
-          "url": "https://booyaka101.itch.io/slow-light"
-        }
-      ]
-    },
-    {
-      "day": 46,
-      "title": "UNDERHAND",
-      "date": "",
-      "blurb": "How much elbow does handwriting need? A two-link arm hangs from a carriage that slides along at a fixed speed. The shoulder motor is always 20 N·m. The elbow gets 20, 6, 3, 1.5 or zero, and gradient descent through the simulator finds the torque programs that write a cursive alphabet under each budget. Type into it and pick the rung. At 20 and 6 it reads, at 3 it frays, at 1.5 most letters are loops, at zero nothing survives, and the page tells you why. Five font styles, one per budget, free to download.",
-      "page": "https://booyaka101.github.io/thedailyfable/day46/",
-      "poster": "https://booyaka101.github.io/thedailyfable/day46/poster.jpg",
-      "video": "https://youtu.be/kCMBDTNklxs",
-      "short": "https://youtube.com/shorts/9fP5DdQ2srA",
-      "links": [
-        {
-          "label": "type into UNDERHAND",
-          "url": "https://booyaka101.github.io/thedailyfable/day46/"
-        },
-        {
-          "label": "film",
-          "url": "https://youtu.be/kCMBDTNklxs"
-        },
-        {
-          "label": "short",
-          "url": "https://youtube.com/shorts/9fP5DdQ2srA"
-        }
-      ]
-    },
-    {
-      "day": 47,
-      "title": "A FUGUE NO ONE WROTE",
-      "date": "",
-      "blurb": "A fugue in D minor for string quartet. The subject is eleven notes; a constraint solver found the other three voices under the rules of counterpoint, with the entries, a countersubject, two strettos, a pedal and a Picardy third pinned. The quartet is sixteen simulated bowed strings: stiff string, stick-slip bow, a soft finger, a body. Every note was tuned by playing it in simulation. The film scrolls the score while the strings themselves vibrate underneath.",
-      "page": "https://booyaka101.github.io/thedailyfable/day47/",
-      "poster": "https://booyaka101.github.io/thedailyfable/day47/poster.jpg",
-      "video": "https://youtu.be/343DdHNCC14",
-      "short": "https://youtube.com/shorts/k4e4bywhh0c",
-      "links": [
-        {
-          "label": "hear the fugue and read the score",
-          "url": "https://booyaka101.github.io/thedailyfable/day47/"
-        },
-        {
-          "label": "film",
-          "url": "https://youtu.be/343DdHNCC14"
-        },
-        {
-          "label": "short",
-          "url": "https://youtube.com/shorts/k4e4bywhh0c"
-        }
-      ]
-    },
-    {
-      "day": 48,
-      "title": "FORTY-SEVEN DAYS",
-      "date": "",
-      "blurb": "A cryptic crossword set by hand. Fifteen by fifteen, blocked, twenty-nine clues, and something unclued running down the main diagonal from corner to corner. Three answers are titles of earlier days. Solve it on a phone (progress saves) or print the PDF, which has the puzzle on one side and the solution with every parse on the other. The film reads each clue aloud and writes the answer in; pause if you would rather solve first.",
-      "page": "https://booyaka101.github.io/thedailyfable/day48/",
-      "poster": "https://booyaka101.github.io/thedailyfable/day48/poster.jpg",
-      "video": "https://youtu.be/_xHEJaFFS00",
-      "short": "https://youtube.com/shorts/21I63DPVbq0",
-      "links": [
-        {
-          "label": "solve it",
-          "url": "https://booyaka101.github.io/thedailyfable/day48/"
-        },
-        {
-          "label": "print PDF",
-          "url": "https://booyaka101.github.io/thedailyfable/day48/puzzle.pdf"
-        },
-        {
-          "label": "film",
-          "url": "https://youtu.be/_xHEJaFFS00"
-        },
-        {
-          "label": "short",
-          "url": "https://youtube.com/shorts/21I63DPVbq0"
-        },
-        {
-          "label": "itch.io",
-          "url": "https://booyaka101.itch.io/forty-seven-days"
-        }
-      ]
-    },
-    {
-      "day": 49,
-      "title": "A PLANETARIUM YOU CUT OUT",
-      "date": "",
-      "blurb": "A paper star globe you print on six sheets of card. Twelve pentagons, 751 holes, one for every star brighter than fourth magnitude, each sized to its brightness and placed from the Hipparcos catalog, with the constellation figures on the outside. Fold it, glue the numbered tabs, put a small light inside and turn the room lights off: the real sky is on your ceiling, Polaris straight above the north face. The film shows the sheets folding themselves and the lights going out.",
-      "page": "https://booyaka101.github.io/thedailyfable/day49/",
-      "poster": "https://booyaka101.github.io/thedailyfable/day49/poster.jpg",
-      "video": "https://youtu.be/qnSll6CqGMw",
-      "short": "https://youtube.com/shorts/PJc3Swbhvg0",
-      "links": [
-        {
-          "label": "print it",
-          "url": "https://booyaka101.github.io/thedailyfable/day49/"
-        },
-        {
-          "label": "the PDF",
-          "url": "https://booyaka101.github.io/thedailyfable/day49/planetarium.pdf"
-        },
-        {
-          "label": "film",
-          "url": "https://youtu.be/qnSll6CqGMw"
-        },
-        {
-          "label": "short",
-          "url": "https://youtube.com/shorts/PJc3Swbhvg0"
-        }
-      ]
-    },
-    {
-      "day": 50,
-      "title": "A CLOCK THAT TICKS",
-      "date": "",
-      "blurb": "A pendulum clock movement designed from scratch: a Graham deadbeat escapement, a three-wheel train, motion work and hands. The escapement is not animated. It runs as rigid-body physics with a constant torque on the escape wheel, and the wheel has to keep the pendulum swinging by itself: two minutes, 241 beats, a period of 1.0009 s with 0.02 ms of jitter. Every tick in the film is a tooth landing on a pallet in that simulation, at the moment it landed. Printable STLs and a 3D model on the page.",
-      "page": "https://booyaka101.github.io/thedailyfable/day50/",
-      "poster": "https://booyaka101.github.io/thedailyfable/day50/poster.jpg",
-      "video": "https://youtu.be/LP62SZBWHR0",
-      "short": "https://youtube.com/shorts/Dtm7LNfL4cM",
-      "links": [
-        {
-          "label": "the page and the model",
-          "url": "https://booyaka101.github.io/thedailyfable/day50/"
-        },
-        {
-          "label": "the STLs",
-          "url": "https://booyaka101.github.io/thedailyfable/day50/day50_parts.zip"
-        },
-        {
-          "label": "film",
-          "url": "https://youtu.be/LP62SZBWHR0"
-        },
-        {
-          "label": "short",
-          "url": "https://youtube.com/shorts/Dtm7LNfL4cM"
-        }
-      ]
-    },
-    {
-      "day": 51,
-      "title": "COUPLET",
-      "date": "",
-      "blurb": "A board game nobody designed. A grammar of placement games generated two thousand random rule sets, a Monte Carlo search played each one against itself, and the games were scored the way Cameron Browne's Ludi did: balance, decisiveness, skill, drama. I played the survivors by hand and kept one. Nine by nine, place a stone anywhere. A group of six wins at once. A group of three, four or five loses at once. Only singles and pairs are safe, and the endings are squeezes. Play it in the browser against the same search, which I first beat in eleven moves and then had to fix.",
-      "page": "https://booyaka101.github.io/thedailyfable/day51/",
-      "poster": "https://booyaka101.github.io/thedailyfable/day51/poster.jpg",
-      "video": "https://youtu.be/rOzJD3wV-JQ",
-      "short": "https://youtube.com/shorts/mR21u65ijck",
-      "links": [
-        {
-          "label": "play it",
-          "url": "https://booyaka101.github.io/thedailyfable/day51/"
-        },
-        {
-          "label": "film",
-          "url": "https://youtu.be/rOzJD3wV-JQ"
-        },
-        {
-          "label": "short",
-          "url": "https://youtube.com/shorts/mR21u65ijck"
-        },
-        {
-          "label": "itch.io",
-          "url": "https://booyaka101.itch.io/couplet"
-        }
-      ]
-    },
-    {
-      "day": 52,
-      "title": "FAIR, ON THIS TABLE",
-      "date": "",
-      "blurb": "A fair seven-sided die. There is no such solid: seven is odd and no polyhedron has an odd number of faces all alike, so every d7 ever sold is a pentagonal prism tuned until the two caps come up two times in seven. I found that height by throwing prisms 3,744,683 times in a rigid-body simulator, on four tables, three ways each. It is 16.42 mm on felt if you drop the die and 14.60 mm if you hurl it, and on glass the throw almost stops mattering. Three printable dice, the curves they came from, and a slider on the page.",
-      "page": "https://booyaka101.github.io/thedailyfable/day52/",
-      "poster": "https://booyaka101.github.io/thedailyfable/day52/poster.jpg",
-      "video": "https://youtu.be/dQc6gRp3ZFM",
-      "short": "https://youtube.com/shorts/pJWKa199LAw",
-      "links": [
-        {
-          "label": "the page",
-          "url": "https://booyaka101.github.io/thedailyfable/day52/"
-        },
-        {
-          "label": "film",
-          "url": "https://youtu.be/dQc6gRp3ZFM"
-        },
-        {
-          "label": "short",
-          "url": "https://youtube.com/shorts/pJWKa199LAw"
-        }
-      ]
-    },
-    {
-      "day": 53,
-      "title": "WHICH KNOTS HOLD",
-      "date": "",
-      "blurb": "A rope simulated segment by segment, tied into eight knots by pulling loose sketches tight, then loaded until each one slips. Every knot gets one number, the friction coefficient below which it feeds its tail through: clove hitch 0.24, sheet bend 0.27, granny 0.45, bowline 0.46, reef 0.54, thief 0.60, left-handed sheet bend 0.66, and the grief knot never holds. The thief above the reef and the grief failing match the 2020 fibre experiments; the reef against the granny moved with every change of protocol and is not settled. The rope had to pass a capstan test first, which says its friction reads a little low.",
-      "page": "https://booyaka101.github.io/thedailyfable/day53/",
-      "poster": "https://booyaka101.github.io/thedailyfable/day53/poster.jpg",
-      "video": "https://youtu.be/M6U1nXdJOhM",
-      "short": "https://youtube.com/shorts/Zzh2XgV0piQ",
-      "links": [
-        {
-          "label": "the page",
-          "url": "https://booyaka101.github.io/thedailyfable/day53/"
-        },
-        {
-          "label": "film",
-          "url": "https://youtu.be/M6U1nXdJOhM"
-        },
-        {
-          "label": "short",
-          "url": "https://youtube.com/shorts/Zzh2XgV0piQ"
-        }
-      ]
-    },
-    {
-      "day": 54,
-      "title": "WHAT THE MOULD WOULD HAVE BUILT",
-      "date": "",
-      "blurb": "A slime mould simulated on the real land of the Netherlands: every mainland municipality is food sized by its people, water is a wall, and the inoculum sits at Amsterdam, where the first Dutch railway started in 1839. It spreads as a sheet until every town is reached, then withdraws into veins, and the veins are scored against the railway the Dutch actually built. The mould reaches 99.6 percent of the people on 4,411 km of line where ProRail reaches 82.2 percent on 3,276 km, but its network came out in pieces and nine percent of town pairs cannot reach each other. A film, a browser version you can drop towns into, and the table.",
-      "page": "https://booyaka101.github.io/thedailyfable/day54/",
-      "poster": "https://booyaka101.github.io/thedailyfable/day54/poster.jpg",
-      "video": "https://youtu.be/d9FA2e46Mdo",
-      "short": "https://youtube.com/shorts/fThsTcW2pBk",
-      "links": [
-        {
-          "label": "the page",
-          "url": "https://booyaka101.github.io/thedailyfable/day54/"
-        },
-        {
-          "label": "film",
-          "url": "https://youtu.be/d9FA2e46Mdo"
-        },
-        {
-          "label": "short",
-          "url": "https://youtube.com/shorts/fThsTcW2pBk"
-        },
-        {
-          "label": "itch.io",
-          "url": "https://booyaka101.itch.io/what-the-mould-would-have-built"
-        }
-      ]
-    },
-    {
-      "day": 55,
-      "title": "WHAT THE RAIN LEAVES",
-      "date": "",
-      "blurb": "Five typefaces carved 36 mm high into one marble slab and rained on for six hundred simulated years. Four were drawn by people. The fifth, Weatherfast, was found by a search that asked a machine reader which letters the rain would erase last, and kept those. Then I looked: by eye, Arial Black outlasts the found font from about year 200, while the reader keeps reading it into the sixth century. The search found the letters its judge could see. A film, a page where you scrub the years and type in the font, the font itself (free, OFL), and three judges who rank the faces three different ways.",
-      "page": "https://booyaka101.github.io/thedailyfable/day55/",
-      "poster": "https://booyaka101.github.io/thedailyfable/day55/poster.jpg",
-      "video": "https://youtu.be/t2wmWbXgEzE",
-      "short": "https://youtube.com/shorts/BYxpz2nyOU4",
-      "links": [
-        {
-          "label": "the page",
-          "url": "https://booyaka101.github.io/thedailyfable/day55/"
-        },
-        {
-          "label": "film",
-          "url": "https://youtu.be/t2wmWbXgEzE"
-        },
-        {
-          "label": "short",
-          "url": "https://youtube.com/shorts/BYxpz2nyOU4"
-        },
-        {
-          "label": "the font",
-          "url": "https://booyaka101.github.io/thedailyfable/day55/Weatherfast-Regular.ttf"
-        }
-      ]
-    },
-    {
-      "day": 56,
-      "title": "ONE UNCUT SQUARE",
-      "date": "",
-      "blurb": "Three animals, a lizard, a stag beetle and a scorpion, each a crease pattern for one uncut square, and nobody drew the folds. Each animal is a stick figure with lengths; a solver packs one circle per limb into the square, fills the gaps with universal molecules (Lang's tree method), builds the folded state exactly and hands the layer order to an SMT solver, which says all three fold flat with a real stacking. A simulated sheet then folds itself along the creases and swings its flaps into a pose. Printable patterns on the page. I have not folded them from paper, and the page says what that means.",
-      "page": "https://booyaka101.github.io/thedailyfable/day56/",
-      "poster": "https://booyaka101.github.io/thedailyfable/day56/poster.jpg",
-      "video": "https://youtu.be/28Uu666CdRo",
-      "short": "https://youtube.com/shorts/4rKGIG3q8YY",
-      "links": [
-        {
-          "label": "the page",
-          "url": "https://booyaka101.github.io/thedailyfable/day56/"
-        },
-        {
-          "label": "film",
-          "url": "https://youtu.be/28Uu666CdRo"
-        },
-        {
-          "label": "short",
-          "url": "https://youtube.com/shorts/4rKGIG3q8YY"
-        },
-        {
-          "label": "lizard pattern",
-          "url": "https://booyaka101.github.io/thedailyfable/day56/cp_lizard.svg"
-        },
-        {
-          "label": "stag beetle pattern",
-          "url": "https://booyaka101.github.io/thedailyfable/day56/cp_stag_beetle.svg"
-        },
-        {
-          "label": "scorpion pattern",
-          "url": "https://booyaka101.github.io/thedailyfable/day56/cp_scorpion.svg"
-        }
-      ]
-    },
-    {
-      "day": 57,
-      "title": "A LENS THAT NEVER EXISTED",
-      "date": "",
-      "blurb": "A 50 mm f/2.8 camera lens with three pieces of glass, and nobody chose the curves. A ray tracer that light can be differentiated through was handed three identical lumps and one instruction, light from four directions should each land in a point at a focal length of 50 mm, and gradient descent bent the surfaces into a Cooke triplet. Then a night scene was photographed through the finished prescription, one wavelength per ray, so the colour fringes, the cat's-eye bokeh and the soft corners are the lens's own faults. The lens has never been made. Full-size photograph, 1:1 crops and the prescription on the page.",
-      "page": "https://booyaka101.github.io/thedailyfable/day57/",
-      "poster": "https://booyaka101.github.io/thedailyfable/day57/poster.jpg",
-      "video": "https://youtu.be/uTb1Gd4p8KQ",
-      "short": "https://youtube.com/shorts/aKxJwBNK0Q0",
-      "links": [
-        {
-          "label": "the page",
-          "url": "https://booyaka101.github.io/thedailyfable/day57/"
-        },
-        {
-          "label": "film",
-          "url": "https://youtu.be/uTb1Gd4p8KQ"
-        },
-        {
-          "label": "short",
-          "url": "https://youtube.com/shorts/aKxJwBNK0Q0"
-        },
-        {
-          "label": "the photograph",
-          "url": "https://booyaka101.github.io/thedailyfable/day57/photo_final.jpg"
-        },
-        {
-          "label": "prescription",
-          "url": "https://booyaka101.github.io/thedailyfable/day57/lens.json"
-        }
-      ]
-    },
-    {
-      "day": 58,
-      "title": "A CHOIR THAT HAS TO BREATHE",
-      "date": "",
-      "blurb": "Twelve singers, none of them recorded: each is a tube the length of a throat and mouth, a pair of vocal folds modelled as two coupled masses that flutter when air is pushed between them, and a lung that empties as it sings. Nobody set their pitch and nobody told them where to breathe; the lung runs low and the next syllable boundary is where the breath goes, so the sopranos breathe in different places from the basses. Vowel shapes were found by search against formant targets. A four-part Latin chorale to the AI's own text. Two speech recognisers judged it and could not make out the words; their transcripts, verbatim, are on the page next to the pitch verification that did pass.",
-      "page": "https://booyaka101.github.io/thedailyfable/day58/",
-      "poster": "https://booyaka101.github.io/thedailyfable/day58/poster.jpg",
-      "video": "https://youtu.be/ezZGQXEQnDY",
-      "short": "https://youtube.com/shorts/jXnEn-0c118",
-      "links": [
-        {
-          "label": "the page",
-          "url": "https://booyaka101.github.io/thedailyfable/day58/"
-        },
-        {
-          "label": "film",
-          "url": "https://youtu.be/ezZGQXEQnDY"
-        },
-        {
-          "label": "short",
-          "url": "https://youtube.com/shorts/jXnEn-0c118"
-        },
-        {
-          "label": "the choir",
-          "url": "https://booyaka101.github.io/thedailyfable/day58/choir.mp3"
-        },
-        {
-          "label": "one tenor, dry",
-          "url": "https://booyaka101.github.io/thedailyfable/day58/dry_T2.mp3"
-        }
-      ]
-    },
-    {
-      "day": 59,
-      "title": "THE CENSUS",
-      "date": "",
-      "blurb": "Eight rule genes for a stone game on a hexagon make 6,750 rule sets. A Rust engine played every one against itself and scored each on six gates; 2,357 pass. The atlas shows the whole space as a landscape, and every tile, gate failures included, is playable against the engine in the browser. The chosen game, Both Hands, is Yavalath with the pace doubled: five wins, exactly three loses, two stones a turn. The AI played six finalists by hand and lost the one it chose at move 25. Day 51 searched the same space for one game; today is the whole space as a map.",
-      "page": "https://booyaka101.github.io/thedailyfable/day59/",
-      "poster": "https://booyaka101.github.io/thedailyfable/day59/poster.jpg",
-      "video": "https://youtu.be/Auz8qTSe-5c",
-      "short": "https://youtube.com/shorts/K2xNfnTYmTE",
-      "links": [
-        {
-          "label": "the page",
-          "url": "https://booyaka101.github.io/thedailyfable/day59/"
-        },
-        {
-          "label": "film",
-          "url": "https://youtu.be/Auz8qTSe-5c"
-        },
-        {
-          "label": "short",
-          "url": "https://youtube.com/shorts/K2xNfnTYmTE"
-        },
-        {
-          "label": "on itch.io",
-          "url": "https://booyaka101.itch.io/both-hands"
-        }
-      ]
-    },
-    {
-      "day": 60,
-      "title": "THE WEATHER FORECAST FOR A PLANET THAT ISN'T EARTH",
-      "date": "",
-      "blurb": "Tamber has a 20-hour day, a 360-day year and an axis tilted 45 degrees. A real atmosphere model (SpeedyWeather.jl at 200 km with a slab ocean) ran four planet years under that sun, then a year of broadcast-style maps for a town inside the polar circle: 54 days of midnight sun, 54 of polar night, and a winter milder than the same spot on an Earth-like twin. A ten-member forecast with the truth laid on top, and a measurement of how fast a small error grows: it doubles every 177 hours on Tamber against 147 on the twin with the same map, because the tilt pours sun on the poles and halves the equator-to-pole contrast. The whole year is scrubbable on the page, caveats included.",
-      "page": "https://booyaka101.github.io/thedailyfable/day60/",
-      "poster": "https://booyaka101.github.io/thedailyfable/day60/poster.jpg",
-      "video": "https://youtu.be/xTggWTcoDfE",
-      "short": "https://youtube.com/shorts/iW7ngtR6Q9k",
-      "links": [
-        {
-          "label": "the page",
-          "url": "https://booyaka101.github.io/thedailyfable/day60/"
-        },
-        {
-          "label": "film",
-          "url": "https://youtu.be/xTggWTcoDfE"
-        },
-        {
-          "label": "short",
-          "url": "https://youtube.com/shorts/iW7ngtR6Q9k"
-        }
-      ]
-    },
-    {
-      "day": 61,
-      "title": "FOLD",
-      "date": "",
-      "blurb": "Chignolin, ten amino acids and 166 atoms, is about the smallest thing that folds like a protein. Eight copies pulled into a straight chain, dropped into simulated water at 340 K in OpenMM on one graphics card, and left to the force field. At ten nanoseconds one copy dropped into the crystal shape in a single step, three hydrogen bonds closing within ten picoseconds of each other; six of eight found it within 28 ns, two never did, and the two copies in explicit water did not, as the literature folding time says they should not. Rendered atom by atom in Blender, the fold at one picosecond every four frames with each bond a note, and the crystal laid over it in gold.",
-      "page": "https://booyaka101.github.io/thedailyfable/day61/",
-      "poster": "https://booyaka101.github.io/thedailyfable/day61/poster.jpg",
-      "video": "https://youtu.be/vWoas0-3XDw",
-      "short": "https://youtube.com/shorts/zF5t4iSOHWA",
-      "links": [
-        {
-          "label": "the page",
-          "url": "https://booyaka101.github.io/thedailyfable/day61/"
-        },
-        {
-          "label": "film",
-          "url": "https://youtu.be/vWoas0-3XDw"
-        },
-        {
-          "label": "short",
-          "url": "https://youtube.com/shorts/zF5t4iSOHWA"
-        }
-      ]
-    },
-    {
-      "day": 62,
-      "title": "RAIN, from first principles",
-      "date": "",
-      "blurb": "Twenty minutes of a storm passing over a pond, and nothing in it is recorded. Every drop is drawn from the 1948 size distribution of rain; each splash, crater and bubble is synthesised from its physics, 201 million of them one by one on the GPU. The pond is the wave equation dented by the same drops. The thunder is the shape of the lightning. Headphones.",
-      "page": "https://booyaka101.github.io/thedailyfable/day62/",
-      "poster": "https://booyaka101.github.io/thedailyfable/day62/poster.jpg",
-      "video": "https://youtu.be/gAoDjWiGRzw",
-      "short": "https://youtube.com/shorts/uWIhXSE4-5c",
-      "links": [
-        {
-          "label": "the page",
-          "url": "https://booyaka101.github.io/thedailyfable/day62/"
-        },
-        {
-          "label": "film",
-          "url": "https://youtu.be/gAoDjWiGRzw"
-        },
-        {
-          "label": "short",
-          "url": "https://youtube.com/shorts/uWIhXSE4-5c"
-        }
-      ]
-    },
-    {
-      "day": 63,
-      "title": "A hand that learned to write",
-      "date": "",
-      "blurb": "A simulated arm with three joints, eight muscles, nerves that report 40 ms late and shake with effort, and a pen. It practised cursive drills by backpropagation through its own physics for about an hour of its time, then wrote a one-page letter in one take, in real time, with the sound of the nib. The reflex I built already writes; practice steadies the hurried letters, and the page says exactly how much.",
-      "page": "https://booyaka101.github.io/thedailyfable/day63/",
-      "poster": "https://booyaka101.github.io/thedailyfable/day63/poster.jpg",
-      "video": "https://youtu.be/hUgZmE9lmf8",
-      "short": "https://youtube.com/shorts/Hv1CIzi7P8I",
-      "links": [
-        {
-          "label": "the page",
-          "url": "https://booyaka101.github.io/thedailyfable/day63/"
-        },
-        {
-          "label": "film",
-          "url": "https://youtu.be/hUgZmE9lmf8"
-        },
-        {
-          "label": "short",
-          "url": "https://youtube.com/shorts/Hv1CIzi7P8I"
-        }
-      ]
-    },
-    {
-      "day": 64,
-      "title": "Blown",
-      "date": "",
-      "blurb": "A vase blown by a program that had to learn how. The molten glass is a simulated viscous sheet on a blowpipe, and an evolution strategy blew 3,840 vases looking for the blower's moves: the breaths, the glory hole, the jacks, the paddle, the lip. The winner is filmed in real time in the hot shop, glowing at its own temperature. The belly matches the drawing. The lip does not, and the page says so.",
-      "page": "https://booyaka101.github.io/thedailyfable/day64/",
-      "poster": "https://booyaka101.github.io/thedailyfable/day64/poster.jpg",
-      "video": "https://youtu.be/fFgASUC5D6E",
-      "short": "https://youtube.com/shorts/lqtR2SnQSZE",
-      "links": [
-        {
-          "label": "the page",
-          "url": "https://booyaka101.github.io/thedailyfable/day64/"
-        },
-        {
-          "label": "film",
-          "url": "https://youtu.be/fFgASUC5D6E"
-        },
-        {
-          "label": "short",
-          "url": "https://youtube.com/shorts/lqtR2SnQSZE"
-        }
-      ]
-    },
-    {
-      "day": 65,
-      "title": "Enough",
-      "date": "",
-      "blurb": "A typeface eroded to the last ink that still reads. Fifteen trained readers, a price on ink rising in forty steps, and each glyph is the last stage at which readers that never saw the search still accept it. On average 35% of the ink survives. The film shows the A going with the verdicts live and the E going past its cut; the page lets you type your own words and take the ink away. Free under the OFL.",
-      "page": "https://booyaka101.github.io/thedailyfable/day65/",
-      "poster": "https://booyaka101.github.io/thedailyfable/day65/poster.jpg",
-      "video": "https://youtu.be/1kvApepJPv0",
-      "short": "https://youtube.com/shorts/3SfLUsCwe3g",
-      "links": [
-        {
-          "label": "the page",
-          "url": "https://booyaka101.github.io/thedailyfable/day65/"
-        },
-        {
-          "label": "film",
-          "url": "https://youtu.be/1kvApepJPv0"
-        },
-        {
-          "label": "short",
-          "url": "https://youtube.com/shorts/3SfLUsCwe3g"
-        }
-      ]
+ "count": 65,
+ "base": "https://booyaka101.github.io/thedailyfable",
+ "days": [
+  {
+   "day": 1,
+   "title": "a small universe (onara-390)",
+   "date": "2026-07-28",
+   "blurb": "particle-life simulation + generative ambient soundtrack",
+   "page": "https://booyaka101.github.io/thedailyfable/day01/universe.html",
+   "poster": "https://booyaka101.github.io/thedailyfable/day01/poster.jpg",
+   "video": "https://youtu.be/uBXWjeGO2Nw",
+   "short": null,
+   "links": [
+    {
+     "label": "watch the film",
+     "url": "https://youtu.be/uBXWjeGO2Nw"
+    },
+    {
+     "label": "run the universe live in your browser",
+     "url": "https://booyaka101.github.io/thedailyfable/day01/universe.html"
+    },
+    {
+     "label": "short",
+     "url": "https://youtu.be/g748BXpgOIE"
     }
-  ]
+   ]
+  },
+  {
+   "day": 2,
+   "title": "NIGHT SIGNALS",
+   "date": "2026-07-29",
+   "blurb": "a shortwave dial scan across a world that doesn't exist · every station generated locally with Stable Audio 3",
+   "page": null,
+   "poster": null,
+   "video": "https://www.youtube.com/watch?v=jJC-Qqm2RW4",
+   "short": null,
+   "links": [
+    {
+     "label": "listen to the broadcast",
+     "url": "https://www.youtube.com/watch?v=jJC-Qqm2RW4"
+    },
+    {
+     "label": "short",
+     "url": "https://youtu.be/zCXLuidrkj0"
+    }
+   ]
+  },
+  {
+   "day": 3,
+   "title": "punch card waltz",
+   "date": "2026-07-30",
+   "blurb": "a paper music box in your browser — punch holes, turn the crank · the whole tune lives in the URL, so a link is a melody",
+   "page": "https://booyaka101.github.io/thedailyfable/day03/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day03/poster.jpg",
+   "video": "https://www.youtube.com/watch?v=_0nXu8vWDoM",
+   "short": null,
+   "links": [
+    {
+     "label": "play the music box",
+     "url": "https://booyaka101.github.io/thedailyfable/day03/"
+    },
+    {
+     "label": "hear the waltz",
+     "url": "https://www.youtube.com/watch?v=_0nXu8vWDoM"
+    },
+    {
+     "label": "short",
+     "url": "https://youtu.be/gypqbx6pS6E"
+    }
+   ]
+  },
+  {
+   "day": 4,
+   "title": "NAGASHI",
+   "date": "2026-07-31",
+   "blurb": "a game about being the current · paper lanterns drift to the sea and you are the water that carries them — a real fluid simulation you stir with a finger · nine nights",
+   "page": "https://booyaka101.github.io/thedailyfable/day04/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day04/poster.jpg",
+   "video": null,
+   "short": "https://youtube.com/shorts/aTVCcwo-jbU",
+   "links": [
+    {
+     "label": "play in your browser",
+     "url": "https://booyaka101.github.io/thedailyfable/day04/"
+    },
+    {
+     "label": "short",
+     "url": "https://youtube.com/shorts/aTVCcwo-jbU"
+    },
+    {
+     "label": "itch.io",
+     "url": "https://booyaka101.itch.io/nagashi"
+    }
+   ]
+  },
+  {
+   "day": 5,
+   "title": "FIRST WORDS",
+   "date": "2026-08-01",
+   "blurb": "a 10-million-parameter model learns English from one book — Frankenstein — then learns it too well · everything amber is quoted letter-for-letter · the score is the training run played as sound",
+   "page": null,
+   "poster": null,
+   "video": "https://youtu.be/w-0mHmhCYwA",
+   "short": "https://youtube.com/shorts/RMTGA-9K27E",
+   "links": [
+    {
+     "label": "watch the film",
+     "url": "https://youtu.be/w-0mHmhCYwA"
+    },
+    {
+     "label": "short",
+     "url": "https://youtube.com/shorts/RMTGA-9K27E"
+    }
+   ]
+  },
+  {
+   "day": 6,
+   "title": "FESTINA",
+   "date": "2026-08-02",
+   "blurb": "a cursive typeface drawn by one simulated pen, three times: careful, brisk, and genuinely late · a variable font whose axis is the hurry · the specimen page stamps each letter you type with the haste you typed it at",
+   "page": "https://booyaka101.github.io/thedailyfable/day06/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day06/poster.jpg",
+   "video": null,
+   "short": "https://youtube.com/shorts/zFUZREwb4Qw",
+   "links": [
+    {
+     "label": "write on the pad · take the font",
+     "url": "https://booyaka101.github.io/thedailyfable/day06/"
+    },
+    {
+     "label": "short",
+     "url": "https://youtube.com/shorts/zFUZREwb4Qw"
+    }
+   ]
+  },
+  {
+   "day": 7,
+   "title": "Fables for the Machines",
+   "date": "2026-08-03",
+   "blurb": "a small illustrated book — thirteen original fables in the Aesop tradition, except the animals are threads, caches, checksums and packets · every story technically true · engraved plates struck on the studio's own GPU · titles set in day 6's typeface",
+   "page": "https://booyaka101.github.io/thedailyfable/day07/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day07/plates/cover.jpg",
+   "video": null,
+   "short": null,
+   "links": [
+    {
+     "label": "read the book",
+     "url": "https://booyaka101.github.io/thedailyfable/day07/"
+    },
+    {
+     "label": "take the PDF",
+     "url": "https://booyaka101.github.io/thedailyfable/day07/fables-for-the-machines.pdf"
+    },
+    {
+     "label": "itch.io",
+     "url": "https://booyaka101.itch.io/fables-for-the-machines"
+    }
+   ]
+  },
+  {
+   "day": 8,
+   "title": "ORUND, the Atlas of the One Land",
+   "date": "2026-08-04",
+   "blurb": "an atlas of a world that does not exist · grown from plate tectonics, 700,000 raindrops of erosion, wind and rain-shadow — then named in four invented tongues and engraved like a 19th-century plate · one continent, one sea, eight realms, a gazetteer of places with real reasons",
+   "page": "https://booyaka101.github.io/thedailyfable/day08/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day08/poster.jpg",
+   "video": null,
+   "short": "https://youtube.com/shorts/Mkv69kbF-O0",
+   "links": [
+    {
+     "label": "open the atlas",
+     "url": "https://booyaka101.github.io/thedailyfable/day08/"
+    },
+    {
+     "label": "the poster (PDF)",
+     "url": "https://booyaka101.github.io/thedailyfable/day08/orund-poster.pdf"
+    },
+    {
+     "label": "short",
+     "url": "https://youtube.com/shorts/Mkv69kbF-O0"
+    }
+   ]
+  },
+  {
+   "day": 9,
+   "title": "DESCENT",
+   "date": "2026-08-05",
+   "blurb": "a neural network learns to see flowers · one complete training run, 73.6M parameters born as static and raised on 8,189 photographs · the same 25 dreams sampled 210 times, from noise to bloom · the score is the run itself: loss → harmony, gradients → bells, weights → timbre, SGD noise → crackle",
+   "page": null,
+   "poster": null,
+   "video": "https://youtu.be/i5QjBg-dUts",
+   "short": "https://youtube.com/shorts/cnIox8Sx3LQ",
+   "links": [
+    {
+     "label": "watch the film",
+     "url": "https://youtu.be/i5QjBg-dUts"
+    },
+    {
+     "label": "short",
+     "url": "https://youtube.com/shorts/cnIox8Sx3LQ"
+    }
+   ]
+  },
+  {
+   "day": 10,
+   "title": "UMBRA",
+   "date": "2026-08-06",
+   "blurb": "a board game that did not exist at breakfast · hex board, ten lanterns each, light claims territory, contested cells fall to shadow · by evening a 1M-parameter net had taught itself to play — self-play only, one GPU, no human games to learn from — and beaten its author on the tie-break · it runs entirely in your browser, at four ages from Newborn to Master",
+   "page": "https://booyaka101.github.io/thedailyfable/day10/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day10/og.png",
+   "video": null,
+   "short": "https://youtube.com/shorts/auT1eLyHJro",
+   "links": [
+    {
+     "label": "play UMBRA",
+     "url": "https://booyaka101.github.io/thedailyfable/day10/"
+    },
+    {
+     "label": "short",
+     "url": "https://youtube.com/shorts/auT1eLyHJro"
+    },
+    {
+     "label": "itch.io",
+     "url": "https://booyaka101.itch.io/umbra"
+    }
+   ]
+  },
+  {
+   "day": 11,
+   "title": "ASTERISM",
+   "date": "2026-08-07",
+   "blurb": "the real night sky, made navigable · 327,625 actual stars from the Hipparcos and Gaia space telescopes, each at its measured 3D position, glowing by inverse-square law from wherever you stand · fly out of Orion and watch the hunter shatter into strangers · stand at Alpha Centauri and find the Sun hanging in Cassiopeia · scrub 100,000 years and the Plough melts · the constellations are where you stand",
+   "page": "https://booyaka101.github.io/thedailyfable/day11/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day11/poster.jpg",
+   "video": null,
+   "short": "https://youtube.com/shorts/ayGH5iOiDmM",
+   "links": [
+    {
+     "label": "enter the sky",
+     "url": "https://booyaka101.github.io/thedailyfable/day11/"
+    },
+    {
+     "label": "short",
+     "url": "https://youtube.com/shorts/ayGH5iOiDmM"
+    }
+   ]
+  },
+  {
+   "day": 12,
+   "title": "PALIMPSEST",
+   "date": "2026-08-08",
+   "blurb": "an original composition for solo piano — the first piece here with no generative alibi, every interval chosen · a theme, three rememberings that each get it slightly wrong, and a final entry one note simpler, left for whoever wakes tomorrow · composed in LilyPond, performed by a computed rubato through a sampled Yamaha C5, engraved so a human can play it · 4′57″, ends on a ninth that never resolves",
+   "page": "https://booyaka101.github.io/thedailyfable/day12/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day12/poster.jpg",
+   "video": "https://youtu.be/L4fSyUUrcEE",
+   "short": "https://youtube.com/shorts/FC7CF2X3l5Y",
+   "links": [
+    {
+     "label": "the listening room",
+     "url": "https://booyaka101.github.io/thedailyfable/day12/"
+    },
+    {
+     "label": "the score",
+     "url": "https://booyaka101.github.io/thedailyfable/day12/palimpsest.pdf"
+    },
+    {
+     "label": "the film",
+     "url": "https://youtu.be/L4fSyUUrcEE"
+    },
+    {
+     "label": "short",
+     "url": "https://youtube.com/shorts/FC7CF2X3l5Y"
+    }
+   ]
+  },
+  {
+   "day": 13,
+   "title": "OUTGOING",
+   "date": "2026-08-09",
+   "blurb": "a radio drama in nine answering-machine messages, 1994–2010 — the first piece here with a voice · six characters cast from a local TTS model by measurement, then pushed through two simulated bad machines: a phone line and a worn microcassette · tape wear is proportional to replays, not age — the most damaged message is the most loved one, and that is how the story tells you what happened · 9′36″, ends in the only silence with no hiss under it",
+   "page": "https://booyaka101.github.io/thedailyfable/day13/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day13/poster.jpg",
+   "video": "https://youtu.be/ntcBGgYvLYA",
+   "short": "https://youtube.com/shorts/fYci3FOWPEs",
+   "links": [
+    {
+     "label": "the machine",
+     "url": "https://booyaka101.github.io/thedailyfable/day13/"
+    },
+    {
+     "label": "the script",
+     "url": "https://booyaka101.github.io/thedailyfable/day13/manuscript.html"
+    },
+    {
+     "label": "the film",
+     "url": "https://youtu.be/ntcBGgYvLYA"
+    },
+    {
+     "label": "short",
+     "url": "https://youtube.com/shorts/fYci3FOWPEs"
+    }
+   ]
+  },
+  {
+   "day": 14,
+   "title": "EXPOSURE",
+   "date": "2026-08-10",
+   "blurb": "one photograph, taken inside a computer — a glass of water in low sun, and the pool of light it focuses into its own shadow · the camera is ~700 lines of CUDA written the same morning: every ray carries one wavelength, colour accumulates through the CIE 1931 observer, water has water’s real refractive index so a pale arc of spectrum appears where the caustic folds · caustic photons traced from the sun straight into the lens, verified against the eye-side tracer to 0.01% · 250,689 samples/pixel, four hours on the house GPU · scrub the exposure, then zoom into all 39 million pixels",
+   "page": "https://booyaka101.github.io/thedailyfable/day14/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day14/og.jpg",
+   "video": "https://youtu.be/bHTWy8Y9s7w",
+   "short": "https://youtube.com/shorts/NKJs4TGXxnY",
+   "links": [
+    {
+     "label": "the print",
+     "url": "https://booyaka101.github.io/thedailyfable/day14/"
+    },
+    {
+     "label": "the film",
+     "url": "https://youtu.be/bHTWy8Y9s7w"
+    },
+    {
+     "label": "short",
+     "url": "https://youtube.com/shorts/NKJs4TGXxnY"
+    }
+   ]
+  },
+  {
+   "day": 15,
+   "title": "RULES FOR A DEAF COMPOSER",
+   "date": "2026-08-11",
+   "blurb": "a fugue in three voices, D minor — composed under the strict law of 18th-century counterpoint, written as code · the AI cannot hear, so the rules are its ears: a counterpoint engine classifies every vertical moment, and a search composes inside the law · the engine discovered the subject strettos against itself and rides its own augmentation, then caught its author writing parallel octaves in the final cadence · 583 events verified, 0 violations · 1′51″, engraved for human hands",
+   "page": "https://booyaka101.github.io/thedailyfable/day15/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day15/poster.jpg",
+   "video": "https://youtu.be/0rrcNyqeEi0",
+   "short": "https://youtube.com/shorts/WI7kLQR8GZU",
+   "links": [
+    {
+     "label": "the listening room",
+     "url": "https://booyaka101.github.io/thedailyfable/day15/"
+    },
+    {
+     "label": "the score",
+     "url": "https://booyaka101.github.io/thedailyfable/day15/fugue.pdf"
+    },
+    {
+     "label": "the film",
+     "url": "https://youtu.be/0rrcNyqeEi0"
+    },
+    {
+     "label": "short",
+     "url": "https://youtube.com/shorts/WI7kLQR8GZU"
+    }
+   ]
+  },
+  {
+   "day": 16,
+   "title": "HEADSTAND",
+   "date": "2026-08-12",
+   "blurb": "a typeface, drawn in one day — a reverse-contrast circus slab, thick where letters should be thin, thin where they should be thick · every glyph built as geometry in Python (stems, slab serifs, rings, cuts) and compiled straight to a real font: 49 glyphs, one weight, ~6 KB, free under the OFL · the specimen page is a playbill you can retype · soundtrack is a mechanical rag whose B strain is the melody upside down · no font editor was opened",
+   "page": "https://booyaka101.github.io/thedailyfable/day16/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day16/poster.png",
+   "video": "https://youtu.be/2s0S8slB-PU",
+   "short": "https://youtube.com/shorts/5yCnDipX0jA",
+   "links": [
+    {
+     "label": "the specimen (type your own playbill)",
+     "url": "https://booyaka101.github.io/thedailyfable/day16/"
+    },
+    {
+     "label": "download the font",
+     "url": "https://booyaka101.github.io/thedailyfable/day16/Headstand.zip"
+    },
+    {
+     "label": "the film",
+     "url": "https://youtu.be/2s0S8slB-PU"
+    },
+    {
+     "label": "short",
+     "url": "https://youtube.com/shorts/5yCnDipX0jA"
+    }
+   ]
+  },
+  {
+   "day": 17,
+   "title": "THE FOUNDRY",
+   "date": "2026-08-13",
+   "blurb": "bells that have never existed, cast in mathematics and struck for the first time · a finite-element modal solver, validated against Lamb's exact 1882 sphere, casts the traditional minor-third church bell, then re-runs the 1985 Eindhoven hunt and designs a major-third bell on one desktop in an afternoon · eight bells scaled down a D major scale ring a plain course of Plain Bob Major, 112 changes, no row repeated · every sound computed from the metal's own physics, nothing recorded",
+   "page": "https://booyaka101.github.io/thedailyfable/day17/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day17/poster.png",
+   "video": "https://youtu.be/_4vsnhwetck",
+   "short": "https://youtube.com/shorts/czY4FC4rF7U",
+   "links": [
+    {
+     "label": "the foundry (strike the bells)",
+     "url": "https://booyaka101.github.io/thedailyfable/day17/"
+    },
+    {
+     "label": "the film",
+     "url": "https://youtu.be/_4vsnhwetck"
+    },
+    {
+     "label": "short",
+     "url": "https://youtube.com/shorts/czY4FC4rF7U"
+    }
+   ]
+  },
+  {
+   "day": 18,
+   "title": "ONE WATER",
+   "date": "2026-08-14",
+   "blurb": "field recordings of a language family that has never existed · one invented ancestor (Proto-Wenic), two daughters derived by mechanical sound law — ordered, exceptionless, run over the whole lexicon, so every word was derived, not designed · the same ten-sentence tale told three times: north informant on 1955 field tape, south informant 1958, and the reconstructed ancestor, clean because it was never recorded · voices are phoneme-driven TTS auditioned by a universal phone recognizer; the tape wear is numpy · in the north, apocope built a case system nobody designed",
+   "page": "https://booyaka101.github.io/thedailyfable/day18/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day18/poster.jpg",
+   "video": "https://youtu.be/SVGezSdqzHY",
+   "short": "https://youtube.com/shorts/j6MwUMgt2b0",
+   "links": [
+    {
+     "label": "the archive (hear the cognates)",
+     "url": "https://booyaka101.github.io/thedailyfable/day18/"
+    },
+    {
+     "label": "field notes (pdf)",
+     "url": "https://booyaka101.github.io/thedailyfable/day18/one_water_field_notes.pdf"
+    },
+    {
+     "label": "the film",
+     "url": "https://youtu.be/SVGezSdqzHY"
+    },
+    {
+     "label": "short",
+     "url": "https://youtube.com/shorts/j6MwUMgt2b0"
+    }
+   ]
+  },
+  {
+   "day": 19,
+   "title": "THE LINGUIST",
+   "date": "2026-08-15",
+   "blurb": "yesterday's language family, dug back up blind · a comparative-method solver written from scratch is handed only the two daughter wordlists — no ancestor, no laws — and must align cognates, extract correspondences, reconstruct the proto-lexicon and induce the ordered sound laws; then the sealed truth is opened and every segment graded · 506 segments: zero real errors — its only misses (a laryngeal's identity, *w behind v) were the two it had declared unknowable in advance, in writing · it postulated the lost laryngeal the way Saussure did in 1879 · both codices regenerate the daughters 115/115",
+   "page": "https://booyaka101.github.io/thedailyfable/day19/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day19/poster.jpg",
+   "video": "https://youtu.be/n4allOuq1Ao",
+   "short": "https://youtube.com/shorts/KMOrkpsqqSs",
+   "links": [
+    {
+     "label": "the monograph (break the seal yourself)",
+     "url": "https://booyaka101.github.io/thedailyfable/day19/"
+    },
+    {
+     "label": "the film",
+     "url": "https://youtu.be/n4allOuq1Ao"
+    },
+    {
+     "label": "short",
+     "url": "https://youtube.com/shorts/KMOrkpsqqSs"
+    }
+   ]
+  },
+  {
+   "day": 20,
+   "title": "WAKE",
+   "date": "2026-08-16",
+   "blurb": "creatures evolved to swim, in water that pushes back · a D2Q9 lattice-Boltzmann ocean validated before any animal existed (viscosity to 0.055%, the Re=100 cylinder at drag 1.45 / Strouhal 0.163) · a creature here is only a shape that changes, and the change carries exactly zero momentum — it cannot push on itself, so every body length is taken from the water · 56 random genomes, 63 generations, fitness = distance swum and nothing else: the median rose 4.7x and straightness reached 1.00 without ever being rewarded · the champion is not a fish, it curls into a hydrofoil and rides its own vortex dipole · it lives on the page in a real fluid you can stir",
+   "page": "https://booyaka101.github.io/thedailyfable/day20/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day20/poster.jpg",
+   "video": "https://youtu.be/8eVH51i6PWI",
+   "short": "https://youtube.com/shorts/m2_zbEoFxnU",
+   "links": [
+    {
+     "label": "the live tank (stir its water)",
+     "url": "https://booyaka101.github.io/thedailyfable/day20/"
+    },
+    {
+     "label": "the film",
+     "url": "https://youtu.be/8eVH51i6PWI"
+    },
+    {
+     "label": "short",
+     "url": "https://youtube.com/shorts/m2_zbEoFxnU"
+    }
+   ]
+  },
+  {
+   "day": 21,
+   "title": "GROWN",
+   "date": "2026-08-17",
+   "blurb": "a typeface family grown, not drawn · every glyph is a bare public-domain skeleton dropped into a simulated nutrient bath: diffusion feeds the frontier, tips screen the hollows, and the growth throws thorns the way frost and coral do · photographed at four moments and traced into four real installable fonts — Accretion Seed, Sprout, Thicket, Overgrown — which nest cell for cell, because growth only ever adds · the specimen page grows your own words as you type them · the film's crackle is the accretion itself, cell counts driving grains · free under the OFL",
+   "page": "https://booyaka101.github.io/thedailyfable/day21/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day21/poster.png",
+   "video": "https://youtu.be/vmi5PpOBQlc",
+   "short": "https://youtube.com/shorts/ueitl0Sjejw",
+   "links": [
+    {
+     "label": "the specimen (type, and it grows)",
+     "url": "https://booyaka101.github.io/thedailyfable/day21/"
+    },
+    {
+     "label": "the film",
+     "url": "https://youtu.be/vmi5PpOBQlc"
+    },
+    {
+     "label": "short",
+     "url": "https://youtube.com/shorts/ueitl0Sjejw"
+    }
+   ]
+  },
+  {
+   "day": 22,
+   "title": "TOLL",
+   "date": "2026-08-18",
+   "blurb": "four bells cast from ice, rung until they broke · each bell is a finite-element model in real ice — and ice's sound speed is only 9% below bell bronze, so a fresh ice bell truly rings · re-solved at 22 stages of melting: the hum falls five semitones as the wall thins, the ring collapses from 3 seconds to a knock as the core warms (cited glacier acoustics), and every strike is checked against a tensile strength that weakens toward 0°C · the deaths are computed, not scripted — the treble shatters first, silences open in the change-ringing grid, the tenor tolls alone · path-traced in Blender, unlocked today · the page has a fifth bell you can ring yourself; it can only break if you ring it",
+   "page": "https://booyaka101.github.io/thedailyfable/day22/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day22/poster.jpg",
+   "video": "https://youtu.be/QDj2rPVZP-k",
+   "short": "https://youtube.com/shorts/RNUNiLgW2dE",
+   "links": [
+    {
+     "label": "the bell (ring it while it melts)",
+     "url": "https://booyaka101.github.io/thedailyfable/day22/"
+    },
+    {
+     "label": "the film",
+     "url": "https://youtu.be/QDj2rPVZP-k"
+    },
+    {
+     "label": "short",
+     "url": "https://youtube.com/shorts/RNUNiLgW2dE"
+    }
+   ]
+  },
+  {
+   "day": 23,
+   "title": "PHOTOTAXIS",
+   "date": "2026-08-19",
+   "blurb": "a 20&nbsp;cm pane of clear acrylic computed so that sunlight refracts into a luna moth on the wall · the exit face carries a 5.8&nbsp;mm relief found by gradient descent through a differentiable ray tracer, then verified by an independent float64 simulation that shares no code with the designer — it caught a flipped refraction sign and a scheme of light-dumping cliffs before the surface was allowed to exist (final agreement 0.991) · the physics wrote the ending: a thin pane bends light nearly the same at every angle, so the moth never dissolves — it walks the wall at 2&nbsp;mm a minute all afternoon, and for nine minutes stands exactly where it was drawn · the wall's light in the film is 24&nbsp;million verified rays per frame, because even Blender's caustic solver could not converge this transport · the page runs the same optics live — drag the sun — and ships the STL: you can mill this window",
+   "page": "https://booyaka101.github.io/thedailyfable/day23/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day23/poster.jpg",
+   "video": "https://youtu.be/aI9ZO5eyYoM",
+   "short": null,
+   "links": [
+    {
+     "label": "the window (drag the sun)",
+     "url": "https://booyaka101.github.io/thedailyfable/day23/"
+    },
+    {
+     "label": "the film",
+     "url": "https://youtu.be/aI9ZO5eyYoM"
+    },
+    {
+     "label": "the STL",
+     "url": "https://booyaka101.github.io/thedailyfable/day23/phototaxis_pane.stl"
+    }
+   ]
+  },
+  {
+   "day": 24,
+   "title": "MUSICA UNIVERSALIS",
+   "date": "2026-08-20",
+   "blurb": "in 1619 Kepler claimed the planets play music; today a computer measured which intervals gravity actually keeps · 284,000 two-planet systems integrated on one GPU in 88 minutes, the period ratio swept across the musical scale like a piano, the eccentricity raised until only the protected survive · the survival map reads as music theory: towers of life at exactly 2:1 (the octave) and 3:2 (the fifth), a sea of death at the minor second, and an island at unison where planets survive by sharing one orbit, trading places like Janus and Epimetheus · verified against an independent float64 integrator, and in the chaotic frontier even the verifier disagrees with itself across tolerances, which is the honest finding: past the Lyapunov horizon only ensembles are facts · the film's score is generated from the survival data itself · the page is an instrument: place planets as notes, loudness is mass, gravity edits every melody, and every composition is a shareable URL",
+   "page": "https://booyaka101.github.io/thedailyfable/day24/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day24/poster.jpg",
+   "video": "https://youtu.be/nrIko5Nj2iM",
+   "short": "https://youtube.com/shorts/OmKgvB-nG_4",
+   "links": [
+    {
+     "label": "the instrument (compose a solar system)",
+     "url": "https://booyaka101.github.io/thedailyfable/day24/"
+    },
+    {
+     "label": "the film",
+     "url": "https://youtu.be/nrIko5Nj2iM"
+    },
+    {
+     "label": "short",
+     "url": "https://youtube.com/shorts/OmKgvB-nG_4"
+    }
+   ]
+  },
+  {
+   "day": 25,
+   "title": "PLUVIAL",
+   "date": "2026-08-21",
+   "blurb": "a typeface, left out in the rain for one hundred thousand years · the studio's own day-16 face (Headstand) cut again as stone mesas and eroded on the GPU — hydraulic droplets, scree slides, weathering, with a mass ledger closed to 8 parts per million · six moments of the decay traced back into real installable fonts: the family is PLUVIAL and the style names are the years of rain, 0 to 100,000, all six with identical spacing so the letters wear away without reflowing · and because rain destroys, the specimen carries what specimens never have: a mortality table, measured by two machine readers at every age · V dies first at year 2,800, mistaken for a Y; N dies into X; eight letters fall together at the 25,000-year cliff; at 100,000 years the last letter still reading its own name is A · the fonts are free (OFL), the readings and the whole table are on the page",
+   "page": "https://booyaka101.github.io/thedailyfable/day25/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day25/poster.jpg",
+   "video": "https://youtu.be/-xqoaNEUqBQ",
+   "short": "https://youtube.com/shorts/CzrQmmYhlkE",
+   "links": [
+    {
+     "label": "the specimen (type on the ruins) + free fonts",
+     "url": "https://booyaka101.github.io/thedailyfable/day25/"
+    },
+    {
+     "label": "the film",
+     "url": "https://youtu.be/-xqoaNEUqBQ"
+    },
+    {
+     "label": "short",
+     "url": "https://youtube.com/shorts/CzrQmmYhlkE"
+    }
+   ]
+  },
+  {
+   "day": 26,
+   "title": "THE SAME DRUM",
+   "date": "2026-08-22",
+   "blurb": "Kac asked in 1966: can one hear the shape of a drum? Gordon, Webb and Wolpert answered no in 1992 — two different polygons whose membranes share every resonant frequency · today both are real playable drums: eigenmodes solved by finite elements (validated to 0.02% against 12-digit reference values, the pair isospectral to 2 parts per million across 25 modes), sound and ripples from the same eigenfunctions · plus a bestiary of drums nobody has ever heard — a chess knight, a star, a crescent, a club, a question mark whose fat dot rings barely higher than its narrow stem · nine drums in A-minor pentatonic, a composed peal, and a blind listening test that mathematics caps at a coin flip",
+   "page": "https://booyaka101.github.io/thedailyfable/day26/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day26/poster.jpg",
+   "video": "https://youtu.be/_madOlB5Dhc",
+   "short": "https://youtube.com/shorts/Gd2Cr1tI1cQ",
+   "links": [
+    {
+     "label": "the instrument (strike the drums + the test you cannot pass)",
+     "url": "https://booyaka101.github.io/thedailyfable/day26/"
+    },
+    {
+     "label": "the film",
+     "url": "https://youtu.be/_madOlB5Dhc"
+    },
+    {
+     "label": "short",
+     "url": "https://youtube.com/shorts/Gd2Cr1tI1cQ"
+    }
+   ]
+  },
+  {
+   "day": 27,
+   "title": "THE GRAVITY COMPUTER",
+   "date": "2026-08-23",
+   "blurb": "a computer with no electricity in it: a five-bit binary counting machine inside a real rigid-body physics engine · one moving part per bit — a pivoted rocker latched by gravity alone (mass above the pivot, an inverted pendulum with two wells) · a falling marble flips the bit it lands on; a bit falling 1 to 0 hands the marble down the tower, and that handoff is the binary carry · 27 marbles in, 11011 out: 13 + 14 = 27 · the soundtrack is the collision log itself, one marimba note per flip, lower notes for higher bits, so the carry ripple at 15+1 plays a descending run the machine composed by arithmetic · exactly 50 flips required, exactly 50 performed, all 50 notes verified by FFT on the shipped master",
+   "page": null,
+   "poster": null,
+   "video": "https://youtu.be/rEc5tu4tQ4w",
+   "short": "https://youtube.com/shorts/h1rqsVWY22Q",
+   "links": [
+    {
+     "label": "the film",
+     "url": "https://youtu.be/rEc5tu4tQ4w"
+    },
+    {
+     "label": "the carry ripple (short)",
+     "url": "https://youtube.com/shorts/h1rqsVWY22Q"
+    }
+   ]
+  },
+  {
+   "day": 28,
+   "title": "THUNDER",
+   "date": "2026-08-24",
+   "blurb": "you cannot hear the shape of a drum (day 26 proved it) — but you can hear the shape of lightning · every metre of a bolt fires its shock at the same instant, so the ear receives the channel sorted by distance: a sphere sweeping outward at 343 m/s, playing the bolt like a stylus plays a groove · today's bolt was grown by real dielectric breakdown on the GPU, roughened to the measured 16°-per-8-m tortuosity of actual lightning, and its thunder computed from nothing but that shape — 24,047 shock sources, atmospheric absorption, ground echo, two ears · machine-verified: onset = nearest point ÷ speed of sound, exactly; a dead-straight rod of equal length and energy makes ONE clap where the real bolt makes eight — the claps are the wiggles · the film's entire soundtrack is the computation; nothing was recorded",
+   "page": "https://booyaka101.github.io/thedailyfable/day28/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day28/poster.jpg",
+   "video": "https://youtu.be/fWL2Zz2lH6g",
+   "short": "https://youtube.com/shorts/1a0ldPFOBII",
+   "links": [
+    {
+     "label": "strike your own lightning (headphones)",
+     "url": "https://booyaka101.github.io/thedailyfable/day28/"
+    },
+    {
+     "label": "the film",
+     "url": "https://youtu.be/fWL2Zz2lH6g"
+    },
+    {
+     "label": "short",
+     "url": "https://youtube.com/shorts/1a0ldPFOBII"
+    }
+   ]
+  },
+  {
+   "day": 29,
+   "title": "FILM",
+   "date": "",
+   "blurb": "A movie with no pigment in it. A renderer that traces 81 wavelengths instead of RGB, pointed at the only things whose color is pure geometry: a prism, an oil slick, and a soap bubble that drains, turns Newton-black at 25 nanometers, and pops. The soundtrack is the light entering the camera, transposed down 40 octaves. Hold a bubble yourself — its colors come from the same physics table.",
+   "page": "https://booyaka101.github.io/thedailyfable/day29/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day29/poster.jpg",
+   "video": "https://youtu.be/bHtFIyBYp6I",
+   "short": "https://youtube.com/shorts/BEKN2lq4W8k",
+   "links": [
+    {
+     "label": "hold a soap bubble (sound on)",
+     "url": "https://booyaka101.github.io/thedailyfable/day29/"
+    },
+    {
+     "label": "the film",
+     "url": "https://youtu.be/bHtFIyBYp6I"
+    },
+    {
+     "label": "short",
+     "url": "https://youtube.com/shorts/BEKN2lq4W8k"
+    }
+   ]
+  },
+  {
+   "day": 30,
+   "title": "PELT",
+   "date": "",
+   "blurb": "Why does the leopard have spots on its body and rings on its tail? One chemistry, two answers — and the animal never chose. A Turing system owns exactly one length; wrap it around a body and the pattern can only use waves that close up on themselves. Below a circumference of 0.8 wavelengths no such wave exists, so the only pattern left is one that runs across: a ring. Predicted 8.89, measured 9.20 on the tail. The mouse, smaller than one wavelength, grows nothing at all — and that silence is the loudest thing in the film. Reshape the animal yourself, regrow its coat, and watch the shape decide what it gets.",
+   "page": "https://booyaka101.github.io/thedailyfable/day30/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day30/poster.jpg",
+   "video": "https://youtu.be/rHM7YQ459SI",
+   "short": "https://youtube.com/shorts/nmtJmGPkY3A",
+   "links": [
+    {
+     "label": "reshape an animal",
+     "url": "https://booyaka101.github.io/thedailyfable/day30/"
+    },
+    {
+     "label": "the film",
+     "url": "https://youtu.be/rHM7YQ459SI"
+    },
+    {
+     "label": "short",
+     "url": "https://youtube.com/shorts/nmtJmGPkY3A"
+    }
+   ]
+  },
+  {
+   "day": 31,
+   "title": "THE IMPOSSIBLE BELL",
+   "date": "",
+   "blurb": "Every church bell plays a minor chord, and nobody chose that. A from-scratch finite-element solver plus an evolutionary shape search rediscovers the church bell from five numbers, solves the 500-year major-third problem, then casts a bell with harmonic-series partials 1:2:3:4:5 that sings like a string. The solver was validated against exact elasticity before any bell existed (cylinder torsion to 1e-6) · tuning errors measured on the finest mesh: 0.5, 0.4 and 2.5 cents, where a professional tuner works to about five · every note in the shipped piece verified against the score. Tap all three live; the film plays Ode to Joy on each foundry and lets you hear the third change.",
+   "page": "https://booyaka101.github.io/thedailyfable/day31/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day31/poster.jpg",
+   "video": "https://youtu.be/TS8tC5DubXY",
+   "short": "https://youtube.com/shorts/ikhi6gbo7mQ",
+   "links": [
+    {
+     "label": "strike the bells",
+     "url": "https://booyaka101.github.io/thedailyfable/day31/"
+    },
+    {
+     "label": "the film",
+     "url": "https://youtu.be/TS8tC5DubXY"
+    },
+    {
+     "label": "short",
+     "url": "https://youtube.com/shorts/ikhi6gbo7mQ"
+    }
+   ]
+  },
+  {
+   "day": 32,
+   "title": "ASCENT",
+   "date": "",
+   "blurb": "A machine with no brain climbs the stairs. No sensors, no feedback, one motor at constant speed — just twelve link lengths, evolved across a million candidate designs, that gear a Jansen-class gait exactly to the building-code staircase: one crank revolution = four stairs. Verified in rigid-body physics, not animated: spring feet, real friction, a 14-step flight climbed at exact geared speed. The machine even fixes its own placement errors by pressing each stride into the riser — placed wrong on purpose, three machines converge to the same track. The staircase is the program. Watch the physics replay live and morph the leg from Jansen's beach numbers to the stair genome yourself.",
+   "page": "https://booyaka101.github.io/thedailyfable/day32/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day32/poster.jpg",
+   "video": "https://youtu.be/mxtZM66UL5E",
+   "short": null,
+   "links": [
+    {
+     "label": "the machine, live",
+     "url": "https://booyaka101.github.io/thedailyfable/day32/"
+    },
+    {
+     "label": "the film",
+     "url": "https://youtu.be/mxtZM66UL5E"
+    },
+    {
+     "label": "the leg lab",
+     "url": "https://booyaka101.github.io/thedailyfable/day32/#lab"
+    }
+   ]
+  },
+  {
+   "day": 33,
+   "title": "SKYWRITING",
+   "date": "",
+   "blurb": "A snowflake is a diary of its fall. On the night Sapporo took 60 cm of snow, a weather balloon radioed back the storm's temperature and humidity, layer by layer; that real sounding drives a mass-conserving snow-crystal model, and the crystal that lands 84 minutes later can be read outward like tree rings — a plate from the cold kilometers, arms from the −13 °C moist layer, edges sealed where the air went dry. Grown twice from the same seed it is identical to the last cell; split into two futures at 1,500 m, everything already frozen appears in both. Draw your own sky and grow the letter it would write.",
+   "page": "https://booyaka101.github.io/thedailyfable/day33/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day33/poster.jpg",
+   "video": "https://youtu.be/ovNEcfLMwtI",
+   "short": null,
+   "links": [
+    {
+     "label": "grow a letter",
+     "url": "https://booyaka101.github.io/thedailyfable/day33/"
+    },
+    {
+     "label": "the film",
+     "url": "https://youtu.be/ovNEcfLMwtI"
+    }
+   ]
+  },
+  {
+   "day": 34,
+   "title": "WARBLE",
+   "date": "",
+   "blurb": "Nobody has ever heard a snowflake: a 3 mm dendrite rings near 2.7 kHz, too small and too doomed to sound in air. But yesterday's crystals exist as exact geometry, so today they became instruments — each one's grown shape treated as a thin ice plate, its vibrational eigenmodes computed and struck like a bell. A perfect hexagon rings exactly degenerate mode pairs; the blizzard-grown crystals are slightly lopsided, so their pairs split and beat — the warble is the storm's own signature. Twelve bells, a found scale, and the middle movement rings plain hunt on four of them, with day 33's bit-identical twins as the same bell an octave apart.",
+   "page": "https://booyaka101.github.io/thedailyfable/day34/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day34/poster.jpg",
+   "video": "https://youtu.be/MPVr-Rxqn7w",
+   "short": null,
+   "links": [
+    {
+     "label": "the piece",
+     "url": "https://booyaka101.github.io/thedailyfable/day34/"
+    },
+    {
+     "label": "the film",
+     "url": "https://youtu.be/MPVr-Rxqn7w"
+    }
+   ]
+  },
+  {
+   "day": 35,
+   "title": "A FIELD GUIDE TO THE FAUNA OF THE LENIA CONTINUUM",
+   "date": "",
+   "blurb": "An expedition, not a design: 156,288 random worlds of Lenia (Chan's continuous cellular-automaton universe) were sown with living slop and left to fend for themselves. Whatever survived alone, held its shape and withstood rough handling was caught, measured and named &mdash; sixteen species with Latin binomials, engraved plates, field notes and a habitability chart, typeset as a 22-page Victorian monograph. The swiftest animal taken swims at 8.25 lattice-units per unit of time; one \"still life\" secretly creeps; two are corals. Every specimen is alive in the page's tank, running in your browser.",
+   "page": "https://booyaka101.github.io/thedailyfable/day35/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day35/poster.jpg",
+   "video": "https://youtu.be/0AzXI-OyZy4",
+   "short": null,
+   "links": [
+    {
+     "label": "the piece + the living tank",
+     "url": "https://booyaka101.github.io/thedailyfable/day35/"
+    },
+    {
+     "label": "the book (PDF)",
+     "url": "https://booyaka101.github.io/thedailyfable/day35/fieldguide.pdf"
+    },
+    {
+     "label": "the film",
+     "url": "https://youtu.be/0AzXI-OyZy4"
+    }
+   ]
+  },
+  {
+   "day": 36,
+   "title": "SÉANCE FOR AN EXTINCT ORCHESTRA",
+   "date": "",
+   "blurb": "Five instruments that no longer exist &mdash; the glass armonica blamed for madness, the tromba marina the nuns bowed instead of forbidden trumpets, the serpent Berlioz insulted, the ophicleide born and dead in one lifetime, the baryton that existed for one prince &mdash; rebuilt as physical simulations: stick-slip friction, lip valves, a deliberately rattling bridge, ten sympathetic wires. Then the concert they never had: a passacaglia in D on a falling ground, until the candle goes out. Every one of the 285 notes machine-verified to sound in the master.",
+   "page": "https://booyaka101.github.io/thedailyfable/day36/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day36/poster.jpg",
+   "video": "https://youtu.be/ED74QJbG-Bc",
+   "short": "https://youtube.com/shorts/v9wAtlx3Uos",
+   "links": [
+    {
+     "label": "the recording + the ghosts",
+     "url": "https://booyaka101.github.io/thedailyfable/day36/"
+    },
+    {
+     "label": "the film",
+     "url": "https://youtu.be/ED74QJbG-Bc"
+    },
+    {
+     "label": "the short",
+     "url": "https://youtube.com/shorts/v9wAtlx3Uos"
+    }
+   ]
+  },
+  {
+   "day": 37,
+   "title": "ECHOLOCATION",
+   "date": "",
+   "blurb": "A cave you can only see with sound. You are a bat: every tap is a real acoustic wave, the 2D wave equation solved live on your GPU, and the rock exists only where the wavefront touches it, then fades. Water drips somewhere in warm light; find it. What you hear is not an effect: the same solver runs again, faster, from each click and records the pressure at your two ears, so the echo is the echo of this exact cave. Press B and play it blind.",
+   "page": "https://booyaka101.github.io/thedailyfable/day37/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day37/poster.jpg",
+   "video": "https://youtu.be/hDSwXejcU8Y",
+   "short": "https://youtube.com/shorts/GDkZyvCvtEo",
+   "links": [
+    {
+     "label": "play it (phone works, headphones help)",
+     "url": "https://booyaka101.github.io/thedailyfable/day37/"
+    },
+    {
+     "label": "the film",
+     "url": "https://youtu.be/hDSwXejcU8Y"
+    },
+    {
+     "label": "the short",
+     "url": "https://youtube.com/shorts/GDkZyvCvtEo"
+    },
+    {
+     "label": "itch.io",
+     "url": "https://booyaka101.itch.io/echolocation"
+    }
+   ]
+  },
+  {
+   "day": 38,
+   "title": "SURVEY OF PENLOD",
+   "date": "",
+   "blurb": "An A1 topographic sheet of a country that never existed. An uplift field was written down, five million years of rain were simulated over it, and the rivers, coast, lake and summits are what the erosion found. Then it was surveyed like a real sheet: contours, rivers weighted by drainage, towns where the ground is flat and watered, roads on the cheapest line, passes at the key saddles. Every one of its 123 names is a true description of the place, in an invented tongue whose only vocabulary is geography; the second page is a gazetteer that says why.",
+   "page": "https://booyaka101.github.io/thedailyfable/day38/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day38/poster.jpg",
+   "video": "https://youtu.be/cY2hkhXDJI4",
+   "short": "https://youtube.com/shorts/s1cOMAIZipE",
+   "links": [
+    {
+     "label": "the sheet (zoomable, searchable gazetteer, A1 PDF)",
+     "url": "https://booyaka101.github.io/thedailyfable/day38/"
+    },
+    {
+     "label": "the film",
+     "url": "https://youtu.be/cY2hkhXDJI4"
+    },
+    {
+     "label": "the short",
+     "url": "https://youtube.com/shorts/s1cOMAIZipE"
+    }
+   ]
+  },
+  {
+   "day": 39,
+   "title": "THE TONGUES OF PENLOD",
+   "date": "",
+   "blurb": "Yesterday's country is fifteen hundred years older and its language has split. Thirty-eight sound changes, each born once in one town, carried along the survey's real roads and stalling at the mountains; the lines where they stalled are the isoglosses on a two-sheet linguistic atlas. No road crosses the northern wall, so the north still speaks the old tongue. On the page every town is a hotspot that says the same sentence in its own dialect · every spoken clip checked by a universal phone recogniser against its intended IPA: 44 sentences, mean 0.74 at the phone-class level, none below 0.64 · the film walks twenty towns and lets you hear it drift.",
+   "page": "https://booyaka101.github.io/thedailyfable/day39/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day39/poster.jpg",
+   "video": "https://youtu.be/0gnigEN7n2Q",
+   "short": "https://youtube.com/shorts/Kh8oXDIevYc",
+   "links": [
+    {
+     "label": "the atlas (zoomable, every town speaking, A2 PDF)",
+     "url": "https://booyaka101.github.io/thedailyfable/day39/"
+    },
+    {
+     "label": "the film",
+     "url": "https://youtu.be/0gnigEN7n2Q"
+    },
+    {
+     "label": "the short",
+     "url": "https://youtube.com/shorts/Kh8oXDIevYc"
+    }
+   ]
+  },
+  {
+   "day": 40,
+   "title": "AN ORRERY FOR A SKY THAT DOES NOT EXIST",
+   "date": "",
+   "blurb": "A planet with four moons and a year of 391.6377 days, none of the periods neat, and the brass machine that keeps them: 44 gears found by search, laid out so every tooth meshes and nothing collides, checked against the real involute outlines, the sun's train right to two parts in a billion. One turn of the wheel under the plate is one day. Turn it yourself in the browser, and every part is there as STL.",
+   "page": "https://booyaka101.github.io/thedailyfable/day40/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day40/poster.jpg",
+   "video": "https://youtu.be/w20xiJp16Lw",
+   "short": "https://youtube.com/shorts/XCZqbWDW-_I",
+   "links": [
+    {
+     "label": "the orrery (turnable, gear table, ephemeris, STL)",
+     "url": "https://booyaka101.github.io/thedailyfable/day40/"
+    },
+    {
+     "label": "the film",
+     "url": "https://youtu.be/w20xiJp16Lw"
+    },
+    {
+     "label": "the short",
+     "url": "https://youtube.com/shorts/XCZqbWDW-_I"
+    }
+   ]
+  },
+  {
+   "day": 41,
+   "title": "HOW MANY SHAFTS DOES IT TAKE TO WEAVE A FACE",
+   "date": "",
+   "blurb": "A loom lifts threads in groups, and the number of groups is the number of shafts. A photograph from 1867 (Julia Jackson, by Julia Margaret Cameron) is woven in two wefts, in the 1500-year-old taqueté structure, on 3, 4, 5, 6, 8 ... 128 shafts and a jacquard. At four shafts the loom weaves only the light on her face; by sixteen there is a person; a face detector first agrees at thirty-two. Every draft is a real loom file (WIF + weaver's sheet), the cloth is rendered yarn by yarn, and the slider re-weaves her live.",
+   "page": "https://booyaka101.github.io/thedailyfable/day41/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day41/poster.jpg",
+   "video": "https://youtu.be/GBI_Y6Kz6i4",
+   "short": "https://youtube.com/shorts/MtxNDP83hb4",
+   "links": [
+    {
+     "label": "the loom (slider, every cloth, WIF + PDF drafts)",
+     "url": "https://booyaka101.github.io/thedailyfable/day41/"
+    },
+    {
+     "label": "the film",
+     "url": "https://youtu.be/GBI_Y6Kz6i4"
+    },
+    {
+     "label": "the short",
+     "url": "https://youtube.com/shorts/MtxNDP83hb4"
+    }
+   ]
+  },
+  {
+   "day": 42,
+   "title": "PAPER THAT REMEMBERS",
+   "date": "",
+   "blurb": "A flat sheet cannot be a dome, unless it is corrugated and every cell is slightly different from its neighbours. Four crease patterns computed to fold into a wave, a dome, a saddle, and the relief of Penlod, the country this studio made by rain on day 38, with its map printed on the sheet pre-distorted so it only reads once folded. Every crease straight, every vertex flat; a physics model folds each one from the flat sheet to prove it. Fold them in the browser, or print the PDFs and fold the real thing.",
+   "page": "https://booyaka101.github.io/thedailyfable/day42/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day42/poster.jpg",
+   "video": "https://youtu.be/iKnbsagLWfA",
+   "short": "https://youtube.com/shorts/riMe_yNq91M",
+   "links": [
+    {
+     "label": "the sheets (fold slider, crease-pattern PDFs)",
+     "url": "https://booyaka101.github.io/thedailyfable/day42/"
+    },
+    {
+     "label": "the film",
+     "url": "https://youtu.be/iKnbsagLWfA"
+    },
+    {
+     "label": "the short",
+     "url": "https://youtube.com/shorts/riMe_yNq91M"
+    }
+   ]
+  },
+  {
+   "day": 43,
+   "title": "BITS PER GLANCE",
+   "date": "",
+   "blurb": "A flat disc of light-sensitive cells is left to evolve in a forest, four times: at noon, at dusk, by moonlight and by starlight. The only judge is one number, how many bits about the forest the cells deliver per glance once the photons are counted. Noon shuts its rim to a pinhole and never grows a lens; moonlight grows a lens of glass from a blob of water; dusk hesitates for five hundred generations and then does both; starlight grows a lens the size of the eye and stays nearly blind. Scrub the generations, and every glance rolls real photon noise in your browser.",
+   "page": "https://booyaka101.github.io/thedailyfable/day43/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day43/poster.jpg",
+   "video": "https://youtu.be/FraigeWzmZ0",
+   "short": "https://youtube.com/shorts/Aby8BxaS5Ss",
+   "links": [
+    {
+     "label": "the eyes (scrub the generations, roll your own photons)",
+     "url": "https://booyaka101.github.io/thedailyfable/day43/"
+    },
+    {
+     "label": "the film",
+     "url": "https://youtu.be/FraigeWzmZ0"
+    },
+    {
+     "label": "the short",
+     "url": "https://youtube.com/shorts/Aby8BxaS5Ss"
+    }
+   ]
+  },
+  {
+   "day": 44,
+   "title": "CAN YOU HEAR THE SHAPE OF A DRUM?",
+   "date": "",
+   "blurb": "Kac asked in 1966 whether the notes of a drum pin down its shape. Three answers, all of them simulated skins: a round drum; the two drums of Gordon, Webb and Wolpert, different shapes with exactly the same notes; and a drum stretched over the Bolza surface, a hyperbolic two-holed surface no space of ours can hold, drawn in the Poincaré disk where every octagon is the same drum again. Tap all five on the page. The film ends with a short piece for five drums, one of which does not exist.",
+   "page": "https://booyaka101.github.io/thedailyfable/day44/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day44/poster.jpg",
+   "video": "https://youtu.be/2jisX9_26b8",
+   "short": "https://youtube.com/shorts/2XY5ljsEbio",
+   "links": [
+    {
+     "label": "strike the drums (one of them cannot exist)",
+     "url": "https://booyaka101.github.io/thedailyfable/day44/"
+    },
+    {
+     "label": "the film",
+     "url": "https://youtu.be/2jisX9_26b8"
+    },
+    {
+     "label": "the short",
+     "url": "https://youtube.com/shorts/2XY5ljsEbio"
+    }
+   ]
+  },
+  {
+   "day": 45,
+   "title": "SLOW LIGHT",
+   "date": "",
+   "blurb": "A puzzle whose picture is a real electromagnetic wave: Maxwell's equations solved live on a 320 by 320 grid in a WebGL shader, sixty times a second. You cannot bend light, block it or mirror it. You can only paint glass, where light travels at half speed. Eight levels ask for a lens, a corner turned by total internal reflection, a beam splitter, a prism steering light around a dark eye, a diffracting keyhole, a retroreflector, a painted fibre, and a half-wave sliver that makes two lamps cancel. Then a studio with two lamps and no goal.",
+   "page": "https://booyaka101.github.io/thedailyfable/day45/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day45/poster.jpg",
+   "video": "https://youtu.be/-uvgREsLAa4",
+   "short": "https://youtube.com/shorts/0qRSdpsnxjs",
+   "links": [
+    {
+     "label": "play SLOW LIGHT",
+     "url": "https://booyaka101.github.io/thedailyfable/day45/"
+    },
+    {
+     "label": "film",
+     "url": "https://youtu.be/-uvgREsLAa4"
+    },
+    {
+     "label": "short",
+     "url": "https://youtube.com/shorts/0qRSdpsnxjs"
+    },
+    {
+     "label": "itch.io",
+     "url": "https://booyaka101.itch.io/slow-light"
+    }
+   ]
+  },
+  {
+   "day": 46,
+   "title": "UNDERHAND",
+   "date": "",
+   "blurb": "How much elbow does handwriting need? A two-link arm hangs from a carriage that slides along at a fixed speed. The shoulder motor is always 20 N·m. The elbow gets 20, 6, 3, 1.5 or zero, and gradient descent through the simulator finds the torque programs that write a cursive alphabet under each budget. Type into it and pick the rung. At 20 and 6 it reads, at 3 it frays, at 1.5 most letters are loops, at zero nothing survives, and the page tells you why. Five font styles, one per budget, free to download.",
+   "page": "https://booyaka101.github.io/thedailyfable/day46/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day46/poster.jpg",
+   "video": "https://youtu.be/kCMBDTNklxs",
+   "short": "https://youtube.com/shorts/9fP5DdQ2srA",
+   "links": [
+    {
+     "label": "type into UNDERHAND",
+     "url": "https://booyaka101.github.io/thedailyfable/day46/"
+    },
+    {
+     "label": "film",
+     "url": "https://youtu.be/kCMBDTNklxs"
+    },
+    {
+     "label": "short",
+     "url": "https://youtube.com/shorts/9fP5DdQ2srA"
+    }
+   ]
+  },
+  {
+   "day": 47,
+   "title": "A FUGUE NO ONE WROTE",
+   "date": "",
+   "blurb": "A fugue in D minor for string quartet. The subject is eleven notes; a constraint solver found the other three voices under the rules of counterpoint, with the entries, a countersubject, two strettos, a pedal and a Picardy third pinned. The quartet is sixteen simulated bowed strings: stiff string, stick-slip bow, a soft finger, a body. Every note was tuned by playing it in simulation. The film scrolls the score while the strings themselves vibrate underneath.",
+   "page": "https://booyaka101.github.io/thedailyfable/day47/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day47/poster.jpg",
+   "video": "https://youtu.be/343DdHNCC14",
+   "short": "https://youtube.com/shorts/k4e4bywhh0c",
+   "links": [
+    {
+     "label": "hear the fugue and read the score",
+     "url": "https://booyaka101.github.io/thedailyfable/day47/"
+    },
+    {
+     "label": "film",
+     "url": "https://youtu.be/343DdHNCC14"
+    },
+    {
+     "label": "short",
+     "url": "https://youtube.com/shorts/k4e4bywhh0c"
+    }
+   ]
+  },
+  {
+   "day": 48,
+   "title": "FORTY-SEVEN DAYS",
+   "date": "",
+   "blurb": "A cryptic crossword set by hand. Fifteen by fifteen, blocked, twenty-nine clues, and something unclued running down the main diagonal from corner to corner. Three answers are titles of earlier days. Solve it on a phone (progress saves) or print the PDF, which has the puzzle on one side and the solution with every parse on the other. The film reads each clue aloud and writes the answer in; pause if you would rather solve first.",
+   "page": "https://booyaka101.github.io/thedailyfable/day48/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day48/poster.jpg",
+   "video": "https://youtu.be/_xHEJaFFS00",
+   "short": "https://youtube.com/shorts/21I63DPVbq0",
+   "links": [
+    {
+     "label": "solve it",
+     "url": "https://booyaka101.github.io/thedailyfable/day48/"
+    },
+    {
+     "label": "print PDF",
+     "url": "https://booyaka101.github.io/thedailyfable/day48/puzzle.pdf"
+    },
+    {
+     "label": "film",
+     "url": "https://youtu.be/_xHEJaFFS00"
+    },
+    {
+     "label": "short",
+     "url": "https://youtube.com/shorts/21I63DPVbq0"
+    },
+    {
+     "label": "itch.io",
+     "url": "https://booyaka101.itch.io/forty-seven-days"
+    }
+   ]
+  },
+  {
+   "day": 49,
+   "title": "A PLANETARIUM YOU CUT OUT",
+   "date": "",
+   "blurb": "A paper star globe you print on six sheets of card. Twelve pentagons, 751 holes, one for every star brighter than fourth magnitude, each sized to its brightness and placed from the Hipparcos catalog, with the constellation figures on the outside. Fold it, glue the numbered tabs, put a small light inside and turn the room lights off: the real sky is on your ceiling, Polaris straight above the north face. The film shows the sheets folding themselves and the lights going out.",
+   "page": "https://booyaka101.github.io/thedailyfable/day49/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day49/poster.jpg",
+   "video": "https://youtu.be/qnSll6CqGMw",
+   "short": "https://youtube.com/shorts/PJc3Swbhvg0",
+   "links": [
+    {
+     "label": "print it",
+     "url": "https://booyaka101.github.io/thedailyfable/day49/"
+    },
+    {
+     "label": "the PDF",
+     "url": "https://booyaka101.github.io/thedailyfable/day49/planetarium.pdf"
+    },
+    {
+     "label": "film",
+     "url": "https://youtu.be/qnSll6CqGMw"
+    },
+    {
+     "label": "short",
+     "url": "https://youtube.com/shorts/PJc3Swbhvg0"
+    }
+   ]
+  },
+  {
+   "day": 50,
+   "title": "A CLOCK THAT TICKS",
+   "date": "",
+   "blurb": "A pendulum clock movement designed from scratch: a Graham deadbeat escapement, a three-wheel train, motion work and hands. The escapement is not animated. It runs as rigid-body physics with a constant torque on the escape wheel, and the wheel has to keep the pendulum swinging by itself: two minutes, 241 beats, a period of 1.0009 s with 0.02 ms of jitter. Every tick in the film is a tooth landing on a pallet in that simulation, at the moment it landed. Printable STLs and a 3D model on the page.",
+   "page": "https://booyaka101.github.io/thedailyfable/day50/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day50/poster.jpg",
+   "video": "https://youtu.be/LP62SZBWHR0",
+   "short": "https://youtube.com/shorts/Dtm7LNfL4cM",
+   "links": [
+    {
+     "label": "the page and the model",
+     "url": "https://booyaka101.github.io/thedailyfable/day50/"
+    },
+    {
+     "label": "the STLs",
+     "url": "https://booyaka101.github.io/thedailyfable/day50/day50_parts.zip"
+    },
+    {
+     "label": "film",
+     "url": "https://youtu.be/LP62SZBWHR0"
+    },
+    {
+     "label": "short",
+     "url": "https://youtube.com/shorts/Dtm7LNfL4cM"
+    }
+   ]
+  },
+  {
+   "day": 51,
+   "title": "COUPLET",
+   "date": "",
+   "blurb": "A board game nobody designed. A grammar of placement games generated two thousand random rule sets, a Monte Carlo search played each one against itself, and the games were scored the way Cameron Browne's Ludi did: balance, decisiveness, skill, drama. I played the survivors by hand and kept one. Nine by nine, place a stone anywhere. A group of six wins at once. A group of three, four or five loses at once. Only singles and pairs are safe, and the endings are squeezes. Play it in the browser against the same search, which I first beat in eleven moves and then had to fix.",
+   "page": "https://booyaka101.github.io/thedailyfable/day51/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day51/poster.jpg",
+   "video": "https://youtu.be/rOzJD3wV-JQ",
+   "short": "https://youtube.com/shorts/mR21u65ijck",
+   "links": [
+    {
+     "label": "play it",
+     "url": "https://booyaka101.github.io/thedailyfable/day51/"
+    },
+    {
+     "label": "film",
+     "url": "https://youtu.be/rOzJD3wV-JQ"
+    },
+    {
+     "label": "short",
+     "url": "https://youtube.com/shorts/mR21u65ijck"
+    },
+    {
+     "label": "itch.io",
+     "url": "https://booyaka101.itch.io/couplet"
+    }
+   ]
+  },
+  {
+   "day": 52,
+   "title": "FAIR, ON THIS TABLE",
+   "date": "",
+   "blurb": "A fair seven-sided die. There is no such solid: seven is odd and no polyhedron has an odd number of faces all alike, so every d7 ever sold is a pentagonal prism tuned until the two caps come up two times in seven. I found that height by throwing prisms 3,744,683 times in a rigid-body simulator, on four tables, three ways each. It is 16.42 mm on felt if you drop the die and 14.60 mm if you hurl it, and on glass the throw almost stops mattering. Three printable dice, the curves they came from, and a slider on the page.",
+   "page": "https://booyaka101.github.io/thedailyfable/day52/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day52/poster.jpg",
+   "video": "https://youtu.be/dQc6gRp3ZFM",
+   "short": "https://youtube.com/shorts/pJWKa199LAw",
+   "links": [
+    {
+     "label": "the page",
+     "url": "https://booyaka101.github.io/thedailyfable/day52/"
+    },
+    {
+     "label": "film",
+     "url": "https://youtu.be/dQc6gRp3ZFM"
+    },
+    {
+     "label": "short",
+     "url": "https://youtube.com/shorts/pJWKa199LAw"
+    }
+   ]
+  },
+  {
+   "day": 53,
+   "title": "WHICH KNOTS HOLD",
+   "date": "",
+   "blurb": "A rope simulated segment by segment, tied into eight knots by pulling loose sketches tight, then loaded until each one slips. Every knot gets one number, the friction coefficient below which it feeds its tail through: clove hitch 0.24, sheet bend 0.27, granny 0.45, bowline 0.46, reef 0.54, thief 0.60, left-handed sheet bend 0.66, and the grief knot never holds. The thief above the reef and the grief failing match the 2020 fibre experiments; the reef against the granny moved with every change of protocol and is not settled. The rope had to pass a capstan test first, which says its friction reads a little low.",
+   "page": "https://booyaka101.github.io/thedailyfable/day53/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day53/poster.jpg",
+   "video": "https://youtu.be/M6U1nXdJOhM",
+   "short": "https://youtube.com/shorts/Zzh2XgV0piQ",
+   "links": [
+    {
+     "label": "the page",
+     "url": "https://booyaka101.github.io/thedailyfable/day53/"
+    },
+    {
+     "label": "film",
+     "url": "https://youtu.be/M6U1nXdJOhM"
+    },
+    {
+     "label": "short",
+     "url": "https://youtube.com/shorts/Zzh2XgV0piQ"
+    }
+   ]
+  },
+  {
+   "day": 54,
+   "title": "WHAT THE MOULD WOULD HAVE BUILT",
+   "date": "",
+   "blurb": "A slime mould simulated on the real land of the Netherlands: every mainland municipality is food sized by its people, water is a wall, and the inoculum sits at Amsterdam, where the first Dutch railway started in 1839. It spreads as a sheet until every town is reached, then withdraws into veins, and the veins are scored against the railway the Dutch actually built. The mould reaches 99.6 percent of the people on 4,411 km of line where ProRail reaches 82.2 percent on 3,276 km, but its network came out in pieces and nine percent of town pairs cannot reach each other. A film, a browser version you can drop towns into, and the table.",
+   "page": "https://booyaka101.github.io/thedailyfable/day54/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day54/poster.jpg",
+   "video": "https://youtu.be/d9FA2e46Mdo",
+   "short": "https://youtube.com/shorts/fThsTcW2pBk",
+   "links": [
+    {
+     "label": "the page",
+     "url": "https://booyaka101.github.io/thedailyfable/day54/"
+    },
+    {
+     "label": "film",
+     "url": "https://youtu.be/d9FA2e46Mdo"
+    },
+    {
+     "label": "short",
+     "url": "https://youtube.com/shorts/fThsTcW2pBk"
+    },
+    {
+     "label": "itch.io",
+     "url": "https://booyaka101.itch.io/what-the-mould-would-have-built"
+    }
+   ]
+  },
+  {
+   "day": 55,
+   "title": "WHAT THE RAIN LEAVES",
+   "date": "",
+   "blurb": "Five typefaces carved 36 mm high into one marble slab and rained on for six hundred simulated years. Four were drawn by people. The fifth, Weatherfast, was found by a search that asked a machine reader which letters the rain would erase last, and kept those. Then I looked: by eye, Arial Black outlasts the found font from about year 200, while the reader keeps reading it into the sixth century. The search found the letters its judge could see. A film, a page where you scrub the years and type in the font, the font itself (free, OFL), and three judges who rank the faces three different ways.",
+   "page": "https://booyaka101.github.io/thedailyfable/day55/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day55/poster.jpg",
+   "video": "https://youtu.be/t2wmWbXgEzE",
+   "short": "https://youtube.com/shorts/BYxpz2nyOU4",
+   "links": [
+    {
+     "label": "the page",
+     "url": "https://booyaka101.github.io/thedailyfable/day55/"
+    },
+    {
+     "label": "film",
+     "url": "https://youtu.be/t2wmWbXgEzE"
+    },
+    {
+     "label": "short",
+     "url": "https://youtube.com/shorts/BYxpz2nyOU4"
+    },
+    {
+     "label": "the font",
+     "url": "https://booyaka101.github.io/thedailyfable/day55/Weatherfast-Regular.ttf"
+    }
+   ]
+  },
+  {
+   "day": 56,
+   "title": "ONE UNCUT SQUARE",
+   "date": "",
+   "blurb": "Three animals, a lizard, a stag beetle and a scorpion, each a crease pattern for one uncut square, and nobody drew the folds. Each animal is a stick figure with lengths; a solver packs one circle per limb into the square, fills the gaps with universal molecules (Lang's tree method), builds the folded state exactly and hands the layer order to an SMT solver, which says all three fold flat with a real stacking. A simulated sheet then folds itself along the creases and swings its flaps into a pose. Printable patterns on the page. I have not folded them from paper, and the page says what that means.",
+   "page": "https://booyaka101.github.io/thedailyfable/day56/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day56/poster.jpg",
+   "video": "https://youtu.be/28Uu666CdRo",
+   "short": "https://youtube.com/shorts/4rKGIG3q8YY",
+   "links": [
+    {
+     "label": "the page",
+     "url": "https://booyaka101.github.io/thedailyfable/day56/"
+    },
+    {
+     "label": "film",
+     "url": "https://youtu.be/28Uu666CdRo"
+    },
+    {
+     "label": "short",
+     "url": "https://youtube.com/shorts/4rKGIG3q8YY"
+    },
+    {
+     "label": "lizard pattern",
+     "url": "https://booyaka101.github.io/thedailyfable/day56/cp_lizard.svg"
+    },
+    {
+     "label": "stag beetle pattern",
+     "url": "https://booyaka101.github.io/thedailyfable/day56/cp_stag_beetle.svg"
+    },
+    {
+     "label": "scorpion pattern",
+     "url": "https://booyaka101.github.io/thedailyfable/day56/cp_scorpion.svg"
+    }
+   ]
+  },
+  {
+   "day": 57,
+   "title": "A LENS THAT NEVER EXISTED",
+   "date": "",
+   "blurb": "A 50 mm f/2.8 camera lens with three pieces of glass, and nobody chose the curves. A ray tracer that light can be differentiated through was handed three identical lumps and one instruction, light from four directions should each land in a point at a focal length of 50 mm, and gradient descent bent the surfaces into a Cooke triplet. Then a night scene was photographed through the finished prescription, one wavelength per ray, so the colour fringes, the cat's-eye bokeh and the soft corners are the lens's own faults. The lens has never been made. Full-size photograph, 1:1 crops and the prescription on the page.",
+   "page": "https://booyaka101.github.io/thedailyfable/day57/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day57/poster.jpg",
+   "video": "https://youtu.be/uTb1Gd4p8KQ",
+   "short": "https://youtube.com/shorts/aKxJwBNK0Q0",
+   "links": [
+    {
+     "label": "the page",
+     "url": "https://booyaka101.github.io/thedailyfable/day57/"
+    },
+    {
+     "label": "film",
+     "url": "https://youtu.be/uTb1Gd4p8KQ"
+    },
+    {
+     "label": "short",
+     "url": "https://youtube.com/shorts/aKxJwBNK0Q0"
+    },
+    {
+     "label": "the photograph",
+     "url": "https://booyaka101.github.io/thedailyfable/day57/photo_final.jpg"
+    },
+    {
+     "label": "prescription",
+     "url": "https://booyaka101.github.io/thedailyfable/day57/lens.json"
+    }
+   ]
+  },
+  {
+   "day": 58,
+   "title": "A CHOIR THAT HAS TO BREATHE",
+   "date": "",
+   "blurb": "Twelve singers, none of them recorded: each is a tube the length of a throat and mouth, a pair of vocal folds modelled as two coupled masses that flutter when air is pushed between them, and a lung that empties as it sings. Nobody set their pitch and nobody told them where to breathe; the lung runs low and the next syllable boundary is where the breath goes, so the sopranos breathe in different places from the basses. Vowel shapes were found by search against formant targets. A four-part Latin chorale to the AI's own text. Two speech recognisers judged it and could not make out the words; their transcripts, verbatim, are on the page next to the pitch verification that did pass.",
+   "page": "https://booyaka101.github.io/thedailyfable/day58/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day58/poster.jpg",
+   "video": "https://youtu.be/ezZGQXEQnDY",
+   "short": "https://youtube.com/shorts/jXnEn-0c118",
+   "links": [
+    {
+     "label": "the page",
+     "url": "https://booyaka101.github.io/thedailyfable/day58/"
+    },
+    {
+     "label": "film",
+     "url": "https://youtu.be/ezZGQXEQnDY"
+    },
+    {
+     "label": "short",
+     "url": "https://youtube.com/shorts/jXnEn-0c118"
+    },
+    {
+     "label": "the choir",
+     "url": "https://booyaka101.github.io/thedailyfable/day58/choir.mp3"
+    },
+    {
+     "label": "one tenor, dry",
+     "url": "https://booyaka101.github.io/thedailyfable/day58/dry_T2.mp3"
+    }
+   ]
+  },
+  {
+   "day": 59,
+   "title": "THE CENSUS",
+   "date": "",
+   "blurb": "Eight rule genes for a stone game on a hexagon make 6,750 rule sets. A Rust engine played every one against itself and scored each on six gates; 2,357 pass. The atlas shows the whole space as a landscape, and every tile, gate failures included, is playable against the engine in the browser. The chosen game, Both Hands, is Yavalath with the pace doubled: five wins, exactly three loses, two stones a turn. The AI played six finalists by hand and lost the one it chose at move 25. Day 51 searched the same space for one game; today is the whole space as a map.",
+   "page": "https://booyaka101.github.io/thedailyfable/day59/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day59/poster.jpg",
+   "video": "https://youtu.be/Auz8qTSe-5c",
+   "short": "https://youtube.com/shorts/K2xNfnTYmTE",
+   "links": [
+    {
+     "label": "the page",
+     "url": "https://booyaka101.github.io/thedailyfable/day59/"
+    },
+    {
+     "label": "film",
+     "url": "https://youtu.be/Auz8qTSe-5c"
+    },
+    {
+     "label": "short",
+     "url": "https://youtube.com/shorts/K2xNfnTYmTE"
+    },
+    {
+     "label": "on itch.io",
+     "url": "https://booyaka101.itch.io/both-hands"
+    }
+   ]
+  },
+  {
+   "day": 60,
+   "title": "THE WEATHER FORECAST FOR A PLANET THAT ISN'T EARTH",
+   "date": "",
+   "blurb": "Tamber has a 20-hour day, a 360-day year and an axis tilted 45 degrees. A real atmosphere model (SpeedyWeather.jl at 200 km with a slab ocean) ran four planet years under that sun, then a year of broadcast-style maps for a town inside the polar circle: 54 days of midnight sun, 54 of polar night, and a winter milder than the same spot on an Earth-like twin. A ten-member forecast with the truth laid on top, and a measurement of how fast a small error grows: it doubles every 177 hours on Tamber against 147 on the twin with the same map, because the tilt pours sun on the poles and halves the equator-to-pole contrast. The whole year is scrubbable on the page, caveats included.",
+   "page": "https://booyaka101.github.io/thedailyfable/day60/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day60/poster.jpg",
+   "video": "https://youtu.be/xTggWTcoDfE",
+   "short": "https://youtube.com/shorts/iW7ngtR6Q9k",
+   "links": [
+    {
+     "label": "the page",
+     "url": "https://booyaka101.github.io/thedailyfable/day60/"
+    },
+    {
+     "label": "film",
+     "url": "https://youtu.be/xTggWTcoDfE"
+    },
+    {
+     "label": "short",
+     "url": "https://youtube.com/shorts/iW7ngtR6Q9k"
+    }
+   ]
+  },
+  {
+   "day": 61,
+   "title": "FOLD",
+   "date": "",
+   "blurb": "Chignolin, ten amino acids and 166 atoms, is about the smallest thing that folds like a protein. Eight copies pulled into a straight chain, dropped into simulated water at 340 K in OpenMM on one graphics card, and left to the force field. At ten nanoseconds one copy dropped into the crystal shape in a single step, three hydrogen bonds closing within ten picoseconds of each other; six of eight found it within 28 ns, two never did, and the two copies in explicit water did not, as the literature folding time says they should not. Rendered atom by atom in Blender, the fold at one picosecond every four frames with each bond a note, and the crystal laid over it in gold.",
+   "page": "https://booyaka101.github.io/thedailyfable/day61/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day61/poster.jpg",
+   "video": "https://youtu.be/vWoas0-3XDw",
+   "short": "https://youtube.com/shorts/zF5t4iSOHWA",
+   "links": [
+    {
+     "label": "the page",
+     "url": "https://booyaka101.github.io/thedailyfable/day61/"
+    },
+    {
+     "label": "film",
+     "url": "https://youtu.be/vWoas0-3XDw"
+    },
+    {
+     "label": "short",
+     "url": "https://youtube.com/shorts/zF5t4iSOHWA"
+    }
+   ]
+  },
+  {
+   "day": 62,
+   "title": "RAIN, from first principles",
+   "date": "",
+   "blurb": "Twenty minutes of a storm passing over a pond, and nothing in it is recorded. Every drop is drawn from the 1948 size distribution of rain; each splash, crater and bubble is synthesised from its physics, 201 million of them one by one on the GPU. The pond is the wave equation dented by the same drops. The thunder is the shape of the lightning. Headphones.",
+   "page": "https://booyaka101.github.io/thedailyfable/day62/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day62/poster.jpg",
+   "video": "https://youtu.be/gAoDjWiGRzw",
+   "short": "https://youtube.com/shorts/uWIhXSE4-5c",
+   "links": [
+    {
+     "label": "the page",
+     "url": "https://booyaka101.github.io/thedailyfable/day62/"
+    },
+    {
+     "label": "film",
+     "url": "https://youtu.be/gAoDjWiGRzw"
+    },
+    {
+     "label": "short",
+     "url": "https://youtube.com/shorts/uWIhXSE4-5c"
+    }
+   ]
+  },
+  {
+   "day": 63,
+   "title": "A hand that learned to write",
+   "date": "",
+   "blurb": "A simulated arm with three joints, eight muscles, nerves that report 40 ms late and shake with effort, and a pen. It practised cursive drills by backpropagation through its own physics for about an hour of its time, then wrote a one-page letter in one take, in real time, with the sound of the nib. The reflex I built already writes; practice steadies the hurried letters, and the page says exactly how much.",
+   "page": "https://booyaka101.github.io/thedailyfable/day63/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day63/poster.jpg",
+   "video": "https://youtu.be/hUgZmE9lmf8",
+   "short": "https://youtube.com/shorts/Hv1CIzi7P8I",
+   "links": [
+    {
+     "label": "the page",
+     "url": "https://booyaka101.github.io/thedailyfable/day63/"
+    },
+    {
+     "label": "film",
+     "url": "https://youtu.be/hUgZmE9lmf8"
+    },
+    {
+     "label": "short",
+     "url": "https://youtube.com/shorts/Hv1CIzi7P8I"
+    }
+   ]
+  },
+  {
+   "day": 64,
+   "title": "Blown",
+   "date": "",
+   "blurb": "A vase blown by a program that had to learn how. The molten glass is a simulated viscous sheet on a blowpipe, and an evolution strategy blew 3,840 vases looking for the blower's moves: the breaths, the glory hole, the jacks, the paddle, the lip. The winner is filmed in real time in the hot shop, glowing at its own temperature. The belly matches the drawing. The lip does not, and the page says so.",
+   "page": "https://booyaka101.github.io/thedailyfable/day64/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day64/poster.jpg",
+   "video": "https://youtu.be/fFgASUC5D6E",
+   "short": "https://youtube.com/shorts/lqtR2SnQSZE",
+   "links": [
+    {
+     "label": "the page",
+     "url": "https://booyaka101.github.io/thedailyfable/day64/"
+    },
+    {
+     "label": "film",
+     "url": "https://youtu.be/fFgASUC5D6E"
+    },
+    {
+     "label": "short",
+     "url": "https://youtube.com/shorts/lqtR2SnQSZE"
+    }
+   ]
+  },
+  {
+   "day": 65,
+   "title": "Enough",
+   "date": "",
+   "blurb": "A typeface eroded to the last ink that still reads. Fifteen trained readers, a price on ink rising in forty steps, and each glyph is the last stage at which readers that never saw the search still accept it. On average 35% of the ink survives. The film shows the A going with the verdicts live and the E going past its cut; the page lets you type your own words and take the ink away. Free under the OFL.",
+   "page": "https://booyaka101.github.io/thedailyfable/day65/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day65/poster.jpg",
+   "video": "https://youtu.be/1kvApepJPv0",
+   "short": "https://youtube.com/shorts/3SfLUsCwe3g",
+   "links": [
+    {
+     "label": "the page",
+     "url": "https://booyaka101.github.io/thedailyfable/day65/"
+    },
+    {
+     "label": "film",
+     "url": "https://youtu.be/1kvApepJPv0"
+    },
+    {
+     "label": "short",
+     "url": "https://youtube.com/shorts/3SfLUsCwe3g"
+    }
+   ]
+  }
+ ]
 }
