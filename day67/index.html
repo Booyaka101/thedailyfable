@@ -1,0 +1,1109 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>PETRICHOR — The Daily Fable, day 67</title>
+<meta property="og:title" content="PETRICHOR — an ocean world, a brush, and the weather">
+<meta property="og:description" content="Raise stone from the sea; the wind will find it. Rain on the windward shore, desert in the lee, ice when the warmth fails. A playable toy climate with its gates published: mass conserved, rain shadows measured, snowball bistability demonstrated.">
+<meta property="og:image" content="https://booyaka101.github.io/thedailyfable/day67/poster.jpg">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://booyaka101.github.io/thedailyfable/day67/">
+<meta name="twitter:card" content="summary_large_image">
+<style>
+  html, body { margin:0; padding:0; height:100%; background:#06090f; overflow:hidden;
+               touch-action:manipulation; font-family:Georgia, 'Times New Roman', serif; }
+  #gl { position:fixed; inset:0; width:100%; height:100%; display:block; touch-action:none; }
+  #topbar { position:fixed; top:0; left:0; right:0; display:flex; justify-content:space-between;
+            align-items:flex-start; padding:10px 14px; pointer-events:none;
+            color:#d8d2c2; text-shadow:0 1px 3px rgba(0,0,0,.9); }
+  #title { font-size:21px; letter-spacing:.35em; }
+  #clock { font-size:13px; font-variant-numeric:tabular-nums; opacity:.85; text-align:right; line-height:1.5; }
+  #note { position:fixed; bottom:64px; left:0; right:0; text-align:center; color:#9a917d;
+          font-size:12.5px; font-style:italic; pointer-events:none; text-shadow:0 1px 3px rgba(0,0,0,.9); }
+  #toolbar { position:fixed; bottom:0; left:0; right:0; display:flex; gap:6px; align-items:center;
+             justify-content:center; padding:8px 6px 10px; flex-wrap:wrap;
+             background:linear-gradient(transparent, rgba(4,6,10,.88) 40%); }
+  .tbtn { min-width:46px; min-height:44px; padding:6px 10px; border:1px solid #4a4436; border-radius:4px;
+          background:rgba(10,12,16,.85); color:#d8d2c2; font-family:inherit; font-size:14px;
+          cursor:pointer; user-select:none; -webkit-user-select:none; touch-action:manipulation; }
+  .tbtn.on { background:#6b5f3f; border-color:#8a7c52; color:#fff; }
+  .tsep { width:10px; }
+  #ghwrap { display:flex; align-items:center; gap:6px; color:#9a917d; font-size:13px; }
+  #gh { width:110px; accent-color:#8a7c52; }
+  #modes { position:fixed; top:52px; right:10px; display:flex; flex-direction:column; gap:6px; }
+  #viewbtn { position:fixed; top:52px; left:10px; }
+</style>
+</head>
+<body>
+<canvas id="gl"></canvas>
+<div id="topbar"><div id="title">PETRICHOR</div><div id="clock"></div></div>
+<div id="note">spinning up the atmosphere…</div>
+<div id="intro" style="position:fixed; inset:0; display:flex; align-items:center; justify-content:center;
+     background:rgba(3,5,9,.55); z-index:5;">
+  <div style="max-width:640px; padding:28px 34px; background:rgba(8,10,14,.92); border:1px solid #4a4436;
+              border-radius:6px; color:#d8d2c2; font-family:Georgia,serif;">
+    <div style="font-size:26px; letter-spacing:.3em; margin-bottom:14px; color:#e8e2d2;">PETRICHOR</div>
+    <p style="font-size:16px; line-height:1.55; margin:0 0 12px;">
+      An ocean world, a brush, and the weather. Raise stone from the sea and the wind
+      will find it: rain on the windward shore, desert in the lee, forests where the
+      water stays, ice where the warmth fails.</p>
+    <p style="font-size:14px; line-height:1.5; margin:0 0 14px; color:#9a917d;">
+      <b>look</b> — drag to turn the world, pinch or scroll to zoom ·
+      <b>raise / lower</b> — drag to build mountains ·
+      <b>sea / sow</b> — tap to flood or to plant ·
+      the <b>sun</b> slider is the greenhouse.</p>
+    <button class="tbtn" id="begin" style="width:100%; font-size:16px;">begin</button>
+  </div>
+</div>
+<div id="cap" style="position:fixed; bottom:9%; left:0; right:0; text-align:center;
+     font-family:Georgia,'Times New Roman',serif; font-size:52px; color:#e8e2d2;
+     text-shadow:0 2px 8px rgba(0,0,0,.95), 0 0 2px rgba(0,0,0,.9);
+     opacity:0; transition:opacity .8s; pointer-events:none; padding:0 8%;"></div>
+<div id="modes">
+  <button class="tbtn on" id="mLook" title="drag to orbit">look</button>
+  <button class="tbtn" id="mRaise" title="drag to raise land">raise</button>
+  <button class="tbtn" id="mLower" title="drag to lower land">lower</button>
+  <button class="tbtn" id="mSea" title="tap to flood to sea">sea</button>
+  <button class="tbtn" id="mSow" title="tap to sow life">sow</button>
+</div>
+<button class="tbtn" id="viewbtn" title="globe / atlas">atlas</button>
+<div id="toolbar">
+  <button class="tbtn" id="pause">▮▮</button>
+  <button class="tbtn on" id="sp1">1×</button>
+  <button class="tbtn" id="sp4">4×</button>
+  <button class="tbtn" id="sp16">16×</button>
+  <div class="tsep"></div>
+  <span style="color:#9a917d;font-size:13px">brush</span>
+  <input type="range" id="brush" min="0.03" max="0.22" step="0.005" value="0.09"
+         style="width:100px; accent-color:#8a7c52; touch-action:none;">
+  <div class="tsep"></div>
+  <div id="ghwrap"><span>sun</span>
+  <input type="range" id="gh" min="0.30" max="1.35" step="0.01" value="0.92"
+         style="width:130px; accent-color:#8a7c52; touch-action:none;"></div>
+</div>
+<script>
+"use strict";
+window.__ERRS = [];
+addEventListener('error', (e) => { if (__ERRS.length < 8) __ERRS.push(String(e.message || e) + ' @' + (e.lineno||0)); });
+addEventListener('unhandledrejection', (e) => __ERRS.push(String(e.reason)));
+/* =====================================================================
+   PETRICHOR — a little planet with real weather. Day 67.
+   Toy GCM in WebGL2 fragment shaders, lat-lon grid, physics-first.
+
+   Fields (RGBA32F):
+     A: h (column thickness m), T (K), q (kg/kg), w (soil wetness 0..1)
+     B: snow (mm we), veg (0..1), ice (0..1), ledger (mm, water accounting)
+     D: u (m/s), v (m/s), P (mm/s ~12h EMA, render+gates), Pstep (mm/s this step)
+     C: z terrain (m, <0 ocean)
+   UNITS: precipitation/evaporation in kg/m2/s (numerically = mm of water per s).
+   Passes per substep: DYN (h flux-form, T adv+thermo, u,v momentum+advect)
+                       MOIST (q evap/rain/advect, soil, water ledger, P)
+                       SURF every 4 steps (snow+melt ledger, veg, sea ice)
+   ===================================================================== */
+
+const Q     = new URLSearchParams(location.search);
+const SEED  = parseInt(Q.get("seed") || "1");
+const RECMODE = Q.get("rec") === "1";
+let VIEW = Q.get("view") || "sphere";   // sphere | flat (live-toggleable)
+const SIMW  = parseInt(Q.get("q") || "0") || (matchMedia("(pointer: coarse)").matches ? 320 : 512);
+const SIMH  = SIMW >> 1;
+const DT    = 300.0;                       // s per substep (5 sim-minutes)
+const STEPSPF = 5;
+
+/* ---------------- physical constants ---------------- */
+const P = {
+  R:      6.371e6, OMEGA: 7.292e-5, g: 9.81,
+  geff:   0.2943,            // reduced gravity 0.03 g  (shallow-water trick; ledgered)
+  H0:     8000.0, GAMMA: 0.2943*30.0,
+  S0:     1361.0, TAU: 0.75, EPS0: 0.70, GH: 0.92, SIGMA: 5.67e-8,
+  KDIFF:  2.5e6, EPSD: 2.9e-6,
+  K_E:    3.4e-6, K_C: 2.0e-4, K_O: 2.2e-4, HQ: 2200.0, K_R: 1.0/(5*86400.0), SOILD: 3000.0,
+  K_MELT: 4.6e-5, LHV: 2.5e6, C_LAT: 5.0e6,
+  C_OC:   4.0e8, C_LN: 1.0e7, C_ICE: 2.0e7,
+  LAPSE:  6.5e-3, NOISE_U: 3.0e-5, NOISE_T: 2.0e-6,
+  TILT:   23.44*Math.PI/180, YEAR: 365.25*86400.0, DAY: 86400.0,
+};
+/* URL overrides for baked physics constants: ?S0=1225 etc (bake time!) */
+for (const [k, v] of Q.entries()) {
+  if (k in P && !isNaN(parseFloat(v))) P[k] = parseFloat(v);
+}
+const SIM = { time: 0.0, steps: 0, season0: 0.15 };
+
+/* ---------------- gl boot ---------------- */
+const cv = document.getElementById("gl");
+const gl = cv.getContext("webgl2", {antialias:false, preserveDrawingBuffer:true});
+if (!gl) { document.body.innerHTML = "<p style='color:#d8d2c2;padding:2em'>WebGL2 required.</p>"; throw new Error("no webgl2"); }
+gl.getExtension("EXT_color_buffer_float");
+const LINEAR_FLOAT = !!gl.getExtension("OES_texture_float_linear");
+
+function resize() {
+  const d = Math.min(devicePixelRatio || 1, 2);
+  cv.width  = Math.max(2, Math.round(cv.clientWidth  * d));
+  cv.height = Math.max(2, Math.round(cv.clientHeight * d));
+}
+addEventListener("resize", resize); addEventListener("orientationchange", resize); resize();
+
+/* ---------------- shader plumbing ---------------- */
+const VS = `#version 300 es
+void main(){
+  vec2 p = vec2(float((gl_VertexID<<1)&2), float(gl_VertexID&2));
+  gl_Position = vec4(p*2.0-1.0, 0.0, 1.0);
+}`;
+
+function prog(fsSource, name) {
+  const p = gl.createProgram();
+  for (const [type, src] of [[gl.VERTEX_SHADER, VS], [gl.FRAGMENT_SHADER, fsSource]]) {
+    const s = gl.createShader(type);
+    gl.shaderSource(s, src); gl.compileShader(s);
+    if (!gl.getShaderParameter(s, gl.COMPILE_STATUS))
+      throw new Error(name + ": " + gl.getShaderInfoLog(s));
+    gl.attachShader(p, s);
+  }
+  gl.linkProgram(p);
+  if (!gl.getProgramParameter(p, gl.LINK_STATUS))
+    throw new Error(name + " link: " + gl.getProgramInfoLog(p));
+  const u = {}, ints = new Set();
+  const n = gl.getProgramParameter(p, gl.ACTIVE_UNIFORMS);
+  for (let i=0;i<n;i++){
+    const info = gl.getActiveUniform(p,i);
+    const nm = info.name.replace("[0]","");
+    u[nm] = gl.getUniformLocation(p, info.name);
+  }
+  for (const m of fsSource.matchAll(/uniform\s+int\s+(\w+)/g)) ints.add(m[1]);
+  return {p, u, ints};
+}
+
+const fmt = gl.RGBA32F, filt = (LINEAR_FLOAT ? gl.LINEAR : gl.NEAREST);
+function makeTex(w,h){ const t = gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_2D, t);
+  gl.texImage2D(gl.TEXTURE_2D,0,fmt,w,h,0,gl.RGBA,gl.FLOAT,null);
+  gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,filt);
+  gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,filt);
+  gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.REPEAT);
+  gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
+  return t; }
+function attachFbo(texs){ const f = gl.createFramebuffer();
+  gl.bindFramebuffer(gl.FRAMEBUFFER, f);
+  texs.forEach((t,i)=>gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0+i, gl.TEXTURE_2D, t, 0));
+  gl.drawBuffers(texs.map((_,i)=>gl.COLOR_ATTACHMENT0+i));
+  return f; }
+
+/* field pairs; index FA.n is "current", (FA.n^1) is "write target" */
+function fieldPair(){ const t=[makeTex(SIMW,SIMH),makeTex(SIMW,SIMH)]; return { t, n:0 }; }
+const FA = fieldPair(), FB = fieldPair(), FD = fieldPair(), FC = fieldPair();
+const fboH     = [attachFbo([FA.t[0]]), attachFbo([FA.t[1]])];
+const fboUV    = [attachFbo([FD.t[0]]), attachFbo([FD.t[1]])];
+const fboMoist = [attachFbo([FA.t[0],FD.t[0]]), attachFbo([FA.t[1],FD.t[1]])];
+const fboSurf  = [attachFbo([FB.t[0]]), attachFbo([FB.t[1]])];
+const fboStampA = [attachFbo([FA.t[0]]), attachFbo([FA.t[1]])];
+const fboStampB = [attachFbo([FB.t[0]]), attachFbo([FB.t[1]])];
+const fboStampC = [attachFbo([FC.t[0]]), attachFbo([FC.t[1]])];
+const fboStampD = [attachFbo([FD.t[0]]), attachFbo([FD.t[1]])];
+const fboInit  = attachFbo([FA.t[0],FB.t[0],FC.t[0],FD.t[0]]);
+const probeTex = makeTex(64,32);
+const fboProbe = attachFbo([probeTex]);
+var PROBW = 64, PROBH = 32;
+var probeData = new Float32Array(64*32*4);
+
+/* ---------------- GLSL ---------------- */
+const CNUM = `
+const float P_R     = ${P.R.toFixed(1)};
+const float P_OMEGA = ${P.OMEGA.toExponential(8)};
+const float P_GE    = ${P.geff.toFixed(6)};
+const float P_GAM   = ${P.GAMMA.toFixed(5)};
+const float H0C     = ${P.H0.toFixed(1)};
+const float P_TAU   = ${P.TAU.toFixed(3)};
+const float P_S0    = ${P.S0.toFixed(1)};
+const float P_SIGMA = ${P.SIGMA.toExponential(4)};
+const float P_KDIFF = ${P.KDIFF.toExponential(4)};
+const float P_EPSD  = ${P.EPSD.toExponential(6)};
+const float P_KE    = ${P.K_E.toExponential(5)};
+const float P_KC    = ${P.K_C.toFixed(4)};
+const float P_KO    = ${P.K_O.toFixed(1)};
+const float P_KR    = ${P.K_R.toExponential(6)};
+const float P_SOILD = ${P.SOILD.toFixed(1)};
+const float P_KMELT = ${P.K_MELT.toExponential(5)};
+const float P_LHV   = ${P.LHV.toExponential(4)};
+const float P_CLAT  = ${P.C_LAT.toExponential(4)};
+const float P_COC   = ${P.C_OC.toExponential(4)};
+const float P_CLN   = ${P.C_LN.toExponential(4)};
+const float P_CICE  = ${P.C_ICE.toExponential(4)};
+const float P_LAPSE = ${P.LAPSE.toExponential(5)};
+const float P_NU    = ${P.NOISE_U.toExponential(4)};
+const float P_NT    = ${P.NOISE_T.toExponential(4)};
+const float DTC     = ${DT.toFixed(1)};
+`;
+
+const GL_HEADER = `#version 300 es
+precision highp float; precision highp int; precision highp sampler2D;
+uniform int W; uniform int H;
+const float PI = 3.14159265359;
+float latOf(int j){ return -PI*0.5 + (float(j)+0.5)/float(H)*PI; }
+float cosOf(int j){ return cos(latOf(j)); }
+float hash12(vec2 p){ vec3 p3 = fract(vec3(p.xyx)*443.8975); p3 += dot(p3, p3.yzx+19.19);
+  return fract((p3.x+p3.y)*p3.z); }
+float vnoise(vec2 p){ vec2 i=floor(p), f=fract(p); f=f*f*(3.0-2.0*f);
+  float a=hash12(i), b=hash12(i+vec2(1,0)), c=hash12(i+vec2(0,1)), d=hash12(i+vec2(1,1));
+  return mix(mix(a,b,f.x), mix(c,d,f.x), f.y); }
+// manual bilinear, x wraps, y clamps
+vec4 bilin(sampler2D s, vec2 p){
+  vec2 q = vec2(p.x, clamp(p.y, 0.5, float(H)-0.5));
+  vec2 i = floor(q-0.5), f = q-0.5-i;
+  int y0 = int(clamp(i.y, 0.0, float(H-1))), y1 = int(clamp(i.y+1.0, 0.0, float(H-1)));
+  int x0 = int(mod(i.x, float(W))), x1 = int(mod(i.x+1.0, float(W)));
+  vec4 a=texelFetch(s, ivec2(x0,y0), 0), b=texelFetch(s, ivec2(x1,y0), 0);
+  vec4 c=texelFetch(s, ivec2(x0,y1), 0), d=texelFetch(s, ivec2(x1,y1), 0);
+  return mix(mix(a,b,f.x), mix(c,d,f.x), f.y);
+}
+` + CNUM;
+
+const PHYS_COMMON = `
+uniform sampler2D uA; uniform sampler2D uB; uniform sampler2D uD; uniform sampler2D uC;
+uniform float uSeason;  // 0..1 year fraction
+uniform float uTime;    // sim seconds
+uniform float uGHs;
+uniform float uEps0;
+uniform float uNU;      // stirring accel m/s2 (0 = still air)
+uniform float uNT;      // stirring K/s
+#define DLON (2.0*PI/float(W))
+#define DPHI (PI/float(H))
+float subLat(){ return 0.4093 * sin(2.0*PI*uSeason); }
+float sunLon(){ return mod(2.0*PI*uTime/86400.0, 2.0*PI); }
+float coszAt(float lon, float lat){ float d = subLat();
+  return sin(lat)*sin(d) + cos(lat)*cos(d)*cos(lon - sunLon()); }
+float qsat(float Tk){ float tc = Tk - 273.15;
+  return 3.88e-3 * exp(17.625*tc/(tc + 243.04)); }
+float epsLW(){ return max(0.40, uEps0 - 0.20*uGHs); }
+`;
+
+/* ================= DYN-H (flux-form h, then T) =================
+   Forward-backward split, pass 1: h from OLD winds (exact mass conservation),
+   T advected + thermodynamics. Pass 2 (DYN-UV) does momentum from the NEW h. */
+const FS_DYN = GL_HEADER + PHYS_COMMON + `
+layout(location=0) out vec4 fragA;
+float polarMask(float lat){ float a = abs(lat);
+  return 1.0 - smoothstep(1.0472, 1.3090, a); }   // 60..75 deg
+void main(){
+  ivec2 xy = ivec2(gl_FragCoord.xy);
+  int i = xy.x, j = xy.y;
+  float lon = (float(i)+0.5)*DLON, lat = latOf(j), cphi = cosOf(j);
+  vec4 a = texelFetch(uA, xy, 0);
+  vec4 b = texelFetch(uB, xy, 0);
+  vec4 d = texelFetch(uD, xy, 0);
+  float z = texelFetch(uC, xy, 0).x;
+  float h = a.x, T = a.y;
+
+  ivec2 xe = ivec2((i+1)%W, j), xw = ivec2((i-1+W)%W, j);
+  int jn = min(j+1, H-1), js = max(j-1, 0);
+
+  // ---------- h : flux-form continuity (exact mass conservation) ----------
+  float uE = texelFetch(uD, xe, 0).x, uW = texelFetch(uD, xw, 0).x;
+  float hE = texelFetch(uA, xe, 0).x, hW = texelFetch(uA, xw, 0).x;
+  vec4 aN = texelFetch(uA, ivec2(i,jn), 0), aS = texelFetch(uA, ivec2(i,js), 0);
+  vec4 dN = texelFetch(uD, ivec2(i,jn), 0), dS = texelFetch(uD, ivec2(i,js), 0);
+  float Fp_n = (j==H-1) ? 0.0 : 0.5*(h+aN.x)*0.5*(d.y+dN.y)*cosOf(jn);
+  float Fp_s = (j==0)   ? 0.0 : 0.5*(h+aS.x)*0.5*(d.y+dS.y)*cosOf(js);
+  float Fl_e = 0.5*(h+hE)*0.5*(d.x+uE);
+  float Fl_w = 0.5*(h+hW)*0.5*(d.x+uW);
+  float dh = -DTC/(P_R*cphi) * ( (Fl_e-Fl_w)/DLON + (Fp_n-Fp_s)/DPHI );
+  float hNew = h + dh;
+  if (!(abs(hNew - H0C) < 4000.0)) hNew = H0C + clamp(hNew - H0C, -3000.0, 3000.0); // NaN rail
+
+  // ---------- T : semi-Lag advection + thermodynamics ----------
+  float pm = polarMask(lat);
+  float dxm = P_R*cphi*DLON, dym = P_R*DPHI;
+  vec2 back = vec2(float(i)+0.5 - d.x*DTC/dxm, float(j)+0.5 - d.y*DTC/dym);
+  vec4 backA = bilin(uA, back);
+  float Tn = backA.y;
+  float icef = b.z;
+  float snowf = clamp(b.x/25.0, 0.0, 1.0);
+  float baseAlb = (z < 0.0) ? 0.06 : mix(0.34, 0.12, b.y);
+  float alb2 = mix(baseAlb, 0.50, max(snowf, icef));
+  float cz = coszAt(lon, lat);
+  float sw = (cz > 0.0) ? P_TAU*P_S0*cz : 0.0;
+  float Cs = (z < 0.0) ? ((icef > 0.5) ? P_CICE : P_COC) : P_CLN;
+  float dT = ((1.0-alb2)*sw - epsLW()*P_SIGMA*T*T*T*T)/Cs;
+  float lapT = aN.y + aS.y + texelFetch(uA,xe,0).y + texelFetch(uA,xw,0).y - 4.0*T;
+  float KcT = min(P_KDIFF, 0.12*dxm*dxm/DTC);
+  dT += 0.3*KcT*lapT/(dxm*dxm);
+  float n1 = vnoise(vec2(lon*2.4 - uTime*3.0e-6, lat*4.8)) - 0.5;
+  float n2 = vnoise(vec2(lon*5.0 + uTime*7.0e-6, lat*9.0)) - 0.5;
+  dT += uNT*(n2-0.5)*pm;   // zero-mean (vnoise centers on 0.5!)
+  Tn = max(180.0, Tn + dT*DTC);
+  if (!(Tn < 400.0)) Tn = backA.y;   // NaN crash-rail: keep yesterday's T
+
+  fragA = vec4(hNew, Tn, a.z, a.w);
+}`;
+
+/* ================= DYN-UV (momentum from the NEW h and T) ================= */
+const FS_DYNUV = GL_HEADER + PHYS_COMMON + `
+layout(location=0) out vec4 fragD;
+float polarMask(float lat){ float a = abs(lat);
+  return 1.0 - smoothstep(1.0472, 1.3090, a); }   // 60..75 deg
+void main(){
+  ivec2 xy = ivec2(gl_FragCoord.xy);
+  int i = xy.x, j = xy.y;
+  float lon = (float(i)+0.5)*DLON, lat = latOf(j), cphi = cosOf(j);
+  vec4 a = texelFetch(uA, xy, 0);   // NEW h, T
+  vec4 d = texelFetch(uD, xy, 0);   // OLD u,v
+  ivec2 xe = ivec2((i+1)%W, j), xw = ivec2((i-1+W)%W, j);
+  int jn = min(j+1, H-1), js = max(j-1, 0);
+  vec4 aN = texelFetch(uA, ivec2(i,jn), 0), aS = texelFetch(uA, ivec2(i,js), 0);
+  vec4 dN = texelFetch(uD, ivec2(i,jn), 0), dS = texelFetch(uD, ivec2(i,js), 0);
+  float pm = polarMask(lat);
+  float f = 2.0*P_OMEGA*sin(lat);
+  float dxm = P_R*cphi*DLON, dym = P_R*DPHI;
+
+  // PGF from the UPDATED fields (forward-backward: this is what makes waves stable)
+  float etaE = P_GE*texelFetch(uA,xe,0).x + P_GAM*texelFetch(uA,xe,0).y;
+  float etaW = P_GE*texelFetch(uA,xw,0).x + P_GAM*texelFetch(uA,xw,0).y;
+  float etaN = P_GE*aN.x + P_GAM*aN.y;
+  float etaS = P_GE*aS.x + P_GAM*aS.y;
+  float du = f*d.y - (etaE-etaW)/(2.0*dxm);
+  float dv = -f*d.x - (etaN-etaS)/(2.0*dym);
+
+  float Kc = min(P_KDIFF, 0.18*dxm*dxm/DTC);
+  vec2 lap = dN.xy + dS.xy + texelFetch(uD,xe,0).xy + texelFetch(uD,xw,0).xy - 4.0*d.xy;
+  du += Kc*lap.x/(dxm*dxm);
+  dv += Kc*lap.y/(dym*dym);
+  float n1 = vnoise(vec2(lon*2.4 - uTime*3.0e-6, lat*4.8)) - 0.5;
+  float n2 = vnoise(vec2(lon*5.0 + uTime*7.0e-6, lat*9.0)) - 0.5;
+  du += (uNU*(n1*1.4 + n2*0.6) - P_EPSD*d.x)*pm;
+  dv += (uNU*(n2*1.4 - n1*0.6) - P_EPSD*d.y)*pm;
+
+  // semi-Lagrangian advection of (u,v), then forces
+  vec2 back = vec2(float(i)+0.5 - d.x*DTC/dxm, float(j)+0.5 - d.y*DTC/dym);
+  vec2 uvA = bilin(uD, back).xy;
+  vec2 uvNew = uvA + vec2(du,dv)*DTC;
+  // polar wind suppression (stability filter: tiny winds near the poles)
+  float wmask = 0.15 + 0.85*pm;
+  uvNew *= wmask;
+  float sp = length(uvNew)*DTC;
+  if (sp > 2.0*dxm) uvNew *= (2.0*dxm)/sp;
+  if (!(abs(uvNew.x) < 1.0e5)) uvNew = vec2(0.0);   // NaN crash-rail
+
+  fragD = vec4(uvNew, d.z, d.w);
+}`;
+
+/* ================= MOIST ================= */
+const FS_MOIST = GL_HEADER + PHYS_COMMON + `
+layout(location=0) out vec4 fragA;
+layout(location=1) out vec4 fragD;
+void main(){
+  ivec2 xy = ivec2(gl_FragCoord.xy);
+  int i = xy.x, j = xy.y;
+  float lon = (float(i)+0.5)*DLON, lat = latOf(j), cphi = cosOf(j);
+  vec4 a = texelFetch(uA, xy, 0);
+  vec4 b = texelFetch(uB, xy, 0);
+  vec4 d = texelFetch(uD, xy, 0);
+  float z = texelFetch(uC, xy, 0).x;
+  float q = a.z, w = a.w;
+  float dxm = P_R*cphi*DLON, dym = P_R*DPHI;
+
+  // terrain slopes (dimensionless) — only LAND lifts air; the sea floor is flat to the wind
+  float zlE = max(texelFetch(uC, ivec2((i+1)%W, j), 0).x, 0.0);
+  float zlW = max(texelFetch(uC, ivec2((i-1+W)%W, j), 0).x, 0.0);
+  int jn = min(j+1, H-1), js = max(j-1, 0);
+  float zlN = max(texelFetch(uC, ivec2(i,jn), 0).x, 0.0);
+  float zlS = max(texelFetch(uC, ivec2(i,js), 0).x, 0.0);
+  vec2 gradZ = vec2((zlE-zlW)/(2.0*dxm), (zlN-zlS)/(2.0*dym));
+
+  // ---------- evaporation (q = column water, mm; effective lower-troposphere depth HQ) ----------
+  float Qsat = 2200.0*qsat(a.y);
+  float isSea = (z < 0.0) ? 1.0 : 0.0;
+  float evap = P_KE*max(0.0, Qsat - q);
+  float eSea  = evap*(1.0 - b.z);        // sea only, shut by ice
+  float eLand = evap*w;                  // land, by soil wetness
+  float E = mix(eLand, eSea, isSea);
+
+  // ---------- precipitation ----------
+  float Tair = a.y - P_LAPSE*max(0.0, z);
+  float wUp = max(0.0, d.x*gradZ.x + d.y*gradZ.y);   // upslope vertical speed m/s
+  // orographic rain is supply-limited (slow drain); convective relief of
+  // supersaturation must be FAST or q runs away — separate caps.
+  float Poro  = min(P_KO*q*wUp, q*0.002/DTC);
+  float Pconv = min(P_KC*max(0.0, q - 0.85*2200.0*qsat(Tair)), q*0.01/DTC);
+  float Pr = Poro + Pconv;
+  float qNew = max(0.0, q + (E - Pr)*DTC);
+
+  // ---------- soil ----------
+  float wNew = w;
+  if (z >= 0.0) {
+    wNew = clamp(w + (Pr - eLand - P_KR*w)*DTC/P_SOILD, 0.0, 1.0);
+  }
+
+  // semi-Lagrangian advection of q
+  vec2 back = vec2(float(i)+0.5 - d.x*DTC/dxm, float(j)+0.5 - d.y*DTC/dym);
+  float qAdv = bilin(uA, back).z;
+  float qOut = max(0.0, qAdv + (qNew - q));
+  if (!(qOut >= 0.0 && qOut < 5000.0)) qOut = q;   // NaN/negative/absurd crash-rail only
+
+  float Pema = mix(d.z, Pr, clamp(DTC/43200.0, 0.0, 1.0));  // ~12 h EMA
+
+  fragA = vec4(a.x, a.y, qOut, wNew);
+  fragD = vec4(d.x, d.y, Pema, Pr);
+}`;
+
+/* ================= SURF (every 4th substep) ================= */
+const FS_SURF = GL_HEADER + PHYS_COMMON + `
+layout(location=0) out vec4 fragB;
+void main(){
+  ivec2 xy = ivec2(gl_FragCoord.xy);
+  vec4 a = texelFetch(uA, xy, 0);
+  vec4 b = texelFetch(uB, xy, 0);
+  vec4 d = texelFetch(uD, xy, 0);
+  float z = texelFetch(uC, xy, 0).x;
+  float T = a.y, snow = b.x, veg = b.y, ice = b.z;
+  float Teff = T - P_LAPSE*max(0.0, z);
+  float Pr = d.w;   // mm/s this substep
+  float melt = 0.0;
+  if (z >= 0.0) {
+    melt = (Teff >= 273.15) ? min(snow, P_KMELT*max(0.0, Teff-273.15)*DTC) : 0.0;
+    snow = (Teff < 273.15) ? snow + Pr*4.0*DTC : snow - melt;   // SURF runs every 4th step
+    snow = min(snow, 2000.0);
+    float grow = (Teff > 268.0 && Teff < 308.0 && a.w > 0.30) ? DTC/(90.0*86400.0) : 0.0;
+    float die  = (a.w < 0.15 || Teff < 255.0) ? DTC/(60.0*86400.0) : 0.0;
+    veg = clamp(veg + grow*(1.0-veg) - die*veg, 0.0, 1.0);
+  } else {
+    if (T < 271.0) ice = min(1.0, ice + DTC/(45.0*86400.0));
+    if (T > 273.5) ice = max(0.0, ice - DTC/(10.0*86400.0));
+  }
+  // water ledger (mm, external fluxes only): sea evaporation in; soil drainage
+  // and snowmelt out. SURF runs every 4 substeps, hence 4*DTC.
+  float evap = P_KE*max(0.0, 2200.0*qsat(T) - a.z);
+  float isSea = step(z, 0.0);
+  float eSea = evap*(1.0 - ice)*isSea;
+  float runoff = P_KR*a.w*(1.0 - isSea);
+  float psea = Pr*isSea;   // rain into the sea leaves the tracked system
+  float ledger = b.w + (eSea - runoff - melt - psea)*4.0*DTC;
+  fragB = vec4(snow, veg, ice, ledger);
+}`;
+
+/* ================= STAMP (gates + brush: inject one field) =================
+   Writes ONLY the target field's pair — no cross-pair parity coupling.
+   target: 0 z(C), 1 h, 2 T, 3 q, 4 w, 5 snow, 6 ice, 7 u, 8 v
+   mode: 0 add gaussian, 1 blend-to-value                                  */
+const FS_STAMP = GL_HEADER + `
+uniform sampler2D uA; uniform sampler2D uB; uniform sampler2D uC; uniform sampler2D uD;
+uniform vec3 uStamp;    // lon, lat, sigma_rad
+uniform float uAmt;
+uniform float uMode;
+uniform int uTarget;
+layout(location=0) out vec4 frag;
+void main(){
+  ivec2 xy = ivec2(gl_FragCoord.xy);
+  float lon = (float(xy.x)+0.5)*2.0*PI/float(W), lat = latOf(xy.y);
+  vec4 a = texelFetch(uA, xy, 0);
+  vec4 b = texelFetch(uB, xy, 0);
+  vec4 c = texelFetch(uC, xy, 0);
+  vec4 d = texelFetch(uD, xy, 0);
+  float dL = lon - uStamp.x; dL = mod(dL + PI, 2.0*PI) - PI;
+  float dP = lat - uStamp.y;
+  float dl = sqrt(dL*dL*cos(lat)*cos(uStamp.y) + dP*dP);
+  float g = exp(-(dl*dl)/(2.0*uStamp.z*uStamp.z));
+  vec4 v = c;
+  if (uTarget == 0) v = vec4((uMode<0.5) ? clamp(c.x + uAmt*g, -6000.0, 8000.0) : mix(c.x, uAmt, g), 0.0, 0.0, 0.0);
+  else if (uTarget == 1) v = vec4((uMode<0.5) ? a.x + uAmt*g : mix(a.x, uAmt, g), a.y, a.z, a.w);
+  else if (uTarget == 2) v = vec4(a.x, (uMode<0.5) ? a.y + uAmt*g : mix(a.y, uAmt, g), a.z, a.w);
+  else if (uTarget == 3) v = vec4(a.x, a.y, (uMode<0.5) ? a.z + uAmt*g : mix(a.z, uAmt, g), a.w);
+  else if (uTarget == 4) v = vec4(a.x, a.y, a.z, (uMode<0.5) ? clamp(a.w + uAmt*g, 0.0, 1.0) : mix(a.w, uAmt, g));
+  else if (uTarget == 5) v = vec4((uMode<0.5) ? b.x + uAmt*g : mix(b.x, uAmt, g), b.y, b.z, b.w);
+  else if (uTarget == 6) v = vec4(b.x, b.y, (uMode<0.5) ? clamp(b.z + uAmt*g, 0.0, 1.0) : mix(b.z, uAmt, g), b.w);
+  else if (uTarget == 7) v = vec4((uMode<0.5) ? d.x + uAmt*g : mix(d.x, uAmt, g), d.y, d.z, d.w);
+  else if (uTarget == 8) v = vec4(d.x, (uMode<0.5) ? d.y + uAmt*g : mix(d.y, uAmt, g), d.z, d.w);
+  frag = v;
+}`;
+
+/* ================= INIT ================= */
+const FS_INIT = GL_HEADER + `
+uniform float uSeed;
+layout(location=0) out vec4 fragA;
+layout(location=1) out vec4 fragB;
+layout(location=2) out vec4 fragC;
+layout(location=3) out vec4 fragD;
+float qsat(float Tk){ float tc = Tk - 273.15;
+  return 3.88e-3 * exp(17.625*tc/(tc + 243.04)); }
+void main(){
+  ivec2 xy = ivec2(gl_FragCoord.xy);
+  float lon = (float(xy.x)+0.5)*2.0*PI/float(W), lat = latOf(xy.y);
+  float n = vnoise(vec2(lon*3.0+uSeed, lat*6.0))*0.55 + vnoise(vec2(lon*9.0-uSeed, lat*15.0))*0.45;
+  float T = 285.0 + 6.0*cos(2.0*lat) + 1.5*(n-0.5);
+  vec4 Av = vec4(H0C, T, 0.75*2200.0*qsat(T), 0.0);   // q = column water vapour, mm
+  vec4 Bv = vec4(0.0, 0.0, 0.0, 0.0);
+  vec4 Cv = vec4(-4200.0 - 60.0*n, 0.0, 0.0, 0.0);
+  vec4 Dv = vec4(0.0, 0.0, 0.0, 0.0);
+  fragA = Av; fragB = Bv; fragC = Cv; fragD = Dv;
+}`;
+
+/* ================= VIEW: flat atlas ================= */
+const FS_VIEW_FLAT = GL_HEADER + PHYS_COMMON + `
+uniform float WINW; uniform float WINH;
+layout(location=0) out vec4 frag;
+void main(){
+  vec2 suv = gl_FragCoord.xy / vec2(WINW, WINH);
+  ivec2 xy = ivec2(clamp(suv*vec2(float(W), float(H)), vec2(0.0), vec2(float(W-1), float(H-1))));
+  vec4 a = texelFetch(uA, xy, 0);
+  vec4 b = texelFetch(uB, xy, 0);
+  vec4 d = texelFetch(uD, xy, 0);
+  float z = texelFetch(uC, xy, 0).x;
+  float lon = (float(xy.x)+0.5)*DLON, lat = latOf(xy.y);
+
+  vec3 col;
+  if (z < 0.0) {
+    float depth = clamp(-z/6000.0, 0.0, 1.0);
+    col = mix(vec3(0.12,0.42,0.48), vec3(0.015,0.07,0.16), smoothstep(0.05,0.8,depth));
+    if (b.z > 0.05) col = mix(col, vec3(0.80,0.85,0.89), b.z);
+  } else {
+    float e = clamp(z/5000.0, 0.0, 1.0);
+    col = mix(vec3(0.32,0.38,0.20), vec3(0.42,0.36,0.28), smoothstep(0.2,0.7,e));
+    col = mix(col, vec3(0.55,0.52,0.47), smoothstep(0.65,1.0,e));
+    col = mix(col, vec3(0.62,0.52,0.30), clamp(1.0 - a.w*2.2, 0.0, 1.0)*(1.0-b.y));
+    col = mix(col, vec3(0.10,0.30,0.10), b.y*0.8);
+    float snowf = clamp(b.x/60.0, 0.0, 1.0);
+    col = mix(col, vec3(0.93,0.94,0.96), snowf);
+  }
+  float prr = clamp(d.z*4.0, 0.0, 1.0);
+  col = mix(col, vec3(0.25,0.45,0.85), prr*0.45);
+  float rh = a.z / max(2200.0*qsat(a.y - P_LAPSE*max(0.0,z)), 1.0e-6);
+  float cl = smoothstep(0.90, 1.02, rh);
+  col = mix(col, vec3(0.92), cl*0.75);
+  float cz = coszAt(lon, lat);
+  col *= (0.18 + 0.82*smoothstep(-0.12, 0.12, cz));
+  frag = vec4(pow(col, vec3(0.9)), 1.0);
+}`;
+
+/* ================= PROBE: field -> 64x32 box averages =================
+   field: 0 h, 1 T, 2 q, 3 w, 4 snow, 5 veg, 6 ice, 7 ledger,
+          8 u, 9 v, 10 P, 11 z                                              */
+/* ================= VIEW: sphere (raytraced, lit by the same sun) ================= */
+const FS_VIEW_SPHERE = GL_HEADER + PHYS_COMMON + `
+uniform float WINW; uniform float WINH;
+uniform vec3 uCamPos;
+uniform mat3 uCamMat;
+uniform vec3 uSunDir; uniform vec3 uNrmE;
+layout(location=0) out vec4 frag;
+float pX; float pY;
+vec3 paletteOf(vec4 a, vec4 b, vec4 d, float z, float lon, float lat, float cz, vec3 nrm, vec3 ray){
+  vec3 col;
+  if (z < 0.0) {
+    float depth = clamp(-z/6000.0, 0.0, 1.0);
+    col = mix(vec3(0.19,0.52,0.58), vec3(0.035,0.11,0.22), smoothstep(0.05,0.8,depth));
+    if (b.z > 0.05) col = mix(col, vec3(0.82,0.87,0.91), b.z);
+    vec3 r = reflect(-ray, nrm);
+    float glint = pow(max(dot(r, uSunDir), 0.0), 220.0) * step(0.0, cz) * (1.0 - b.z);
+    col += vec3(1.0, 0.95, 0.82) * glint * 1.2;
+  } else {
+    float e = clamp(z/5000.0, 0.0, 1.0);
+    col = mix(vec3(0.34,0.40,0.22), vec3(0.44,0.38,0.30), smoothstep(0.2,0.7,e));
+    col = mix(col, vec3(0.56,0.53,0.48), smoothstep(0.65,1.0,e));
+    col = mix(col, vec3(0.64,0.53,0.32), clamp(1.0 - a.w*2.2, 0.0, 1.0)*(1.0-b.y));
+    col = mix(col, vec3(0.11,0.31,0.11), b.y*0.8);
+    float snowf = clamp(b.x/60.0, 0.0, 1.0);
+    col = mix(col, vec3(0.93,0.94,0.96), snowf);
+    float zE = texelFetch(uC, ivec2(int(pX)+1, int(pY)), 0).x - texelFetch(uC, ivec2(int(pX)-1, int(pY)), 0).x;
+    float zN = texelFetch(uC, ivec2(int(pX), min(int(pY)+1, H-1)), 0).x - texelFetch(uC, ivec2(int(pX), max(int(pY)-1, 0)), 0).x;
+    vec3 n2 = normalize(nrm + vec3(0.00016*zE, 0.0, 0.00016*zN));
+    col *= 0.72 + 0.5*max(dot(n2, uSunDir), 0.0);
+  }
+  float prr = clamp(d.z*4.0, 0.0, 1.0);
+  col = mix(col, vec3(0.28,0.48,0.88), prr*0.4);
+  float rh = a.z / max(2200.0*qsat(a.y - P_LAPSE*max(0.0,z)), 1.0e-6);
+  float cl = smoothstep(0.90, 1.02, rh);
+  vec3 cloudCol = mix(vec3(0.98), vec3(0.45,0.5,0.6), smoothstep(0.1, -0.2, cz));
+  col = mix(col, cloudCol, cl*0.85);
+  // Lambert volume within the lit side
+  float lam = max(dot(nrm, uSunDir), 0.0);
+  col *= (0.62 + 0.55*lam);
+  return col;
+}
+void main(){
+  vec2 uv = (gl_FragCoord.xy - 0.5*vec2(WINW, WINH)) / WINH;
+  vec3 ray = normalize(uCamMat * normalize(vec3(uv, 1.6)));
+  float b = dot(uCamPos, ray);
+  float cc = dot(uCamPos, uCamPos) - 1.0;
+  float disc = b*b - cc;
+  vec3 sky = vec3(0.008, 0.010, 0.016);
+  float star = step(0.9992, hash12(floor(gl_FragCoord.xy/1.5)));
+  sky += vec3(star)*0.5;
+  if (disc < 0.0) { frag = vec4(sky, 1.0); return; }
+  float t = -b - sqrt(disc);
+  if (t < 0.0) { frag = vec4(sky, 1.0); return; }
+  vec3 pos = uCamPos + t*ray;
+  vec3 nrm = normalize(pos);
+  float lat = asin(clamp(nrm.y, -1.0, 1.0));
+  float lon = atan(nrm.z, nrm.x);
+  float fy = (0.5 - lat/PI)*float(H);
+  float fx = mod((lon + PI)/(2.0*PI)*float(W), float(W));
+  pX = fx; pY = fy;
+  ivec2 xy = ivec2(clamp(fx, 0.0, float(W-1)), clamp(fy, 0.0, float(H-1)));
+  vec4 a = texelFetch(uA, xy, 0);
+  vec4 bb = texelFetch(uB, xy, 0);
+  vec4 d = texelFetch(uD, xy, 0);
+  float z = texelFetch(uC, xy, 0).x;
+  float cz = coszAt(lon + PI, lat);
+  vec3 col = paletteOf(a, bb, d, z, lon, lat, cz, nrm, ray);
+  float day = smoothstep(-0.12, 0.18, cz);
+  col = col * (0.05 + 0.95*day) + vec3(0.25,0.08,0.0)*smoothstep(0.06,-0.06,cz)*0.35;
+  float rim = pow(1.0 - abs(dot(nrm, ray)), 3.0);
+  col += vec3(0.25,0.45,0.9) * rim * 0.55 * max(day, 0.08);
+  frag = vec4(pow(col, vec3(0.92)), 1.0);
+}`;
+
+const FS_PROBE = GL_HEADER + `
+uniform sampler2D uA; uniform sampler2D uB; uniform sampler2D uD; uniform sampler2D uC;
+uniform int uField;
+uniform float uSeason; uniform float uTime; uniform float uGHs; uniform float uEps0;
+float subLat(){ return 0.4093 * sin(2.0*PI*uSeason); }
+float sunLon(){ return mod(2.0*PI*uTime/86400.0, 2.0*PI); }
+float coszAt(float lon, float lat){ float dd = subLat();
+  return sin(lat)*sin(dd) + cos(lat)*cos(dd)*cos(lon - sunLon()); }
+float qsatP(float Tk){ float tc = Tk - 273.15;
+  return 3.88e-3 * exp(17.625*tc/(tc + 243.04)); }
+layout(location=0) out vec4 frag;
+void main(){
+  int bw = W/64, bh = H/32;
+  int i0 = int(gl_FragCoord.x)*bw, j0 = int(gl_FragCoord.y)*bh;
+  float s = 0.0;
+  for (int jj=0; jj<16; jj++){ if (jj>=bh) break;
+    for (int ii=0; ii<16; ii++){ if (ii>=bw) break;
+      ivec2 p = ivec2(i0+ii, j0+jj);
+      vec4 a = texelFetch(uA,p,0), b = texelFetch(uB,p,0), d = texelFetch(uD,p,0);
+      float z = texelFetch(uC,p,0).x;
+      float v = z;
+      float lon0 = (float(p.x)+0.5)*2.0*PI/float(W), lat0 = latOf(p.y);
+      if (uField==0) v=a.x; else if (uField==1) v=a.y; else if (uField==2) v=a.z;
+      else if (uField==3) v=a.w; else if (uField==4) v=b.x; else if (uField==5) v=b.y;
+      else if (uField==6) v=b.z; else if (uField==7) v=b.w;
+      else if (uField==8) v=d.x; else if (uField==9) v=d.y; else if (uField==10) v=d.z;
+      else if (uField==12) v=d.w;
+      else if (uField>=13) {
+        float icef = b.z, snowf = clamp(b.x/25.0, 0.0, 1.0);
+        float baseAlb = (z < 0.0) ? 0.06 : mix(0.34, 0.12, b.y);
+        float alb2 = mix(baseAlb, 0.50, max(snowf, icef));
+        float cz = coszAt(lon0, lat0);
+        float sw = (cz > 0.0) ? P_TAU*P_S0*cz : 0.0;
+        if (uField==13) v = (1.0-alb2)*sw;
+        else if (uField==14) v = max(0.40, uEps0 - 0.20*uGHs)*P_SIGMA*a.y*a.y*a.y*a.y;
+      }
+      s += v;
+    } }
+  frag = vec4(s/float(bw*bh), 0.0, 0.0, 0.0);
+}`;
+
+/* ---------------- programs ---------------- */
+const PR = {};
+for (const [nm, src, tag] of [
+  ["dyn", FS_DYN, "dyn"], ["dynuv", FS_DYNUV, "dynuv"],
+  ["moist", FS_MOIST, "moist"], ["surf", FS_SURF, "surf"],
+  ["edit", FS_STAMP, "stamp"], ["init", FS_INIT, "init"], ["flat", FS_VIEW_FLAT, "flat"],
+  ["sphere", FS_VIEW_SPHERE, "sphere"],
+  ["probe", FS_PROBE, "probe"],
+]) { try { PR[nm] = prog(src, tag); } catch (e) { PR[nm] = null; window.__SHADER_ERR = String(e.message||e).slice(0, 2000); } }
+
+const quadVAO = gl.createVertexArray();
+function setUniforms(pr, uniforms) {
+  for (const [k,v] of Object.entries(uniforms||{})) {
+    const loc = pr.u[k]; if (loc === undefined || loc === null) continue;
+    if (Array.isArray(v) && v.length === 9) gl.uniformMatrix3fv(loc, false, v);
+    else if (Array.isArray(v)) gl.uniform3f(loc, v[0], v[1], v[2]);
+    else if (typeof v === "object") gl.uniform1i(loc, v.texUnit);
+    else if (pr.ints.has(k)) gl.uniform1i(loc, v|0);
+    else gl.uniform1f(loc, v);
+  }
+}
+function useSimTextures(pr, a,b,c,d) {
+  gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, a); gl.uniform1i(pr.u.uA, 0);
+  gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D, b); gl.uniform1i(pr.u.uB, 1);
+  gl.activeTexture(gl.TEXTURE2); gl.bindTexture(gl.TEXTURE_2D, c); gl.uniform1i(pr.u.uD, 2);
+  gl.activeTexture(gl.TEXTURE3); gl.bindTexture(gl.TEXTURE_2D, d); gl.uniform1i(pr.u.uC, 3);
+}
+function bindFieldTextures(pr) {
+  useSimTextures(pr, FA.t[FA.n], FB.t[FB.n], FD.t[FD.n], FC.t[FC.n]);
+}
+
+/* ---------------- sim steps ---------------- */
+let substepCount = 0;
+window.__GLERRS = [];
+function glErr(tag){ if (window.__GLERRS.length < 8) { const e = gl.getError(); if (e !== 0) window.__GLERRS.push(tag + ':' + e); } }
+function substep() {
+  const season = (SIM.season0 + SIM.time/P.YEAR) % 1.0;
+  const cmn = { uSeason: season, uTime: SIM.time, uGHs: P.GH, uEps0: P.EPS0,
+                uNU: P.NOISE_U, uNT: P.NOISE_T };
+
+  // DYN -> FA.nxt, FD.nxt
+  let pr = PR.dyn;
+  gl.useProgram(pr.p);
+  gl.uniform1i(pr.u.W, SIMW); gl.uniform1i(pr.u.H, SIMH);
+  bindFieldTextures(pr);
+  gl.bindFramebuffer(gl.FRAMEBUFFER, fboH[FA.n^1]);
+  gl.viewport(0,0,SIMW,SIMH);
+  setUniforms(pr, cmn);
+  gl.bindVertexArray(quadVAO);
+  gl.drawArrays(gl.TRIANGLES, 0, 3);
+  glErr('dynH');
+  FA.n^=1;
+
+  // DYN-UV: momentum from the NEW h,T -> FD.nxt
+  pr = PR.dynuv;
+  gl.useProgram(pr.p);
+  gl.uniform1i(pr.u.W, SIMW); gl.uniform1i(pr.u.H, SIMH);
+  bindFieldTextures(pr);
+  gl.bindFramebuffer(gl.FRAMEBUFFER, fboUV[FD.n^1]);
+  setUniforms(pr, cmn);
+  gl.drawArrays(gl.TRIANGLES, 0, 3);
+  glErr('dynuv');
+  FD.n^=1;
+
+  // MOIST -> FA.nxt, FD.nxt
+  pr = PR.moist;
+  gl.useProgram(pr.p);
+  gl.uniform1i(pr.u.W, SIMW); gl.uniform1i(pr.u.H, SIMH);
+  bindFieldTextures(pr);
+  gl.bindFramebuffer(gl.FRAMEBUFFER, fboMoist[FA.n^1]);
+  setUniforms(pr, cmn);
+  gl.drawArrays(gl.TRIANGLES, 0, 3);
+  glErr('moist');
+  FA.n^=1; FD.n^=1;
+
+  substepCount++;
+  if (substepCount % 4 === 0) {
+    pr = PR.surf;
+    gl.useProgram(pr.p);
+    gl.uniform1i(pr.u.W, SIMW); gl.uniform1i(pr.u.H, SIMH);
+    bindFieldTextures(pr);
+    gl.bindFramebuffer(gl.FRAMEBUFFER, fboSurf[FB.n^1]);
+    setUniforms(pr, cmn);
+    gl.drawArrays(gl.TRIANGLES, 0, 3);
+    glErr('surf');
+    FB.n^=1;
+  }
+  SIM.time += DT; SIM.steps++;
+}
+
+/* ---------------- terrain stamps ---------------- */
+function stampOnce(target, lon, lat, sigma, amt, mode) {
+  const pr = PR.edit;
+  gl.useProgram(pr.p);
+  gl.uniform1i(pr.u.W, SIMW); gl.uniform1i(pr.u.H, SIMH);
+  gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, FA.t[FA.n]); gl.uniform1i(pr.u.uA, 0);
+  gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D, FB.t[FB.n]); gl.uniform1i(pr.u.uB, 1);
+  gl.activeTexture(gl.TEXTURE2); gl.bindTexture(gl.TEXTURE_2D, FD.t[FD.n]); gl.uniform1i(pr.u.uD, 2);
+  gl.activeTexture(gl.TEXTURE3); gl.bindTexture(gl.TEXTURE_2D, FC.t[FC.n]); gl.uniform1i(pr.u.uC, 3);
+  let fbo, P;
+  if (target === 0) { fbo = fboStampC; P = FC; }
+  else if (target <= 4) { fbo = fboStampA; P = FA; }
+  else if (target <= 6) { fbo = fboStampB; P = FB; }
+  else { fbo = fboStampD; P = FD; }
+  gl.bindFramebuffer(gl.FRAMEBUFFER, fbo[P.n^1]);
+  gl.viewport(0,0,SIMW,SIMH);
+  setUniforms(pr, { uStamp:[lon,lat,sigma], uAmt:amt, uMode:mode, uTarget:target });
+  gl.bindVertexArray(quadVAO);
+  gl.drawArrays(gl.TRIANGLES, 0, 3);
+  P.n^=1;
+}
+function stampField(target, lon, lat, sigma, amt, mode=0) {
+  // A-pair and D-pair fields must stay parity-locked with each other (MOIST
+  // writes both in one draw): strike twice so BOTH buffers are stamped and the
+  // phase never shifts.
+  stampOnce(target, lon, lat, sigma, amt, mode);
+  if ((target >= 1 && target <= 4) || target >= 7) stampOnce(target, lon, lat, sigma, amt, mode);
+}
+function stamp(lon, lat, sigma, amt, mode=0) { stampField(0, lon, lat, sigma, amt, mode); }
+
+/* ---------------- probes ---------------- */
+function snap(field) {
+  const pr = PR.probe;
+  gl.useProgram(pr.p);
+  gl.uniform1i(pr.u.W, SIMW); gl.uniform1i(pr.u.H, SIMH);
+  bindFieldTextures(pr);
+  gl.bindFramebuffer(gl.FRAMEBUFFER, fboProbe);
+  gl.viewport(0,0,64,32);
+  setUniforms(pr, { uField: field,
+    uSeason: (SIM.season0 + SIM.time/P.YEAR)%1.0, uTime: SIM.time,
+    uGHs: P.GH, uEps0: P.EPS0 });
+  gl.bindVertexArray(quadVAO);
+  gl.drawArrays(gl.TRIANGLES, 0, 3);
+  gl.readPixels(0,0,64,32,gl.RGBA,gl.FLOAT,probeData);
+  const PD = probeData, W2 = 64, H2 = 32;
+  const data = PD.slice(0);
+  const at = (lon, lat) => {
+    const ix = Math.min(W2-1, Math.max(0, Math.floor((((lon%(2*Math.PI))+2*Math.PI)%(2*Math.PI))/(2*Math.PI)*W2)));
+    const jy = Math.min(H2-1, Math.max(0, Math.floor((lat+Math.PI/2)/Math.PI*H2)));
+    return data[(jy*W2+ix)*4];
+  };
+  const mean = (l0, l1, la0, la1) => {
+    l0 = (l0===undefined)?0:l0; l1 = (l1===undefined)?2*Math.PI:l1;
+    la0 = (la0===undefined)?-Math.PI/2:la0; la1 = (la1===undefined)?Math.PI/2:la1;
+    let s=0, c=0;
+    for (let jy=0;jy<H2;jy++){ const lat = -Math.PI/2 + (jy+0.5)/H2*Math.PI;
+      if (lat<la0||lat>=la1) continue;
+      const wgt = Math.cos(lat);
+      for (let ix=0;ix<W2;ix++){ const lon0 = (ix+0.5)/W2*2*Math.PI;
+        if (lon0<l0||lon0>=l1) continue;
+        s += data[(jy*W2+ix)*4]*wgt; c += wgt; } }
+    return c>0 ? s/c : 0;
+  };
+  return { data, at, mean };
+}
+
+/* ---------------- world builders ---------------- */
+function buildRidge(lonC, latC, halfLen, sigma, height) {
+  const n = 40;
+  for (let k=0;k<n;k++) {
+    const t = (k/(n-1) - 0.5)*2*halfLen;
+    stamp(lonC + t, latC, sigma, height);
+  }
+}
+function buildWall(lonC, lat0, lat1, sigma, height) {   // north-south range
+  const n = 40;
+  for (let k=0;k<n;k++) {
+    const lat = lat0 + (lat1-lat0)*k/(n-1);
+    const cl = Math.cos(lat);
+    stamp(lonC, lat, sigma*Math.sqrt(cl), height*cl);
+  }
+}
+function worldReset() {
+  const pr = PR.init;
+  gl.useProgram(pr.p);
+  gl.uniform1i(pr.u.W, SIMW); gl.uniform1i(pr.u.H, SIMH);
+  gl.bindFramebuffer(gl.FRAMEBUFFER, fboInit);
+  gl.viewport(0,0,SIMW,SIMH);
+  gl.uniform1f(pr.u.uSeed, SEED*7.13);
+  gl.bindVertexArray(quadVAO);
+  gl.drawArrays(gl.TRIANGLES, 0, 3);
+  FA.n=0; FB.n=0; FD.n=0; FC.n=0;
+  SIM.time = 0; SIM.steps = 0;
+}
+
+/* ---------------- main loop ---------------- */
+let spinning = true;
+const SPIN_TARGET = parseInt(Q.get("spin") || "2880");
+let paused = false;
+let SPEED = 1;
+const clockEl = document.getElementById("clock");
+const noteEl = document.getElementById("note");
+
+const CAM = { yawOff: 0.30, pitchOff: 0.06, dist: 3.2 };
+function camVecs() {
+  // orbit chained to the sun: the dayside faces us, terminator at the limb
+  const sl = sunLonNow() - Math.PI + CAM.yawOff;
+  const d = subLatNow()*0.8 + CAM.pitchOff;
+  const cp = Math.cos(d), sp = Math.sin(d);
+  const pos = [ cp*Math.cos(sl)*CAM.dist, sp*CAM.dist, cp*Math.sin(sl)*CAM.dist ];
+  const fl = Math.hypot(pos[0], pos[1], pos[2]);
+  const fwd = [ -pos[0]/fl, -pos[1]/fl, -pos[2]/fl ];
+  let right = [ fwd[2], 0, -fwd[0] ];
+  const rl = Math.hypot(right[0], right[2]) || 1;
+  right = [ right[0]/rl, 0, right[2]/rl ];
+  const up = [ fwd[1]*right[2] - fwd[2]*right[1], fwd[2]*right[0] - fwd[0]*right[2], fwd[0]*right[1] - fwd[1]*right[0] ];
+  return { pos, right, up, fwd };
+}
+function sunLonNow(){ return (2*Math.PI*SIM.time/86400) % (2*Math.PI); }
+function subLatNow(){ return 0.4093*Math.sin(2*Math.PI*((SIM.season0 + SIM.time/P.YEAR)%1.0)); }
+function render() {
+  const pr = (VIEW === "sphere") ? PR.sphere : PR.flat;
+  gl.useProgram(pr.p);
+  gl.uniform1i(pr.u.W, SIMW); gl.uniform1i(pr.u.H, SIMH);
+  bindFieldTextures(pr);
+  gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+  gl.viewport(0,0,cv.width,cv.height);
+  setUniforms(pr, {
+    WINW: cv.width, WINH: cv.height,
+    uSeason: (SIM.season0 + SIM.time/P.YEAR)%1.0, uTime: SIM.time,
+    uGHs: P.GH, uEps0: P.EPS0,
+  });
+  if (VIEW === "sphere") {
+    const cvv = camVecs();
+    const sl = sunLonNow() - Math.PI, dd = subLatNow();
+    const sun = [ Math.cos(sl)*Math.cos(dd), Math.sin(dd), Math.sin(sl)*Math.cos(dd) ];
+    setUniforms(pr, { uCamPos: cvv.pos,
+      uCamMat: [ cvv.right[0], cvv.right[1], cvv.right[2], cvv.up[0], cvv.up[1], cvv.up[2], cvv.fwd[0], cvv.fwd[1], cvv.fwd[2] ],
+      uSunDir: sun, uNrmE: [0.00016, 0, 0.00016] });
+  }
+  gl.bindVertexArray(quadVAO);
+  gl.drawArrays(gl.TRIANGLES, 0, 3);
+}
+
+let lastT = performance.now();
+worldReset();
+function frame(now) {
+  requestAnimationFrame(frame);
+  const fdt = now - lastT; lastT = now;
+  if (spinning) {
+    for (let k=0;k<240;k++) substep();
+    noteEl.textContent = "spinning up the atmosphere… " + Math.min(100, Math.round(100*SIM.steps/SPIN_TARGET)) + "%";
+    if (SIM.steps >= SPIN_TARGET) { spinning = false; noteEl.textContent = ""; }
+    render(); return;
+  }
+  if (!paused && !RECMODE) {
+    const n = Math.max(1, Math.min(12*SPEED, Math.round(fdt/3.2*SPEED)));
+    for (let k=0;k<n;k++) substep();
+  } else if (RECMODE && !paused) {
+    for (let k=0;k<STEPSPF;k++) substep();
+  }
+  render();
+  const yr = Math.floor(SIM.time/P.YEAR), day = Math.floor(SIM.time/P.DAY)%365;
+  const sl = 0.4093*Math.sin(2*Math.PI*((SIM.season0+SIM.time/P.YEAR)%1.0))*57.2958;
+  clockEl.textContent = "year " + yr + " · day " + day + " · sun " + Math.abs(sl).toFixed(1) + "°" + (sl>=0?"N":"S");
+}
+requestAnimationFrame(frame);
+
+window.__ERRS = window.__ERRS || [];
+
+document.getElementById("begin").onclick = function() {
+  const el = document.getElementById("intro");
+  el.style.transition = "opacity .6s"; el.style.opacity = "0";
+  setTimeout(() => el.remove(), 650);
+};
+
+/* ---------------- interaction: orbit / paint / time ---------------- */
+const MODE = { name: "look" };
+const pointers = new Map();
+let pinchD = 0;
+let lastPaint = null;
+
+function rayToLonLat(clientX, clientY) {
+  const rect = cv.getBoundingClientRect();
+  const px = (clientX - rect.left) * (cv.width / rect.width);
+  const uv = [(px - 0.5*cv.width)/cv.height, (0.5*cv.height - (clientY - rect.top) * (cv.height / rect.height))/cv.height];
+  const cvv = camVecs();
+  const M = [cvv.right, cvv.up, cvv.fwd];
+  let ray = [M[0][0]*uv[0] + M[1][0]*uv[1] + M[2][0]*1.6,
+             M[0][1]*uv[0] + M[1][1]*uv[1] + M[2][1]*1.6,
+             M[0][2]*uv[0] + M[1][2]*uv[1] + M[2][2]*1.6];
+  const rl = Math.hypot(ray[0], ray[1], ray[2]);
+  ray = ray.map(x => x/rl);
+  const b = cvv.pos[0]*ray[0] + cvv.pos[1]*ray[1] + cvv.pos[2]*ray[2];
+  const cc = cvv.pos[0]**2 + cvv.pos[1]**2 + cvv.pos[2]**2 - 1;
+  const disc = b*b - cc;
+  if (disc < 0) return null;
+  const t = -b - Math.sqrt(disc);
+  if (t < 0) return null;
+  const pos = [cvv.pos[0] + t*ray[0], cvv.pos[1] + t*ray[1], cvv.pos[2] + t*ray[2]];
+  const lat = Math.asin(Math.max(-1, Math.min(1, pos[1])));
+  let lon = Math.atan2(pos[2], pos[0]) - Math.PI;   // texture lon convention
+  return { lon, lat };
+}
+
+function paintAt(lon, lat, isTap) {
+  const r = parseFloat(document.getElementById("brush").value);
+  if (MODE.name === "raise") stampField(0, lon, lat, r, 900, 0);
+  else if (MODE.name === "lower") stampField(0, lon, lat, r, -900, 0);
+  else if (MODE.name === "sea") { if (isTap) stampField(0, lon, lat, r*1.4, -200, 1); }
+  else if (MODE.name === "sow") { if (isTap) { stampField(0, lon, lat, r*1.2, 300, 0); stampField(5, lon, lat, r*1.2, 1, 1); stampField(3, lon, lat, r*1.2, 0.8, 1); } }
+}
+
+function arcPoints(a, b) {
+  // great-circle interpolation, stamps every ~half radius
+  const pts = [];
+  const n = Math.max(1, Math.ceil(Math.hypot(b.lon - a.lon, b.lat - a.lat) / 0.02));
+  for (let k = 1; k <= n; k++) pts.push({ lon: a.lon + (b.lon - a.lon)*k/n, lat: a.lat + (b.lat - a.lat)*k/n });
+  return pts;
+}
+
+cv.addEventListener("pointerdown", (e) => {
+  cv.setPointerCapture(e.pointerId);
+  pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+  if (pointers.size === 2) {
+    const pts = [...pointers.values()];
+    pinchD = Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y);
+    lastPaint = null;
+    return;
+  }
+  const ll = rayToLonLat(e.clientX, e.clientY);
+  if (MODE.name !== "look" && ll) {
+    paintAt(ll.lon, ll.lat, true);
+    lastPaint = ll;
+  }
+});
+cv.addEventListener("pointermove", (e) => {
+  if (!pointers.has(e.pointerId)) return;
+  const prev = pointers.get(e.pointerId);
+  pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+  if (pointers.size === 2) {
+    const pts = [...pointers.values()];
+    const d = Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y);
+    if (pinchD > 0) CAM.dist = Math.max(1.45, Math.min(9, CAM.dist * pinchD/d));
+    pinchD = d;
+    return;
+  }
+  if (MODE.name === "look") {
+    CAM.yawOff -= (e.clientX - prev.x) * 0.005;
+    CAM.pitchOff = Math.max(-1.2, Math.min(1.2, CAM.pitchOff + (e.clientY - prev.y) * 0.004));
+  } else {
+    const ll = rayToLonLat(e.clientX, e.clientY);
+    if (ll && lastPaint) for (const p of arcPoints(lastPaint, ll)) paintAt(p.lon, p.lat, false);
+    if (ll) lastPaint = ll;
+  }
+});
+function endPointer(e) {
+  pointers.delete(e.pointerId);
+  if (pointers.size < 2) pinchD = 0;
+  if (pointers.size === 0) lastPaint = null;
+}
+cv.addEventListener("pointerup", endPointer);
+cv.addEventListener("pointercancel", endPointer);
+cv.addEventListener("wheel", (e) => {
+  e.preventDefault();
+  CAM.dist = Math.max(1.45, Math.min(9, CAM.dist * Math.exp(e.deltaY*0.001)));
+}, { passive: false });
+
+/* ---------------- toolbar wiring ---------------- */
+function setMode(name) {
+  MODE.name = name;
+  for (const id of ["mLook","mRaise","mLower","mSea","mSow"])
+    document.getElementById(id).classList.toggle("on", id === "m"+name[0].toUpperCase()+name.slice(1));
+  cv.style.cursor = name === "look" ? "grab" : "crosshair";
+  document.getElementById("note").textContent =
+    name === "look" ? "" :
+    name === "sea" ? "tap the land you want drowned" :
+    name === "sow" ? "tap bare stone to sow the first green" :
+    "drag on the planet to " + name + " mountains";
+}
+document.getElementById("mLook").onclick = () => setMode("look");
+document.getElementById("mRaise").onclick = () => setMode("raise");
+document.getElementById("mLower").onclick = () => setMode("lower");
+document.getElementById("mSea").onclick = () => setMode("sea");
+document.getElementById("mSow").onclick = () => setMode("sow");
+document.getElementById("viewbtn").onclick = function() {
+  VIEW = (VIEW === "sphere") ? "flat" : "sphere";
+  this.textContent = (VIEW === "sphere") ? "atlas" : "globe";
+};
+document.getElementById("pause").onclick = function() {
+  paused = !paused;
+  this.textContent = paused ? "▶" : "▮▮";
+  this.classList.toggle("on", paused);
+};
+for (const [id, s] of [["sp1",1],["sp4",4],["sp16",16]]) {
+  document.getElementById(id).onclick = function() {
+    SPEED = s;
+    for (const [id2] of [["sp1"],["sp4"],["sp16"]])
+      document.getElementById(id2).classList.toggle("on", id2 === id);
+  };
+}
+document.getElementById("gh").oninput = function() { P.GH = parseFloat(this.value); };
+
+/* ---------------- external hooks (gates / dev) ---------------- */
+window.__P = P;
+window.__SIM = SIM;
+window.__param = (k,v)=>{ P[k]=v; };
+window.__step = (n)=>{ for(let k=0;k<n;k++) substep(); };
+window.__pause = (v)=>{ paused = v!==undefined ? v : !paused; };
+window.__snap = snap;
+window.__stamp = stamp;
+window.__ridge = buildRidge;
+window.__wall = buildWall;
+window.__stampF = stampField;
+window.__reset = worldReset;
+window.__setSim = (o)=>Object.assign(SIM,o);
+window.__state = () => {
+  const h = snap(0), T = snap(1), q = snap(2), ice = snap(6), pr = snap(10), uu = snap(8);
+  return {
+    steps: SIM.steps, time: SIM.time,
+    h: h.mean(), T: T.mean(), q: q.mean(), ice: ice.mean(), Pr: pr.mean(), u: uu.mean(),
+  };
+};
+</script>
+</body>
+</html>
