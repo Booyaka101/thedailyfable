@@ -1,5 +1,5 @@
 {
- "count": 65,
+ "count": 67,
  "base": "https://booyaka101.github.io/thedailyfable",
  "days": [
   {
@@ -1615,6 +1615,46 @@
     {
      "label": "short",
      "url": "https://youtube.com/shorts/3SfLUsCwe3g"
+    }
+   ]
+  },
+  {
+   "day": 66,
+   "title": "THE FIRST FABLE",
+   "date": "2026-10-03",
+   "blurb": "speech synthesis · physical modelling + historical linguistics",
+   "page": "https://booyaka101.github.io/thedailyfable/day66/",
+   "poster": null,
+   "video": "https://youtu.be/sxrl9ZSVdbc",
+   "short": "https://youtube.com/shorts/NyxsYYM1L-4",
+   "links": [
+    {
+     "label": "hear the five eras, read the ledger",
+     "url": "https://booyaka101.github.io/thedailyfable/day66/"
+    },
+    {
+     "label": "film",
+     "url": "https://youtu.be/sxrl9ZSVdbc"
+    },
+    {
+     "label": "short",
+     "url": "https://youtube.com/shorts/NyxsYYM1L-4"
+    }
+   ]
+  },
+  {
+   "day": 67,
+   "title": "PETRICHOR",
+   "date": "2026-10-04",
+   "blurb": "playable toy climate · WebGL2 fragment shaders",
+   "page": "https://booyaka101.github.io/thedailyfable/day67/",
+   "poster": "https://booyaka101.github.io/thedailyfable/day67/poster.jpg",
+   "video": null,
+   "short": null,
+   "links": [
+    {
+     "label": "raise your own world",
+     "url": "https://booyaka101.github.io/thedailyfable/day67/"
     }
    ]
   }
